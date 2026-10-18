@@ -33,7 +33,24 @@ table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px} th,td{
 <div class="tabs">
 <button class="tab-btn active" onclick="openTab('samagra',this)">समग्र</button>
 <button class="tab-btn" onclick="openTab('darpan',this)">पंचायत दर्पण - FILTER</button>
-<button class="tab-btn" onclick="openTab('mgnrega',this)">मनरेगा</button>
+<div id="mgnrega" class="card">
+<h2 style="color:#166534;">👷 MGNREGA - MR Date Nikaalo</h2>
+
+<label style="font-weight:bold;">STEP 1: Official MR Report Kholo</label>
+<a class="btn" style="background:#166534;" href="https://mnregaweb4.nic.in/netnrega/dynamic_muster.aspx" target="_blank">1. MR Muster Roll Report (Date Wise) - Yahan Click Karo</a>
+
+<a class="btn" style="background:#15803d;" href="https://nrega.nic.in/MGNREGA_new/Nrega_home.aspx" target="_blank">2. MGNREGA Home Page</a>
+
+<label style="font-weight:bold; margin-top:15px; display:block;">STEP 2: Aapka Banaya Hua MR Tool</label>
+<p style="font-size:13px; background:#f0fdf4; padding:10px; border-radius:8px;">Isse aap Job Card se MR ki Date aur Payment ki Suchi nikal sakte ho</p>
+
+<input type="file" id="mgnregaFile" accept=".xlsx,.xls" style="width:100%; padding:10px; border:2px dashed #16a34a; border-radius:8px; margin:10px 0;">
+<button onclick="alert('Aapki MR wali Excel yahan Process hogi - File Select karo')" class="btn btn-green">MR File Process Karo</button>
+
+<div style="background:#fefce8; border-left:4px solid #eab308; padding:10px; margin-top:10px; font-size:13px;">
+<b>Note:</b> MR Date nikalne ke liye Upar wale Link 1 par click karke - State > District > Block > Panchayat > Date Select karo - Fir Wahi Data ko Excel me Download karke yahan Process kar sakte ho!
+</div>
+</div>
 <button class="tab-btn" onclick="openTab('awas',this)">PM आवास</button>
 </div>
 
