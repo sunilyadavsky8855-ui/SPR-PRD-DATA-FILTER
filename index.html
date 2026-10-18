@@ -53,9 +53,9 @@ table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px} th,td{
 
 <div id="main" style="display:none;">
 <h2 style="color:#1e3a8a;border-left:4px solid #3b82f6;padding-left:10px;">PRD Row Ginti Tool - Panchayat Darpan</h2>
-<label style="font-weight:bold;">STEP 1: INSERT SPR SHEET</label>
+<label style="font-weight:bold;">STEP 1: SELECT SPR SHEET</label>
 <input type="file" id="sprFile" accept=".xlsx,.xls">
-<label style="font-weight:bold;">STEP 2: INSERT PRD SHEETS</label>
+<label style="font-weight:bold;">STEP 2: SELECT PRD SHEETS ALL VILLAGES</label>
 <input type="file" id="prdFiles" accept=".xlsx,.xls" multiple>
 <button onclick="process()" class="btn">PROCESS - Row Ginti + Duplicate</button>
 <button onclick="downloadAll()" id="dl" class="btn btn-green" style="display:none">FINAL 6 SHEETS DOWNLOAD</button>
@@ -124,7 +124,7 @@ function process(){
  let html="<tr><th>File</th><th>Sheet</th><th>Total</th><th>Unique</th><th>8-Digit</th></tr>";
  rowCounts.slice(1).forEach(r=>{ html+=`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[5]}</td></tr>`; });
  document.getElementById('tbl').innerHTML=html;
- document.getElementById('log').innerText=`SPR Unique: ${finalSPR.length-1}\nTotal PRD Unique: ${extractedPRD.length-1}\nDuplicate: ${duplicatePRD.length-1}\nMatched: ${matched.length-1} | Not Matched: ${notMatched.length-1}`;
+ document.getElementById('log').innerText=`SPR TOTAL FAMILY: ${finalSPR.length-1}\nTotal PRD FAMILY: ${extractedPRD.length-1}\nDuplicate PRD FAMILY: ${duplicatePRD.length-1}\nREGISTERD FAMILY: ${matched.length-1} | REMAINING FAMILY: ${notMatched.length-1}`;
  document.getElementById('dl').style.display='block';
 }
 function downloadAll(){
