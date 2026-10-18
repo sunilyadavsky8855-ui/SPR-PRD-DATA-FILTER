@@ -3,27 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Panchayat Sahayak App - Sunil Yadav</title>
+<title>Panchayat Sahayak App</title>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
-body{background:#f0f4ff; padding-bottom:80px;}
-.header{background: linear-gradient(135deg,#1e3a8a,#3b82f6); color:white; padding:20px 15px; text-align:center; border-radius:0 0 25px 25px; box-shadow:0 4px 15px rgba(0,0,0,0.2);}
-.header h1{font-size:22px; margin-bottom:5px;}
-.header p{font-size:13px; opacity:0.9;}
-.tabs{display:flex; overflow-x:auto; gap:8px; padding:12px 10px; background:white; position:sticky; top:0; z-index:10; box-shadow:0 2px 5px rgba(0,0,0,0.1);}
-.tab-btn{white-space:nowrap; padding:8px 18px; border-radius:20px; border:1px solid #3b82f6; background:white; color:#1e3a8a; font-weight:600; font-size:14px; cursor:pointer;}
+body{background:#f0f4ff;}
+.header{background: linear-gradient(135deg,#1e3a8a,#3b82f6); color:white; padding:20px 15px; text-align:center; border-radius:0 0 25px 25px;}
+.header h1{font-size:22px;}
+.tabs{display:flex; overflow-x:auto; gap:8px; padding:12px 10px; background:white; position:sticky; top:0; z-index:10;}
+.tab-btn{white-space:nowrap; padding:8px 18px; border-radius:20px; border:1px solid #3b82f6; background:white; color:#1e3a8a; font-weight:600; cursor:pointer;}
 .tab-btn.active{background:#1e3a8a; color:white;}
 .container{padding:15px;}
-.card{background:white; border-radius:15px; padding:15px; margin-bottom:15px; box-shadow:0 3px 10px rgba(0,0,0,0.08); display:none;}
+.card{background:white; border-radius:15px; padding:15px; margin-bottom:15px; display:none;}
 .card.active{display:block;}
-.card h2{font-size:18px; color:#1e3a8a; margin-bottom:10px; border-left:4px solid #3b82f6; padding-left:10px;}
-.btn{display:block; width:100%; padding:12px; background: linear-gradient(135deg,#2563eb,#1e40af); color:white; text-align:center; border-radius:10px; text-decoration:none; margin:8px 0; font-weight:600; font-size:14px; border:none; cursor:pointer;}
-.btn-green{background: linear-gradient(135deg,#16a34a,#15803d);}
-.btn-orange{background: linear-gradient(135deg,#ea580c,#c2410c);}
-.input{width:100%; padding:12px; border:1px solid #cbd5e1; border-radius:10px; margin:8px 0; font-size:14px;}
-.footer{text-align:center; font-size:12px; color:#64748b; padding:20px;}
-#lock input{padding:14px;width:90%;border-radius:8px;border:1px solid #ccc;text-align:center;font-size:18px}
+.btn{width:100%; padding:12px; background:#2563eb; color:white; border-radius:10px; text-decoration:none; margin:8px 0; display:block; text-align:center; font-weight:600; border:none; cursor:pointer;}
+.btn-green{background:#16a34a;}
 input[type=file]{padding:10px;border:2px dashed #0d6efd;border-radius:8px;width:95%;margin:8px 0;background:#f8f9ff}
 table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px} th,td{border:1px solid #ccc;padding:6px} th{background:#0d6efd;color:#fff}
 </style>
@@ -37,72 +31,52 @@ table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px} th,td{
 
 <div class="tabs">
 <button class="tab-btn active" onclick="openTab('samagra',this)">समग्र</button>
+<button class="tab-btn" onclick="openTab('darpan',this)">पंचायत दर्पण - FILTER</button>
 <button class="tab-btn" onclick="openTab('mgnrega',this)">मनरेगा</button>
 <button class="tab-btn" onclick="openTab('awas',this)">PM आवास</button>
-<button class="tab-btn" onclick="openTab('darpan',this)">पंचायत दर्पण</button>
-<button class="tab-btn" onclick="openTab('tools',this)">PRD Tool</button>
 </div>
 
 <div class="container">
 
 <div id="samagra" class="card active">
-<h2>👨‍👩‍👧 समग्र / eKYC</h2>
+<h2>👨‍👩‍👧 समग्र</h2>
 <a class="btn btn-green" href="https://samagra.gov.in/" target="_blank">समग्र पोर्टल खोलें</a>
-<a class="btn btn-orange" href="https://samagra.gov.in/ekyc/" target="_blank">eKYC करें</a>
 </div>
 
-<div id="mgnrega" class="card">
-<h2>💼 मनरेगा / जॉब कार्ड</h2>
-<a class="btn" href="https://nrega.nic.in/" target="_blank">MGNREGA Official</a>
-<a class="btn btn-green" href="https://nrega.nic.in/netnrega/homestciti.aspx" target="_blank">Job Card देखें</a>
-</div>
-
-<div id="awas" class="card">
-<h2>🏠 PM आवास योजना</h2>
-<a class="btn" href="https://pmayg.nic.in/" target="_blank">PM Awas List देखें</a>
-</div>
-
+<!-- YAHAN DARPAN TAB ME FILTER JOD DIYA -->
 <div id="darpan" class="card">
-<h2>🏛️ पंचायत दर्पण / eGram</h2>
-<a class="btn" href="https://egramswaraj.gov.in/" target="_blank">eGramSwaraj खोलें</a>
-<a class="btn btn-green" href="https://prd.mp.gov.in/" target="_blank">MP Panchayat Darpan</a>
-</div>
-
-<!-- YAHI AAPKA ASLI TOOL HAI -->
-<div id="tools" class="card">
 <div id="lock" style="text-align:center;">
 <h2>🔒 Password: 123456789</h2>
-<input id="p" type="password" placeholder="123456789">
-<button onclick="if(document.getElementById('p').value==='123456789'){document.getElementById('lock').style.display='none';document.getElementById('main').style.display='block'}else{alert('Galat')}" class="btn">Unlock</button>
+<input id="p" type="password" placeholder="Password Dalo" style="padding:14px;width:90%;border-radius:8px;border:1px solid #ccc;text-align:center;">
+<button onclick="if(document.getElementById('p').value==='123456789'){document.getElementById('lock').style.display='none';document.getElementById('main').style.display='block'}else{alert('Galat Password')}" class="btn">Unlock</button>
 </div>
 
 <div id="main" style="display:none;">
-<h2>PRD Alag-Alag Row Ginti Tool</h2>
-<label style="font-weight:bold;display:block;text-align:left">STEP 1: INSERT SPR SHEET</label>
+<h2 style="color:#1e3a8a;border-left:4px solid #3b82f6;padding-left:10px;">PRD Row Ginti Tool - Panchayat Darpan</h2>
+<label style="font-weight:bold;">STEP 1: INSERT SPR SHEET</label>
 <input type="file" id="sprFile" accept=".xlsx,.xls">
-<label style="font-weight:bold;display:block;text-align:left">STEP 2: INSERT PRD SHEETS (Multiple)</label>
+<label style="font-weight:bold;">STEP 2: INSERT PRD SHEETS</label>
 <input type="file" id="prdFiles" accept=".xlsx,.xls" multiple>
 <button onclick="process()" class="btn">PROCESS - Row Ginti + Duplicate</button>
 <button onclick="downloadAll()" id="dl" class="btn btn-green" style="display:none">FINAL 6 SHEETS DOWNLOAD</button>
-<div id="log" style="background:#000;color:#0f0;padding:10px;border-radius:6px;text-align:left;white-space:pre-line;min-height:80px"></div>
+<div id="log" style="background:#000;color:#0f0;padding:10px;border-radius:6px;white-space:pre-line;min-height:60px;margin-top:10px;"></div>
 <div style="max-height:300px;overflow:auto"><table id="tbl"></table></div>
+<a class="btn" style="background:#ea580c;margin-top:15px;" href="https://prd.mp.gov.in/" target="_blank">MP Panchayat Darpan Official Kholo</a>
 </div>
 </div>
 
-</div>
+<div id="mgnrega" class="card"><h2>मनरेगा</h2><a class="btn" href="https://nrega.nic.in/" target="_blank">MGNREGA खोलें</a></div>
+<div id="awas" class="card"><h2>PM आवास</h2><a class="btn" href="https://pmayg.nic.in/" target="_blank">PM Awas List</a></div>
 
-<div class="footer">बनाया गया - सुनील कुमार यादव, पंचायत सचिव, निवानिया<br>Version 1.0 | 2026</div>
+</div>
 
 <script>
-// TAB SWITCH
 function openTab(id,el){
  document.querySelectorAll('.card').forEach(c=>c.classList.remove('active'));
  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
  document.getElementById(id).classList.add('active');
  el.classList.add('active');
 }
-
-// PRD LOGIC - Wahi Purana
 let sprWb=null, prdWbs=[], finalSPR=[], extractedPRD=[], duplicatePRD=[], matched=[], notMatched=[], rowCounts=[], masterSet=new Set();
 function unmerge(ws,data){
  if(ws['!merges']) ws['!merges'].forEach(m=>{ let v=data[m.s.r]?.[m.s.c]||""; for(let R=m.s.r;R<=m.e.r;R++) for(let C=m.s.c;C<=m.e.c;C++){ if(!data[R])data[R]=[]; data[R][C]=v; } });
@@ -122,21 +96,14 @@ function process(){
  let ws1=sprWb.Sheets[sprWb.SheetNames[0]]; let d1=XLSX.utils.sheet_to_json(ws1,{header:1,defval:""}); d1=unmerge(ws1,d1);
  let seenSPR={}; let hSPR=d1[0]; finalSPR=[hSPR]; masterSet=new Set();
  for(let i=1;i<d1.length;i++){ let fid=extract8Digit(d1[i][1])||String(d1[i][1]||"").trim(); if(!fid) continue; if(!seenSPR[fid]){ seenSPR[fid]=1; masterSet.add(fid); finalSPR.push(d1[i]); } }
- let allRows=[]; let hPRD=null; rowCounts=[["File Name","Sheet Name","Total Rows","Unique Rows","Duplicate Rows","8-Digit Found"]];
- let newHeader=null;
+ let allRows=[]; let hPRD=null; rowCounts=[["File Name","Sheet Name","Total Rows","Unique Rows","Duplicate Rows","8-Digit Found"]]; let newHeader=null;
  prdWbs.forEach(item=>{
    item.wb.SheetNames.forEach(sName=>{
      let ws=item.wb.Sheets[sName]; let d=XLSX.utils.sheet_to_json(ws,{header:1,defval:""}); d=unmerge(ws,d);
-     if(!hPRD) hPRD=d[0];
-     if(!newHeader) newHeader=(hPRD||[]).slice().concat(["8_Digit_Family_ID","Source_File","Source_Sheet"]);
-     let totalRows = d.length-1; let seenLocal={}; let dupLocal=0; let uniqueLocal=0; let eightFound=0; let tempRows=[];
-     for(let i=1;i<d.length;i++){
-       let orig=String(d[i][1]||"").trim(); let eight=extract8Digit(orig); if(!eight) continue; eightFound++;
-       if(!seenLocal[eight]){ seenLocal[eight]=1; uniqueLocal++; tempRows.push([d[i],eight,item.name,sName]); }
-       else dupLocal++;
-     }
-     rowCounts.push([item.name, sName, totalRows, uniqueLocal, dupLocal, eightFound]);
-     tempRows.forEach(t=>{ allRows.push(t); });
+     if(!hPRD) hPRD=d[0]; if(!newHeader) newHeader=(hPRD||[]).slice().concat(["8_Digit_Family_ID","Source_File","Source_Sheet"]);
+     let totalRows = d.length-1; let seenLocal={}; let uniqueLocal=0; let eightFound=0; let tempRows=[];
+     for(let i=1;i<d.length;i++){ let orig=String(d[i][1]||"").trim(); let eight=extract8Digit(orig); if(!eight) continue; eightFound++; if(!seenLocal[eight]){ seenLocal[eight]=1; uniqueLocal++; tempRows.push([d[i],eight,item.name,sName]); } }
+     rowCounts.push([item.name, sName, totalRows, uniqueLocal, 0, eightFound]); tempRows.forEach(t=>{ allRows.push(t); });
    });
  });
  let extractedHeader = newHeader; extractedPRD=[extractedHeader]; duplicatePRD=[extractedHeader.concat(["Duplicate_Count"])];
@@ -147,25 +114,22 @@ function process(){
    else { let row = obj[0].slice(); row.push(eight, obj[2], obj[3]); row.push(countGlobal[eight]); duplicatePRD.push(row); }
  });
  matched=[extractedHeader.concat(["Status"])]; notMatched=[extractedHeader.concat(["Status"])];
- extractedPRD.slice(1).forEach(row=>{
-   let eight=String(row[row.length-3]||"").trim();
-   if(masterSet.has(eight)) matched.push(row.concat(["MATCHED"])); else notMatched.push(row.concat(["NOT_MATCHED"]));
- });
- let html="<tr><th>File</th><th>Sheet</th><th>Total</th><th>Unique</th><th>Duplicate</th><th>8-Digit</th></tr>";
- rowCounts.slice(1).forEach(r=>{ html+=`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td></tr>`; });
+ extractedPRD.slice(1).forEach(row=>{ let eight=String(row[row.length-3]||"").trim(); if(masterSet.has(eight)) matched.push(row.concat(["MATCHED"])); else notMatched.push(row.concat(["NOT_MATCHED"])); });
+ let html="<tr><th>File</th><th>Sheet</th><th>Total</th><th>Unique</th><th>8-Digit</th></tr>";
+ rowCounts.slice(1).forEach(r=>{ html+=`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[5]}</td></tr>`; });
  document.getElementById('tbl').innerHTML=html;
- document.getElementById('log').innerText=`SPR Unique: ${finalSPR.length-1}\nPRD Sheets: ${rowCounts.length-1} Sheets Counted\nTotal PRD Unique: ${extractedPRD.length-1}\nDuplicate: ${duplicatePRD.length-1}\nMatched: ${matched.length-1} | Not Matched: ${notMatched.length-1}`;
+ document.getElementById('log').innerText=`SPR Unique: ${finalSPR.length-1}\nTotal PRD Unique: ${extractedPRD.length-1}\nDuplicate: ${duplicatePRD.length-1}\nMatched: ${matched.length-1} | Not Matched: ${notMatched.length-1}`;
  document.getElementById('dl').style.display='block';
 }
 function downloadAll(){
  let newWb=XLSX.utils.book_new();
- XLSX.utils.book_append_sheet(newWb, XLSX.utils.aoa_to_sheet(rowCounts), "0_PRD_Sheet_Wise_Row_Ginti");
- XLSX.utils.book_append_sheet(newWb, XLSX.utils.aoa_to_sheet(finalSPR), "1_SPR_Sheet");
- XLSX.utils.book_append_sheet(newWb, XLSX.utils.aoa_to_sheet(extractedPRD), "2_PRD_Unique_8Digit");
- XLSX.utils.book_append_sheet(newWb, XLSX.utils.aoa_to_sheet(duplicatePRD), "3_PRD_DUPLICATE_ALAG");
+ XLSX.utils.book_append_sheet(newWb, XLSX.utils.aoa_to_sheet(rowCounts), "0_Row_Ginti");
+ XLSX.utils.book_append_sheet(newWb, XLSX.utils.aoa_to_sheet(finalSPR), "1_SPR");
+ XLSX.utils.book_append_sheet(newWb, XLSX.utils.aoa_to_sheet(extractedPRD), "2_PRD_Unique");
+ XLSX.utils.book_append_sheet(newWb, XLSX.utils.aoa_to_sheet(duplicatePRD), "3_DUPLICATE");
  XLSX.utils.book_append_sheet(newWb, XLSX.utils.aoa_to_sheet(matched), "4_Matched");
  XLSX.utils.book_append_sheet(newWb, XLSX.utils.aoa_to_sheet(notMatched), "5_Not_Matched");
- XLSX.writeFile(newWb,"FINAL_ROW_GINTI_"+Date.now()+".xlsx");
+ XLSX.writeFile(newWb,"FINAL_"+Date.now()+".xlsx");
 }
 </script>
 </body>
