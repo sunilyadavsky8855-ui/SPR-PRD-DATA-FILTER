@@ -7,7 +7,7 @@
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
-body{background:#f0f4ff;}
+body{background:#f0f4ff; padding-bottom:70px;}
 .header{background: linear-gradient(135deg,#1e3a8a,#3b82f6); color:white; padding:20px 15px; text-align:center; border-radius:0 0 25px 25px;}
 .header h1{font-size:22px;}
 .tabs{display:flex; overflow-x:auto; gap:8px; padding:12px 10px; background:white; position:sticky; top:0; z-index:10;}
@@ -20,7 +20,7 @@ body{background:#f0f4ff;}
 .btn-green{background:#16a34a;}
 input[type=file]{padding:10px;border:2px dashed #0d6efd;border-radius:8px;width:95%;margin:8px 0;background:#f8f9ff}
 table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px} th,td{border:1px solid #ccc;padding:6px} th{background:#0d6efd;color:#fff}
-.footer{text-align:center; font-size:14px; font-weight:bold; color:#1e3a8a; background:white; padding:20px; margin-top:20px; border-top:3px solid #3b82f6; border-radius:15px 15px 0 0;}
+.footer{position:fixed; bottom:0; left:0; right:0; text-align:center; font-size:14px; font-weight:bold; color:white; background:#1e3a8a; padding:12px; z-index:9999; border-top:3px solid yellow;}
 </style>
 </head>
 <body>
@@ -33,24 +33,7 @@ table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px} th,td{
 <div class="tabs">
 <button class="tab-btn active" onclick="openTab('samagra',this)">समग्र</button>
 <button class="tab-btn" onclick="openTab('darpan',this)">पंचायत दर्पण - FILTER</button>
-<div id="mgnrega" class="card">
-<h2 style="color:#166534;">👷 MGNREGA - MR Date Nikaalo</h2>
-
-<label style="font-weight:bold;">STEP 1: Official MR Report Kholo</label>
-<a class="btn" style="background:#166534;" href="https://mnregaweb4.nic.in/netnrega/dynamic_muster.aspx" target="_blank">1. MR Muster Roll Report (Date Wise) - Yahan Click Karo</a>
-
-<a class="btn" style="background:#15803d;" href="https://nrega.nic.in/MGNREGA_new/Nrega_home.aspx" target="_blank">2. MGNREGA Home Page</a>
-
-<label style="font-weight:bold; margin-top:15px; display:block;">STEP 2: Aapka Banaya Hua MR Tool</label>
-<p style="font-size:13px; background:#f0fdf4; padding:10px; border-radius:8px;">Isse aap Job Card se MR ki Date aur Payment ki Suchi nikal sakte ho</p>
-
-<input type="file" id="mgnregaFile" accept=".xlsx,.xls" style="width:100%; padding:10px; border:2px dashed #16a34a; border-radius:8px; margin:10px 0;">
-<button onclick="alert('Aapki MR wali Excel yahan Process hogi - File Select karo')" class="btn btn-green">MR File Process Karo</button>
-
-<div style="background:#fefce8; border-left:4px solid #eab308; padding:10px; margin-top:10px; font-size:13px;">
-<b>Note:</b> MR Date nikalne ke liye Upar wale Link 1 par click karke - State > District > Block > Panchayat > Date Select karo - Fir Wahi Data ko Excel me Download karke yahan Process kar sakte ho!
-</div>
-</div>
+<button class="tab-btn" onclick="openTab('mgnrega',this)">मनरेगा MR</button>
 <button class="tab-btn" onclick="openTab('awas',this)">PM आवास</button>
 </div>
 
@@ -67,7 +50,6 @@ table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px} th,td{
 <input id="p" type="password" placeholder="Password Dalo" style="padding:14px;width:90%;border-radius:8px;border:1px solid #ccc;text-align:center;">
 <button onclick="if(document.getElementById('p').value==='123456789'){document.getElementById('lock').style.display='none';document.getElementById('main').style.display='block'}else{alert('Galat Password')}" class="btn">Unlock</button>
 </div>
-
 <div id="main" style="display:none;">
 <h2 style="color:#1e3a8a;border-left:4px solid #3b82f6;padding-left:10px;">PRD Row Ginti Tool - Panchayat Darpan</h2>
 <label style="font-weight:bold;">STEP 1: SELECT SPR SHEET</label>
@@ -82,15 +64,26 @@ table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px} th,td{
 </div>
 </div>
 
-<div id="mgnrega" class="card"><h2>मनरेगा</h2><a class="btn" href="https://nrega.nic.in/" target="_blank">MGNREGA खोलें</a></div>
+<div id="mgnrega" class="card">
+<h2 style="color:#166534; border-left:4px solid #16a34a; padding-left:10px;">👷 MGNREGA - MR Date Nikaalo</h2>
+<a class="btn" style="background:#166534;" href="https://mnregaweb4.nic.in/netnrega/dynamic_muster.aspx" target="_blank">1. MR Muster Roll Report (Date Wise) - Yahan Click Karo</a>
+<a class="btn" style="background:#15803d;" href="https://nrega.nic.in/MGNREGA_new/Nrega_home.aspx" target="_blank">2. MGNREGA Home Page</a>
+<div style="background:#f0fdf4; border:1px solid #16a34a; padding:12px; border-radius:10px; margin-top:15px;">
+<label style="font-weight:bold;">Aapka Banaya Hua MR Tool</label>
+<input type="file" id="mgnregaFile" accept=".xlsx,.xls" style="width:100%; padding:10px; border:2px dashed #16a34a; border-radius:8px; margin:10px 0;">
+<button onclick="alert('Aapki MR wali Excel yahan Process hogi')" class="btn btn-green">MR File Process Karo</button>
+</div>
+<div style="background:#fefce8; border-left:4px solid #eab308; padding:10px; margin-top:10px; font-size:13px;">
+<b>Note:</b> MR Date nikalne ke liye Link 1 pe click karke - State > District > Block > Panchayat > Date Select karo!
+</div>
+</div>
+
 <div id="awas" class="card"><h2>PM आवास</h2><a class="btn" href="https://pmayg.nic.in/" target="_blank">PM Awas List</a></div>
 
 </div>
 
-<!-- YAHAN FOOTER JOD DIYA - LINE 61 -->
 <div class="footer">
-बनाया गया - सुनील कुमार यादव<br>
-Version 1.0 | 2026 | Mob: 9755194687
+🌾 बनाया गया - सुनील कुमार यादव, GP निवानिया | 9755194687 - आपकी सहायता के लिए प्रयास जारी है
 </div>
 
 <script>
@@ -155,9 +148,5 @@ function downloadAll(){
  XLSX.writeFile(newWb,"FINAL_"+Date.now()+".xlsx");
 }
 </script>
- <div class="footer">
-🌾 बनाया गया - सुनील कुमार यादव, GP निवानिया | 9755194687
-  आपकी सहायता के लिए और प्रयास जारी है 
-</div>
 </body>
 </html>
