@@ -221,6 +221,48 @@ function downloadAll(){
  XLSX.utils.book_append_sheet(newWb, XLSX.utils.aoa_to_sheet(notMatched), "5_Not_Matched");
  XLSX.writeFile(newWb,"FINAL_"+Date.now()+".xlsx");
 }
+  // JANKARI DARJ SYSTEM - BIAORA BLOCK
+const J_KEY="BIAORA_JANKARI_DATA";
+let jData=JSON.parse(localStorage.getItem(J_KEY)||"[]");
+document.getElementById('panchayat')?.addEventListener('change',function(){
+  let d=document.getElementById('otherPanchDiv'); if(d) d.style.display=this.value==="OTHER"?"block":"none";
+});
+function addJankari(){
+  let panch=document.getElementById('panchayat').value;
+  if(panch==="OTHER") panch=document.getElementById('otherPanch').value.trim().toUpperCase();
+  let vibhag=document.getElementById('vibhag').value;
+  let kola=document.getElementById('panchKola').value.trim();
+  let med=document.getElementById('med').value.trim();
+  let sankhya=document.getElementById('sankhya').value.trim();
+  let purn=document.getElementById('purn').value.trim();
+  let remark=document.getElementById('remark').value.trim();
+  if(!panch||!vibhag||!kola||!med||!sankhya||!purn){alert("Sab * wale bharo");return;}
+  jData.push({id:Date.now(),panchayat:panch,vibhag:vibhag,panchKola:kola,med:med,sankhya:sankhya,purn:purn,remark:remark,date:new Date().toLocaleString('hi-IN')});
+  localStorage.setItem(J_KEY,JSON.stringify(jData));
+  renderJankari();
+  document.getElementById('panchKola').value="";document.getElementById('med').value="";document.getElementById('sankhya').value="";document.getElementById('purn').value="";document.getElementById('remark').value="";
+  alert("✅ Entry Ho Gayi - "+panch);
+}
+function renderJankari(){
+  let tbody=document.getElementById('tbody'); if(!tbody) return;
+  tbody.innerHTML=""; jData.forEach((r,i)=>{
+    let tr=document.createElement('tr');
+    tr.innerHTML=`<td>${i+1}</td><td><b>${r.panchayat}</b></td><td>${r.vibhag}</td><td>${r.panchKola}</td><td>${r.med}</td><td>${r.sankhya}</td><td>${r.purn}</td><td>${r.remark}</td><td><button onclick="delJankari(${r.id})" style="background:red;color:#fff;border:none;padding:3px 7px;border-radius:4px">X</button></td>`;
+    tbody.appendChild(tr);
+  });
+  let c=document.getElementById('totalCount'); if(c) c.innerText=jData.length;
+}
+function delJankari(id){ jData=jData.filter(x=>x.id!==id); localStorage.setItem(J_KEY,JSON.stringify(jData)); renderJankari(); }
+function clearJankari(){ if(confirm("Sab clear karna hai?")){ jData=[]; localStorage.setItem(J_KEY,JSON.stringify(jData)); renderJankari(); } }
+function exportJankariExcel(){
+  if(jData.length===0){alert("Koi entry nahi");return;}
+  let ws_data=[["Kramank","Panchayat","Vibhag","Panch Kola","Med","Sankhya","Purn Parimark","Remark","Date"]];
+  jData.forEach((r,i)=>{ ws_data.push([i+1,r.panchayat,r.vibhag,r.panchKola,r.med,r.sankhya,r.purn,r.remark,r.date]); });
+  let ws=XLSX.utils.aoa_to_sheet(ws_data); let wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,"BIAORA_Data");
+  XLSX.writeFile(wb,`BIAORA_Jankari_${jData.length}_Entry_${new Date().toISOString().slice(0,10)}.xlsx`);
+}
+setTimeout(renderJankari,800);
 </script>
 </body>
 </html>
