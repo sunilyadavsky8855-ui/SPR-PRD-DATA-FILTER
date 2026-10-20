@@ -293,7 +293,7 @@ function renderJankari(){
   let tbody=document.getElementById('tbody'); if(!tbody) return;
   tbody.innerHTML=""; jData.forEach((r,i)=>{
     let tr=document.createElement('tr');
-    tr.innerHTML=`<td>${i+1}</td><td><b>${r.panchayat}</b></td><td>${r.vibhag}</td><td>${r.panchKola}</td><td>${r.med}</td><td>${r.sankhya}</td><td>${r.purn}</td><td>${r.remark}</td><td><button onclick="delJankari(${r.id})" style="background:red;color:#fff;border:none;padding:3px 7px;border-radius:4px">X</button></td>`;
+    tr.innerHTML=`<td>${i+1}</td><td><b>${r.panchayat}</b></td><td>${r.vibhag}</td><td>${r.SANKHYA}</td><td>${r.TOTAL}</td><td>${r.sankhya}</td><td>${r.purn}</td><td>${r.remark}</td><td><button onclick="delJankari(${r.id})" style="background:red;color:#fff;border:none;padding:3px 7px;border-radius:4px">X</button></td>`;
     tbody.appendChild(tr);
   });
   let c=document.getElementById('totalCount'); if(c) c.innerText=jData.length;
