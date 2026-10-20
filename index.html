@@ -22,6 +22,7 @@ input[type=file]{padding:10px;border:2px dashed #0d6efd;border-radius:8px;width:
 table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px} th,td{border:1px solid #ccc;padding:6px} th{background:#0d6efd;color:#fff}
 .footer{position:fixed; bottom:0; left:0; right:0; text-align:center; font-size:14px; font-weight:bold; color:white; background:#1e3a8a; padding:12px; z-index:9999; border-top:3px solid yellow;}
 .demand-btn{position:fixed; bottom:80px; right:15px; background:#e11d48; color:white; padding:13px 20px; border-radius:50px; font-weight:bold; border:none; z-index:9998; box-shadow:0 4px 15px rgba(0,0,0,0.3); cursor:pointer;}
+.j-input{width:100%;padding:10px;border:1px solid #ccc;border-radius:6px}
 </style>
 </head>
 <body>
@@ -31,7 +32,6 @@ table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px} th,td{
 <p>SUNIL KUMAR YADAV | GP NIWANIYA | 9755194687</p>
 </div>
 
-<!-- KONE ME LIVE DEMAND COUNTER -->
 <button id="demandCounter" onclick="openDemandList()" style="position:fixed; top:75px; right:10px; background:#facc15; color:#000; padding:8px 14px; border-radius:20px; font-weight:bold; border:2px solid #000; z-index:9999; display:none;">🔔 0 Demand</button>
 
 <div class="tabs">
@@ -39,6 +39,7 @@ table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px} th,td{
 <button class="tab-btn" onclick="openTab('darpan',this)">पंचायत दर्पण - FILTER</button>
 <button class="tab-btn" onclick="openTab('mgnrega',this)">मनरेगा MR</button>
 <button class="tab-btn" onclick="openTab('awas',this)">PM आवास</button>
+<button class="tab-btn" onclick="openTab('jankari',this)" style="background:#f59e0b;color:#000;border-color:#000">📝 जानकारी दर्ज</button>
 </div>
 
 <div class="container">
@@ -46,6 +47,7 @@ table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px} th,td{
 <h2>👨‍👩‍👧 समग्र</h2>
 <a class="btn btn-green" href="https://samagra.gov.in/" target="_blank">समग्र पोर्टल खोलें</a>
 </div>
+
 <div id="darpan" class="card">
 <div id="lock" style="text-align:center;">
 <h2>🔒 Password: 123456789</h2>
@@ -65,18 +67,63 @@ table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px} th,td{
 <a class="btn" style="background:#ea580c;margin-top:15px;" href="https://prd.mp.gov.in/" target="_blank">MP Panchayat Darpan Official</a>
 </div>
 </div>
+
 <div id="mgnrega" class="card">
 <h2 style="color:#166534; border-left:4px solid #16a34a; padding-left:10px;">👷 MGNREGA - MR Date Nikaalo</h2>
 <a class="btn" style="background:#166534;" href="https://mnregaweb4.nic.in/netnrega/dynamic_muster.aspx" target="_blank">1. MR Muster Roll Report - Yahan Click Karo</a>
 <a class="btn" style="background:#15803d;" href="https://nrega.nic.in/" target="_blank">2. MGNREGA Home Page</a>
 </div>
+
 <div id="awas" class="card"><h2>PM आवास</h2><a class="btn" href="https://pmayg.nic.in/" target="_blank">PM Awas List</a></div>
+
+<div id="jankari" class="card">
+<h2 style="color:#b45309;border-left:4px solid #f59e0b;padding-left:10px;">📝 जानकारी दर्ज करें - BIAORA Block</h2>
+<p style="font-size:11px;color:#666;margin-top:4px">Har Panchayat Yahan Entry Karegi - Panch Kola, Med, Sankhya, Purn Parimark</p>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">
+<div>
+<label style="font-size:11px;font-weight:700">पंचायत का नाम *</label>
+<select id="panchayat" class="j-input">
+<option value="">चुनें</option>
+<option>AGAR</option><option>ALAMPURA</option><option>BARKHEDA</option><option>BIAORA</option>
+<option>CHHAPIHEDA</option><option>DULARIYA</option><option>KADIA</option><option>KARONDI</option>
+<option>LASULDIYA</option><option>MEHTAWADA</option><option>MOY</option><option>PADLIYA</option>
+<option>SEHORE</option><option>SUTHALIYA</option><option>UNCHA</option><option>NIWANIYA</option>
+<option value="OTHER">अन्य - खुद लिखें</option>
+</select>
+</div>
+<div id="otherPanchDiv" style="display:none">
+<label style="font-size:11px;font-weight:700">अन्य पंचायत</label>
+<input id="otherPanch" placeholder="नाम लिखें" class="j-input">
+</div>
+<div><label style="font-size:11px;font-weight:700">विभाग *</label>
+<select id="vibhag" class="j-input">
+<option value="">चुनें</option><option>MNREGA</option><option>Panchayat</option><option>PWD</option><option>Education</option><option>Health</option><option>Other</option>
+</select></div>
+<div><label style="font-size:11px;font-weight:700">पंच कोला *</label><input id="panchKola" placeholder="Ex: 5 Kola" class="j-input"></div>
+<div><label style="font-size:11px;font-weight:700">मेड *</label><input id="med" placeholder="Ex: 1200 Meter" class="j-input"></div>
+<div><label style="font-size:11px;font-weight:700">संख्या *</label><input id="sankhya" type="number" placeholder="Ex: 15" class="j-input"></div>
+<div><label style="font-size:11px;font-weight:700">पूर्ण परिमार्क *</label><input id="purn" type="number" placeholder="Ex: 100" class="j-input"></div>
+<div style="grid-column:1/3"><label style="font-size:11px;font-weight:700">Remark</label><input id="remark" placeholder="टिप्पणी" class="j-input"></div>
 </div>
 
-<!-- DEMAND BUTTON -->
+<button class="btn btn-green" onclick="addJankari()" style="margin-top:12px">✅ Entry जोड़ो - Add Karo</button>
+<div style="display:flex;gap:8px;margin-top:8px">
+<button class="btn" style="background:#f59e0b;color:#000;flex:1" onclick="exportJankariExcel()">📊 Excel Download</button>
+<button class="btn" style="background:#ef4444;flex:1" onclick="clearJankari()">🗑️ Clear</button>
+</div>
+
+<div style="margin-top:10px;background:#000;color:#facc15;padding:6px 12px;border-radius:20px;display:inline-block;font-size:12px">Total Entry: <b id="totalCount">0</b></div>
+
+<div style="max-height:350px;overflow:auto;margin-top:10px;border:1px solid #ccc;border-radius:8px">
+<table><thead><tr><th>#</th><th>Panchayat</th><th>Vibhag</th><th>Kola</th><th>Med</th><th>Sankhya</th><th>Purn</th><th>Remark</th><th>X</th></tr></thead><tbody id="tbody"></tbody></table>
+</div>
+</div>
+
+</div>
+
 <button class="demand-btn" onclick="document.getElementById('demandPopup').style.display='flex'">📩 सहायता के लिए लिखें</button>
 
-<!-- DEMAND FORM POPUP -->
 <div id="demandPopup" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.7); z-index:10000; justify-content:center; align-items:center;">
 <div style="background:white; width:92%; max-width:400px; padding:20px; border-radius:15px;">
 <h3 style="color:#be123c; text-align:center;">🙏 Kaam Ki Demand</h3>
@@ -92,7 +139,6 @@ table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px} th,td{
 </div>
 </div>
 
-<!-- DEMAND LIST PANEL - SERIAL WISE -->
 <div id="demandListPanel" style="display:none; position:fixed; top:0; right:0; width:92%; max-width:380px; height:100%; background:white; z-index:10001; box-shadow:-5px 0 15px rgba(0,0,0,0.3); overflow-y:auto; padding:15px;">
 <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #1e3a8a; padding-bottom:10px;">
 <h3 style="color:#1e3a8a;">📋 Demand List</h3>
@@ -110,9 +156,9 @@ function openTab(id,el){
  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
  document.getElementById(id).classList.add('active');
  el.classList.add('active');
+ if(id==='jankari') renderJankari();
 }
 
-// DEMAND SYSTEM - SERIAL NUMBER
 let demands = JSON.parse(localStorage.getItem('panchayat_demands') || '[]');
 function updateCounter(){
  let count = demands.length;
@@ -141,7 +187,7 @@ function renderList(){
  div.innerHTML=html;
 }
 function okDemand(index){
- if(confirm(`Sr No ${index+1} - ${demands[index].name} ki demand puri? Hatana hai?`)){
+ if(confirm(`Sr No ${index+1} - ${demands[index].name} ki demand puri?`)){
    demands.splice(index,1);
    localStorage.setItem('panchayat_demands', JSON.stringify(demands));
    updateCounter();
@@ -160,13 +206,12 @@ function sendDemand(){
  updateCounter();
  let wMsg=`*Nayi Demand - Sr No ${demands.length}*%0A👤 ${name}%0A📱 ${mobile}%0A🔧 ${kaam}%0A📝 ${msg}`;
  window.open(`https://wa.me/919755194687?text=${wMsg}`,'_blank');
- alert(`✅ Demand No ${demands.length} Save Ho Gayi! Kone Me Dekho!`);
+ alert(`✅ Demand No ${demands.length} Save Ho Gayi!`);
  document.getElementById('demandPopup').style.display='none';
  document.getElementById('d_name').value=''; document.getElementById('d_mobile').value=''; document.getElementById('d_msg').value='';
 }
 setTimeout(updateCounter,500);
 
-// PRD TOOL - SAME AS BEFORE
 let sprWb=null, prdWbs=[], finalSPR=[], extractedPRD=[], duplicatePRD=[], matched=[], notMatched=[], rowCounts=[], masterSet=new Set();
 function unmerge(ws,data){
  if(ws['!merges']) ws['!merges'].forEach(m=>{ let v=data[m.s.r]?.[m.s.c]||""; for(let R=m.s.r;R<=m.e.r;R++) for(let C=m.s.c;C<=m.e.c;C++){ if(!data[R])data[R]=[]; data[R][C]=v; } });
@@ -221,7 +266,8 @@ function downloadAll(){
  XLSX.utils.book_append_sheet(newWb, XLSX.utils.aoa_to_sheet(notMatched), "5_Not_Matched");
  XLSX.writeFile(newWb,"FINAL_"+Date.now()+".xlsx");
 }
-  // JANKARI DARJ SYSTEM - BIAORA BLOCK
+
+// JANKARI DARJ SYSTEM - BIAORA BLOCK - FINAL
 const J_KEY="BIAORA_JANKARI_DATA";
 let jData=JSON.parse(localStorage.getItem(J_KEY)||"[]");
 document.getElementById('panchayat')?.addEventListener('change',function(){
@@ -236,12 +282,12 @@ function addJankari(){
   let sankhya=document.getElementById('sankhya').value.trim();
   let purn=document.getElementById('purn').value.trim();
   let remark=document.getElementById('remark').value.trim();
-  if(!panch||!vibhag||!kola||!med||!sankhya||!purn){alert("Sab * wale bharo");return;}
+  if(!panch||!vibhag||!kola||!med||!sankhya||!purn){alert("Sab * wale bharo - Panchayat, Vibhag, Panch Kola, Med, Sankhya, Purn Parimark");return;}
   jData.push({id:Date.now(),panchayat:panch,vibhag:vibhag,panchKola:kola,med:med,sankhya:sankhya,purn:purn,remark:remark,date:new Date().toLocaleString('hi-IN')});
   localStorage.setItem(J_KEY,JSON.stringify(jData));
   renderJankari();
   document.getElementById('panchKola').value="";document.getElementById('med').value="";document.getElementById('sankhya').value="";document.getElementById('purn').value="";document.getElementById('remark').value="";
-  alert("✅ Entry Ho Gayi - "+panch);
+  alert("✅ Entry Ho Gayi - "+panch+" - Total: "+jData.length);
 }
 function renderJankari(){
   let tbody=document.getElementById('tbody'); if(!tbody) return;
@@ -253,16 +299,16 @@ function renderJankari(){
   let c=document.getElementById('totalCount'); if(c) c.innerText=jData.length;
 }
 function delJankari(id){ jData=jData.filter(x=>x.id!==id); localStorage.setItem(J_KEY,JSON.stringify(jData)); renderJankari(); }
-function clearJankari(){ if(confirm("Sab clear karna hai?")){ jData=[]; localStorage.setItem(J_KEY,JSON.stringify(jData)); renderJankari(); } }
+function clearJankari(){ if(confirm("Sab clear karna hai? Excel download kiya kya?")){ jData=[]; localStorage.setItem(J_KEY,JSON.stringify(jData)); renderJankari(); } }
 function exportJankariExcel(){
-  if(jData.length===0){alert("Koi entry nahi");return;}
-  let ws_data=[["Kramank","Panchayat","Vibhag","Panch Kola","Med","Sankhya","Purn Parimark","Remark","Date"]];
+  if(jData.length===0){alert("Koi entry nahi hai");return;}
+  let ws_data=[["Kramank","Panchayat Ka Naam","Vibhag Ka Naam","Panch Kola","Med","Sankhya","Purn Parimark","Remark","Date"]];
   jData.forEach((r,i)=>{ ws_data.push([i+1,r.panchayat,r.vibhag,r.panchKola,r.med,r.sankhya,r.purn,r.remark,r.date]); });
   let ws=XLSX.utils.aoa_to_sheet(ws_data); let wb=XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb,ws,"BIAORA_Data");
   XLSX.writeFile(wb,`BIAORA_Jankari_${jData.length}_Entry_${new Date().toISOString().slice(0,10)}.xlsx`);
 }
-setTimeout(renderJankari,800);
+setTimeout(()=>{ renderJankari(); updateCounter(); },800);
 </script>
 </body>
 </html>
