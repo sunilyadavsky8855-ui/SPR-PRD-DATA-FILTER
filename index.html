@@ -179,45 +179,7 @@ function exportJankariExcel(){
   XLSX.utils.book_append_sheet(wb,ws,"EKY_Data");
   XLSX.writeFile(wb,`BIAORA_EKY_${jData.length}_Panchayat_${new Date().toISOString().slice(0,10)}.xlsx`);
 }
-
-  let g=document.getElementById('gram').value.trim();
-  let dtype=document.getElementById('dam_type').value;
-  let dname=document.getElementById('dam_name').value.trim();
-  let sd=document.getElementById('stopdam').value.trim();
-  let gt=document.getElementById('gate').value;
-  let n=document.getElementById('nala').value.trim();
-  let b=document.getElementById('bori').value;
-  let dinfo=document.getElementById('dam_info').value.trim();
-  let r=document.getElementById('remark').value.trim();
-  
-  if(!p){ alert("पंचायत चुनो"); return; }
-  if(!g){ alert("ग्राम का नाम लिखो"); return; }
-  
-  data.push({id:Date.now(),panchayat:p,gram:g,dam_type:dtype,dam_name:dname,stopdam:sd,gate:gt,nala:n,bori:b,dam_info:dinfo,remark:r,date:new Date().toLocaleString('hi-IN')});
-  localStorage.setItem(KEY,JSON.stringify(data));
-  document.getElementById('msg').innerText="✅ Entry Ho Gayi: "+p+" / "+g;
-  render();
-  document.getElementById('gram').value=""; document.getElementById('dam_name').value=""; document.getElementById('stopdam').value=""; document.getElementById('nala').value=""; document.getElementById('dam_info').value=""; document.getElementById('remark').value="";
-}
-function render(){
-  let tbody=document.getElementById('tbody'); tbody.innerHTML="";
-  data.forEach((x,i)=>{
-    tbody.innerHTML+=`<tr><td>${i+1}</td><td><b>${x.panchayat}</b></td><td>${x.gram}</td><td>${x.dam_type}</td><td>${x.dam_name}</td><td>${x.stopdam}</td><td>${x.gate}</td><td>${x.nala}</td><td>${x.bori}</td><td>${x.dam_info}</td><td>${x.remark}</td><td><button onclick="del(${x.id})" style="background:red;color:#fff;border:none;padding:2px 6px;border-radius:4px">X</button></td></tr>`;
-  });
-  document.getElementById('count').innerText=data.length;
-}
-function del(id){ data=data.filter(x=>x.id!==id); localStorage.setItem(KEY,JSON.stringify(data)); render(); }
-function clearAll(){ if(confirm("Sab delete karna hai? Excel download kiya kya?")){ data=[]; localStorage.setItem(KEY,"[]"); render(); } }
-function downloadExcel(){
-  if(data.length==0){ alert("Koi entry nahi hai"); return; }
-  let rows=[["क्रं.","ग्राम पंचायत का नाम","ग्राम का नाम","डेम का प्रकार","डेम का नाम","स्टॉप डेम/चेकडेम संख्या","गेट लगा हाँ/नही","नाला संख्या","बोरी बंधान हाँ/नही","डेम की जानकारी","रिमार्क","Date"]];
-  data.forEach((r,i)=>rows.push([i+1,r.panchayat,r.gram,r.dam_type,r.dam_name,r.stopdam,r.gate,r.nala,r.bori,r.dam_info,r.remark,r.date]));
-  let ws=XLSX.utils.aoa_to_sheet(rows); 
-  let wb=XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb,ws,"Dam_Jankari");
-  XLSX.writeFile(wb,`Dam_Jankari_${data.length}_${new Date().toISOString().slice(0,10)}.xlsx`);
-}
-render();
+setTimeout(()=>{ renderJankari(); updateCounter(); },800);
 </script>
 </body>
 </html>
