@@ -298,3 +298,102 @@ setTimeout(()=>{ renderJankari(); renderStopDam(); },500);
 </script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stop Dam Entry</title>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<style>
+body{font-family:sans-serif;background:#f0f4ff;padding:15px}
+.card{background:white;padding:15px;border-radius:12px;max-width:600px;margin:auto}
+.j-input{width:100%;padding:11px;border:1px solid #ccc;border-radius:8px;margin:6px 0}
+.btn{width:100%;padding:12px;background:#16a34a;color:white;border:none;border-radius:8px;font-weight:bold;margin-top:10px;cursor:pointer}
+table{width:100%;border-collapse:collapse;font-size:12px;margin-top:15px} th,td{border:1px solid #ccc;padding:5px} th{background:#16a34a;color:#fff}
+</style>
+</head>
+<body>
+<div class="card">
+<h2 style="text-align:center;color:#166534">🌊 स्टॉप डेम / चेकडेम Entry</h2>
+
+<label>ग्राम पंचायत का नाम *</label>
+<select id="panchayat" class="j-input">
+<option value="">-- चुनें --</option>
+<option>NIWANIYA</option><option>AGAR</option><option>BIAORA</option><option>SEHORE</option><option>CHHAPIHEDA</option>
+</select>
+
+<label>ग्राम का नाम *</label>
+<input id="gram" class="j-input" placeholder="गाँव का नाम लिखें">
+
+<label>स्टॉप डेम / चेकडेम संख्या</label>
+<input id="stopdam" type="number" class="j-input" placeholder="Ex: 2">
+
+<label>गेट लगा हाँ/नहीं</label>
+<select id="gate" class="j-input"><option value="हाँ">हाँ</option><option value="नहीं">नहीं</option></select>
+
+<label>नाला संख्या</label>
+<input id="nala" type="number" class="j-input" placeholder="Ex: 3">
+
+<label>बोरी बंधान हाँ/नहीं</label>
+<select id="bori" class="j-input"><option value="हाँ">हाँ</option><option value="नहीं">नहीं</option></select>
+
+<label>रिमार्क</label>
+<input id="remark" class="j-input" placeholder="रिमार्क लिखें">
+
+<button class="btn" onclick="addEntry()">✅ Entry जोड़ो - Click Karo</button>
+<button class="btn" style="background:#f59e0b;color:#000" onclick="downloadExcel()">📊 Excel Download ( <span id="count">0</span> )</button>
+<button class="btn" style="background:red" onclick="clearAll()">🗑️ Sab Clear</button>
+
+<div style="overflow:auto;margin-top:15px">
+<table>
+<thead><tr><th>क्रं.</th><th>पंचायत</th><th>ग्राम</th><th>स्टॉप/चेक</th><th>गेट</th><th>नाला</th><th>बोरी</th><th>रिमार्क</th><th>X</th></tr></thead>
+<tbody id="tbody"></tbody>
+</table>
+</div>
+<p id="msg" style="color:green;font-weight:bold;text-align:center;margin-top:10px"></p>
+</div>
+
+<script>
+const KEY="STOP_DAM_FINAL";
+let data=JSON.parse(localStorage.getItem(KEY)||"[]");
+function addEntry(){
+  let p=document.getElementById('panchayat').value.trim();
+  let g=document.getElementById('gram').value.trim();
+  let sd=document.getElementById('stopdam').value.trim();
+  let gt=document.getElementById('gate').value;
+  let n=document.getElementById('nala').value.trim();
+  let b=document.getElementById('bori').value;
+  let r=document.getElementById('remark').value.trim();
+  
+  if(!p){ alert("पंचायत चुनो"); return; }
+  if(!g){ alert("ग्राम का नाम लिखो"); return; }
+  
+  data.push({id:Date.now(),panchayat:p,gram:g,stopdam:sd,gate:gt,nala:n,bori:b,remark:r});
+  localStorage.setItem(KEY,JSON.stringify(data));
+  document.getElementById('msg').innerText="✅ Entry Ho Gayi: "+p+" / "+g;
+  render();
+  // clear
+  document.getElementById('gram').value=""; document.getElementById('stopdam').value=""; document.getElementById('nala').value=""; document.getElementById('remark').value="";
+}
+function render(){
+  let tbody=document.getElementById('tbody'); tbody.innerHTML="";
+  data.forEach((x,i)=>{
+    tbody.innerHTML+=`<tr><td>${i+1}</td><td>${x.panchayat}</td><td>${x.gram}</td><td>${x.stopdam}</td><td>${x.gate}</td><td>${x.nala}</td><td>${x.bori}</td><td>${x.remark}</td><td><button onclick="del(${x.id})" style="background:red;color:#fff;border:none;padding:2px 6px">X</button></td></tr>`;
+  });
+  document.getElementById('count').innerText=data.length;
+}
+function del(id){ data=data.filter(x=>x.id!==id); localStorage.setItem(KEY,JSON.stringify(data)); render(); }
+function clearAll(){ if(confirm("Sab delete karna hai?")){ data=[]; localStorage.setItem(KEY,"[]"); render(); } }
+function downloadExcel(){
+  if(data.length==0){ alert("Koi entry nahi hai"); return; }
+  let rows=[["क्रं.","ग्राम पंचायत का नाम","ग्राम का नाम","स्टॉप डेम/चेकडेम संख्या","गेट लगा हाँ/नही","नाला संख्या","बोरी बंधान हाँ/नही","रिमार्क"]];
+  data.forEach((r,i)=>rows.push([i+1,r.panchayat,r.gram,r.stopdam,r.gate,r.nala,r.bori,r.remark]));
+  let ws=XLSX.utils.aoa_to_sheet(rows); let wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,"StopDam");
+  XLSX.writeFile(wb,`StopDam_${data.length}.xlsx`);
+}
+render();
+</script>
+</body>
+</html>
