@@ -179,53 +179,7 @@ function exportJankariExcel(){
   XLSX.utils.book_append_sheet(wb,ws,"EKY_Data");
   XLSX.writeFile(wb,`BIAORA_EKY_${jData.length}_Panchayat_${new Date().toISOString().slice(0,10)}.xlsx`);
 }
-setTimeout(()=>{ renderJankari(); updateCounter(); },800);
-</script>
-</body>
-</html>
-n>
-<option value="चेकडेम">चेकडेम</option>
-<option value="तालाब">तालाब</option>
-<option value="एनीकट">एनीकट</option>
-</select>
-<input id="dam_name" class="j-input" placeholder="डेम का नाम लिखें Ex: Niwanya wala dam">
 
-<label>4. स्टॉप डेम / चेकडेम संख्या</label>
-<input id="stopdam" type="number" class="j-input" placeholder="Ex: 2">
-
-<label>5. गेट लगा हाँ/नहीं</label>
-<select id="gate" class="j-input"><option value="हाँ">हाँ</option><option value="नहीं">नहीं</option><option value="टूटा है">टूटा है</option></select>
-
-<label>6. नाला संख्या</label>
-<input id="nala" type="number" class="j-input" placeholder="Ex: 3">
-
-<label>7. बोरी बंधान हाँ/नहीं</label>
-<select id="bori" class="j-input"><option value="हाँ">हाँ</option><option value="नहीं">नहीं</option><option value="काम चालू">काम चालू</option></select>
-
-<label>8. डेम की जानकारी (पानी, स्थिति आदि)</label>
-<textarea id="dam_info" class="j-input" placeholder="Ex: 10 फिट पानी है, गेट जाम है, सफाई बाकी है" style="height:70px"></textarea>
-
-<label>9. रिमार्क</label>
-<input id="remark" class="j-input" placeholder="रिमार्क लिखें">
-
-<button class="btn" onclick="addEntry()">✅ Entry जोड़ो</button>
-<button class="btn" style="background:#f59e0b;color:#000" onclick="downloadExcel()">📊 Excel Download ( <span id="count">0</span> Entry )</button>
-<button class="btn" style="background:red" onclick="clearAll()">🗑️ Sab Clear</button>
-
-<div style="overflow:auto;margin-top:15px">
-<table>
-<thead><tr><th>क्रं.</th><th>पंचायत</th><th>ग्राम</th><th>डेम प्रकार</th><th>डेम नाम</th><th>संख्या</th><th>गेट</th><th>नाला</th><th>बोरी</th><th>डेम जानकारी</th><th>रिमार्क</th><th>X</th></tr></thead>
-<tbody id="tbody"></tbody>
-</table>
-</div>
-<p id="msg" style="color:green;font-weight:bold;text-align:center;margin-top:10px"></p>
-</div>
-
-<script>
-const KEY="STOP_DAM_WITH_INFO";
-let data=JSON.parse(localStorage.getItem(KEY)||"[]");
-function addEntry(){
-  let p=document.getElementById('panchayat').value.trim();
   let g=document.getElementById('gram').value.trim();
   let dtype=document.getElementById('dam_type').value;
   let dname=document.getElementById('dam_name').value.trim();
