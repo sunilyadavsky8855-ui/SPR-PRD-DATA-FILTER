@@ -183,3 +183,118 @@ setTimeout(()=>{ renderJankari(); updateCounter(); },800);
 </script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stop Dam Entry - Final</title>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<style>
+body{font-family:sans-serif;background:#f0f4ff;padding:15px}
+.card{background:white;padding:15px;border-radius:12px;max-width:700px;margin:auto}
+.j-input{width:100%;padding:11px;border:1px solid #ccc;border-radius:8px;margin:6px 0}
+.btn{width:100%;padding:12px;background:#16a34a;color:white;border:none;border-radius:8px;font-weight:bold;margin-top:10px;cursor:pointer}
+table{width:100%;border-collapse:collapse;font-size:11px;margin-top:15px} th,td{border:1px solid #ccc;padding:5px} th{background:#16a34a;color:#fff}
+label{font-size:13px;font-weight:700;margin-top:8px;display:block}
+</style>
+</head>
+<body>
+<div class="card">
+<h2 style="text-align:center;color:#166534">🌊 स्टॉप डेम / चेकडेम Entry + Dam Jankari</h2>
+
+<label>1. ग्राम पंचायत का नाम *</label>
+<select id="panchayat" class="j-input">
+<option value="">-- चुनें --</option>
+<option>NIWANIYA</option><option>AGAR</option><option>ALAMPURA</option><option>BARKHEDA</option><option>BIAORA</option><option>CHHAPIHEDA</option><option>DULARIYA</option><option>KADIA</option><option>KARONDI</option><option>LASULDIYA</option><option>MEHTAWADA</option><option>MOY</option><option>PADLIYA</option><option>SEHORE</option><option>SUTHALIYA</option><option>UNCHA</option>
+</select>
+
+<label>2. ग्राम का नाम *</label>
+<input id="gram" class="j-input" placeholder="गाँव का नाम लिखें">
+
+<label>3. डेम का नाम / प्रकार *</label>
+<select id="dam_type" class="j-input">
+<option value="स्टॉप डेम">स्टॉप डेम</option>
+<option value="चेकडेम">चेकडेम</option>
+<option value="तालाब">तालाब</option>
+<option value="एनीकट">एनीकट</option>
+</select>
+<input id="dam_name" class="j-input" placeholder="डेम का नाम लिखें Ex: Niwanya wala dam">
+
+<label>4. स्टॉप डेम / चेकडेम संख्या</label>
+<input id="stopdam" type="number" class="j-input" placeholder="Ex: 2">
+
+<label>5. गेट लगा हाँ/नहीं</label>
+<select id="gate" class="j-input"><option value="हाँ">हाँ</option><option value="नहीं">नहीं</option><option value="टूटा है">टूटा है</option></select>
+
+<label>6. नाला संख्या</label>
+<input id="nala" type="number" class="j-input" placeholder="Ex: 3">
+
+<label>7. बोरी बंधान हाँ/नहीं</label>
+<select id="bori" class="j-input"><option value="हाँ">हाँ</option><option value="नहीं">नहीं</option><option value="काम चालू">काम चालू</option></select>
+
+<label>8. डेम की जानकारी (पानी, स्थिति आदि)</label>
+<textarea id="dam_info" class="j-input" placeholder="Ex: 10 फिट पानी है, गेट जाम है, सफाई बाकी है" style="height:70px"></textarea>
+
+<label>9. रिमार्क</label>
+<input id="remark" class="j-input" placeholder="रिमार्क लिखें">
+
+<button class="btn" onclick="addEntry()">✅ Entry जोड़ो</button>
+<button class="btn" style="background:#f59e0b;color:#000" onclick="downloadExcel()">📊 Excel Download ( <span id="count">0</span> Entry )</button>
+<button class="btn" style="background:red" onclick="clearAll()">🗑️ Sab Clear</button>
+
+<div style="overflow:auto;margin-top:15px">
+<table>
+<thead><tr><th>क्रं.</th><th>पंचायत</th><th>ग्राम</th><th>डेम प्रकार</th><th>डेम नाम</th><th>संख्या</th><th>गेट</th><th>नाला</th><th>बोरी</th><th>डेम जानकारी</th><th>रिमार्क</th><th>X</th></tr></thead>
+<tbody id="tbody"></tbody>
+</table>
+</div>
+<p id="msg" style="color:green;font-weight:bold;text-align:center;margin-top:10px"></p>
+</div>
+
+<script>
+const KEY="STOP_DAM_WITH_INFO";
+let data=JSON.parse(localStorage.getItem(KEY)||"[]");
+function addEntry(){
+  let p=document.getElementById('panchayat').value.trim();
+  let g=document.getElementById('gram').value.trim();
+  let dtype=document.getElementById('dam_type').value;
+  let dname=document.getElementById('dam_name').value.trim();
+  let sd=document.getElementById('stopdam').value.trim();
+  let gt=document.getElementById('gate').value;
+  let n=document.getElementById('nala').value.trim();
+  let b=document.getElementById('bori').value;
+  let dinfo=document.getElementById('dam_info').value.trim();
+  let r=document.getElementById('remark').value.trim();
+  
+  if(!p){ alert("पंचायत चुनो"); return; }
+  if(!g){ alert("ग्राम का नाम लिखो"); return; }
+  
+  data.push({id:Date.now(),panchayat:p,gram:g,dam_type:dtype,dam_name:dname,stopdam:sd,gate:gt,nala:n,bori:b,dam_info:dinfo,remark:r,date:new Date().toLocaleString('hi-IN')});
+  localStorage.setItem(KEY,JSON.stringify(data));
+  document.getElementById('msg').innerText="✅ Entry Ho Gayi: "+p+" / "+g;
+  render();
+  document.getElementById('gram').value=""; document.getElementById('dam_name').value=""; document.getElementById('stopdam').value=""; document.getElementById('nala').value=""; document.getElementById('dam_info').value=""; document.getElementById('remark').value="";
+}
+function render(){
+  let tbody=document.getElementById('tbody'); tbody.innerHTML="";
+  data.forEach((x,i)=>{
+    tbody.innerHTML+=`<tr><td>${i+1}</td><td><b>${x.panchayat}</b></td><td>${x.gram}</td><td>${x.dam_type}</td><td>${x.dam_name}</td><td>${x.stopdam}</td><td>${x.gate}</td><td>${x.nala}</td><td>${x.bori}</td><td>${x.dam_info}</td><td>${x.remark}</td><td><button onclick="del(${x.id})" style="background:red;color:#fff;border:none;padding:2px 6px;border-radius:4px">X</button></td></tr>`;
+  });
+  document.getElementById('count').innerText=data.length;
+}
+function del(id){ data=data.filter(x=>x.id!==id); localStorage.setItem(KEY,JSON.stringify(data)); render(); }
+function clearAll(){ if(confirm("Sab delete karna hai? Excel download kiya kya?")){ data=[]; localStorage.setItem(KEY,"[]"); render(); } }
+function downloadExcel(){
+  if(data.length==0){ alert("Koi entry nahi hai"); return; }
+  let rows=[["क्रं.","ग्राम पंचायत का नाम","ग्राम का नाम","डेम का प्रकार","डेम का नाम","स्टॉप डेम/चेकडेम संख्या","गेट लगा हाँ/नही","नाला संख्या","बोरी बंधान हाँ/नही","डेम की जानकारी","रिमार्क","Date"]];
+  data.forEach((r,i)=>rows.push([i+1,r.panchayat,r.gram,r.dam_type,r.dam_name,r.stopdam,r.gate,r.nala,r.bori,r.dam_info,r.remark,r.date]));
+  let ws=XLSX.utils.aoa_to_sheet(rows); 
+  let wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,"Dam_Jankari");
+  XLSX.writeFile(wb,`Dam_Jankari_${data.length}_${new Date().toISOString().slice(0,10)}.xlsx`);
+}
+render();
+</script>
+</body>
+</html>
