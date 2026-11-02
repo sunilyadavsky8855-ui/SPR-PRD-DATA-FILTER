@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Panchayat Sahayak DESK</title>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
 body{background:#f0f4ff; padding-bottom:90px;}
@@ -23,25 +24,24 @@ table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px} th,td{
 .footer{position:fixed; bottom:0; left:0; right:0; text-align:center; font-size:14px; font-weight:bold; color:white; background:#1e3a8a; padding:12px; z-index:9999; border-top:3px solid yellow;}
 .demand-btn{position:fixed; bottom:80px; right:15px; background:#e11d48; color:white; padding:13px 20px; border-radius:50px; font-weight:bold; border:none; z-index:9998; box-shadow:0 4px 15px rgba(0,0,0,0.3); cursor:pointer;}
 .j-input{width:100%;padding:11px;border:1px solid #ccc;border-radius:8px}
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.kpi{background:#f8faff;padding:10px;border-radius:10px;text-align:center;border-left:4px solid #0F5C3D}
+.kpi.green{background:#dcfce7}
+.kpi h2{font-size:20px;color:#0F5C3D}
+.chart-wrap{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+@media(max-width:600px){.chart-wrap{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-
-<div class="header">
-<h1>🌾 पंचायत सहायक </h1>
-<p>SUNIL KUMAR YADAV | GP NIWANIYA | 9755194687</p>
-</div>
-
+<div class="header"><h1>🌾 पंचायत सहायक </h1><p>SUNIL KUMAR YADAV | GP NIWANIYA | 9755194687</p></div>
 <button id="demandCounter" onclick="openDemandList()" style="position:fixed; top:75px; right:10px; background:#facc15; color:#000; padding:8px 14px; border-radius:20px; font-weight:bold; border:2px solid #000; z-index:9999; display:none;">🔔 0 Demand</button>
-
 <div class="tabs">
 <button class="tab-btn active" onclick="openTab('samagra',this)">समग्र</button>
 <button class="tab-btn" onclick="openTab('darpan',this)">पंचायत दर्पण</button>
 <button class="tab-btn" onclick="openTab('mgnrega',this)">मनरेगा MR</button>
-<button class="tab-btn" onclick="openTab('awas',this)">PM आवास</button>
+<button class="tab-btn" onclick="openTab('byawara',this)" style="background:#16a34a;color:white;border-color:#16a34a">📊 ब्यावरा डैशबोर्ड</button>
 <button class="tab-btn" onclick="openTab('jankari',this)" style="background:#f59e0b;color:#000;border-color:#000">📝 जानकारी दर्ज</button>
 </div>
-
 <div class="container">
 <div id="samagra" class="card active"><h2>👨‍👩‍👧 समग्र</h2><a class="btn btn-green" href="https://samagra.gov.in/" target="_blank">समग्र पोर्टल खोलें</a></div>
 <div id="darpan" class="card">
@@ -49,137 +49,81 @@ table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px} th,td{
 <div id="main" style="display:none;"><h2 style="color:#1e3a8a;border-left:4px solid #3b82f6;padding-left:10px;">PRD Row Ginti Tool</h2><label style="font-weight:bold;">STEP 1: SELECT SPR SHEET</label><input type="file" id="sprFile" accept=".xlsx,.xls"><label style="font-weight:bold;">STEP 2: SELECT PRD SHEETS</label><input type="file" id="prdFiles" accept=".xlsx,.xls" multiple><button onclick="process()" class="btn">PROCESS</button><button onclick="downloadAll()" id="dl" class="btn btn-green" style="display:none">FINAL DOWNLOAD</button><div id="log" style="background:#000;color:#0f0;padding:10px;border-radius:6px;white-space:pre-line;min-height:60px;margin-top:10px;"></div><div style="max-height:300px;overflow:auto"><table id="tbl"></table></div></div>
 </div>
 <div id="mgnrega" class="card"><h2 style="color:#166534; border-left:4px solid #16a34a; padding-left:10px;">👷 MGNREGA - MR Date Nikaalo</h2><a class="btn" style="background:#166534;" href="https://mnregaweb4.nic.in/netnrega/dynamic_muster.aspx" target="_blank">1. MR Muster Roll Report</a></div>
-<div id="awas" class="card"><h2>PM आवास</h2><a class="btn" href="https://pmayg.nic.in/" target="_blank">PM Awas List</a></div>
 
-<!-- SIRF 5 COLUMN WALA JANKARI DARJ -->
+<!-- BYAWARA DASHBOARD - PM AWAS KI JAGAH -->
+<div id="byawara" class="card">
+<h2 style="color:#16a34a;border-left:4px solid #16a34a;padding-left:10px;">📊 जनपद पंचायत ब्यावरा - 2 Sheet Comparison</h2>
+<p style="font-size:11px;color:#666;margin:5px 0">Kal ki + Aaj ki Data_export.xlsx Upload karo = Auto Growth + Dashboard + Final Excel Download</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">
+<div style="border:2px dashed #16a34a;padding:12px;border-radius:10px;text-align:center;background:#f0fdf4"><label style="font-weight:bold;font-size:12px">STEP 1: Kal / Purani Sheet</label><input type="file" id="fileOld" accept=".xlsx,.xls" style="width:100%"><div id="oldStatus" style="font-size:11px;color:green;margin-top:4px"></div></div>
+<div style="border:2px dashed #2563eb;padding:12px;border-radius:10px;text-align:center;background:#eff6ff"><label style="font-weight:bold;font-size:12px">STEP 2: Aaj / Nayi Sheet</label><input type="file" id="fileNew" accept=".xlsx,.xls" style="width:100%"><div id="newStatus" style="font-size:11px;color:green;margin-top:4px"></div></div>
+</div>
+<div style="display:flex;gap:8px;margin:12px 0"><button class="btn" style="flex:1;background:#16a34a" onclick="processByawara()">🔄 Dashboard Banao</button><button class="btn" style="flex:1;background:#1e3a8a;display:none" id="dlBtnByawara" onclick="downloadByawaraExcel()">⬇️ Final Excel Download</button></div>
+<div id="byawaraDashboard" style="display:none">
+<div class="kpi-grid"><div class="kpi"><h2 id="kpiTotal">0</h2><p>कुल GP</p></div><div class="kpi"><h2 id="kpiOld">0</h2><p id="kpiOldR">Kal</p></div><div class="kpi"><h2 id="kpiNew">0</h2><p id="kpiNewR">Aaj</p></div><div class="kpi green"><h2 id="kpiGrowth">0</h2><p id="kpiGrowthP">Growth</p></div></div>
+<div id="top3Box" style="background:#fefce8;border:2px solid #facc15;border-radius:10px;padding:10px;font-size:12px;margin-bottom:10px"></div>
+<div class="chart-wrap"><div style="background:white;border-radius:10px;padding:8px;border:1px solid #ccc"><canvas id="billChart"></canvas></div><div style="background:white;border-radius:10px;padding:8px;border:1px solid #ccc"><canvas id="pieChart"></canvas></div></div>
+<div class="chart-wrap"><div style="background:white;border-radius:10px;padding:8px;border:1px solid #ccc"><canvas id="rashiChart"></canvas></div><div style="background:white;border-radius:10px;padding:10px;border:1px solid #ccc"><h4 style="color:#1e3a8a">Summary</h4><div id="summaryBox" style="font-size:12px;line-height:1.6"></div></div></div>
+<input type="text" id="searchByawara" placeholder="🔍 Panchayat Search..." style="width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;margin:10px 0" onkeyup="filterByawara()">
+<div style="max-height:400px;overflow:auto;border:1px solid #ccc;border-radius:10px"><table><thead><tr><th>#</th><th>LGD</th><th>Panchayat</th><th>Kal</th><th>Aaj</th><th>Growth</th><th>Rashi Growth</th></tr></thead><tbody id="tbodyByawara"></tbody></table></div>
+</div>
+</div>
+
 <div id="jankari" class="card">
 <h2 style="color:#b45309;border-left:4px solid #f59e0b;padding-left:10px;">📝 जानकारी दर्ज करें</h2>
 <p style="font-size:11px;color:#666;margin-top:4px">Keval 5 Column - Panchayat, Pensioners, EKY Done, EKY Pending, Remark</p>
-
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px">
-<div style="grid-column:1/3">
-<label style="font-size:12px;font-weight:700">1. Panchayat Ka Naam *</label>
-<select id="panchayat" class="j-input">
-<option value="">चुनें</option>
-<option>AGAR</option><option>ALAMPURA</option><option>BARKHEDA</option><option>BIAORA</option><option>CHHAPIHEDA</option><option>DULARIYA</option><option>KADIA</option><option>KARONDI</option><option>LASULDIYA</option><option>MEHTAWADA</option><option>MOY</option><option>PADLIYA</option><option>SEHORE</option><option>SUTHALIYA</option><option>UNCHA</option><option>NIWANIYA</option>
-<option value="OTHER">अन्य - खुद लिखें</option>
-</select>
+<div style="grid-column:1/3"><label style="font-size:12px;font-weight:700">1. Panchayat Ka Naam *</label><select id="panchayat" class="j-input"><option value="">चुनें</option><option>AGAR</option><option>ALAMPURA</option><option>BARKHEDA</option><option>BIAORA</option><option>CHHAPIHEDA</option><option>DULARIYA</option><option>KADIA</option><option>KARONDI</option><option>LASULDIYA</option><option>MEHTAWADA</option><option>MOY</option><option>PADLIYA</option><option>SEHORE</option><option>SUTHALIYA</option><option>UNCHA</option><option>NIWANIYA</option><option value="OTHER">अन्य - खुद लिखें</option></select></div>
+<div id="otherPanchDiv" style="display:none;grid-column:1/3"><label style="font-size:12px;font-weight:700">अन्य पंचायत नाम लिखें</label><input id="otherPanch" placeholder="Panchayat naam likhe" class="j-input"></div>
+<div><label style="font-size:12px;font-weight:700">2. Pensioners Ki Sankhya *</label><input id="pensioners" type="number" placeholder="Ex: 250" class="j-input"></div>
+<div><label style="font-size:12px;font-weight:700">3. EKY Done *</label><input id="ekyDone" type="number" placeholder="Ex: 180" class="j-input"></div>
+<div><label style="font-size:12px;font-weight:700">4. EKY Pending *</label><input id="ekyPending" type="number" placeholder="Ex: 70" class="j-input"></div>
+<div><label style="font-size:12px;font-weight:700">5. Remark</label><input id="remark" placeholder="Ex: 10 Death, 5 Migrate" class="j-input"></div>
 </div>
-<div id="otherPanchDiv" style="display:none;grid-column:1/3">
-<label style="font-size:12px;font-weight:700">अन्य पंचायत नाम लिखें</label>
-<input id="otherPanch" placeholder="Panchayat naam likhe" class="j-input">
-</div>
-<div>
-<label style="font-size:12px;font-weight:700">2. Pensioners Ki Sankhya *</label>
-<input id="pensioners" type="number" placeholder="Ex: 250" class="j-input">
-</div>
-<div>
-<label style="font-size:12px;font-weight:700">3. EKY Done *</label>
-<input id="ekyDone" type="number" placeholder="Ex: 180" class="j-input">
-</div>
-<div>
-<label style="font-size:12px;font-weight:700">4. EKY Pending *</label>
-<input id="ekyPending" type="number" placeholder="Ex: 70" class="j-input">
-</div>
-<div>
-<label style="font-size:12px;font-weight:700">5. Remark</label>
-<input id="remark" placeholder="Ex: 10 Death, 5 Migrate" class="j-input">
-</div>
-</div>
-
 <button class="btn btn-green" onclick="addJankari()" style="margin-top:14px;font-size:16px">✅ Entry जोड़ो</button>
-<div style="display:flex;gap:8px;margin-top:8px">
-<button class="btn" style="background:#f59e0b;color:#000;flex:1" onclick="exportJankariExcel()">📊 Excel Download</button>
-<button class="btn" style="background:#ef4444;flex:1" onclick="clearJankari()">🗑️ Clear</button>
-</div>
-
+<div style="display:flex;gap:8px;margin-top:8px"><button class="btn" style="background:#f59e0b;color:#000;flex:1" onclick="exportJankariExcel()">📊 Excel Download</button><button class="btn" style="background:#ef4444;flex:1" onclick="clearJankari()">🗑️ Clear</button></div>
 <div style="margin-top:12px;background:#000;color:#facc15;padding:8px 14px;border-radius:20px;display:inline-block;font-size:13px">Total Entry: <b id="totalCount">0</b></div>
-
-<div style="max-height:380px;overflow:auto;margin-top:10px;border:1px solid #ccc;border-radius:10px">
-<table><thead><tr><th>#</th><th>Panchayat</th><th>Pensioners</th><th>EKY Done</th><th>EKY Pending</th><th>Remark</th><th>X</th></tr></thead><tbody id="tbody"></tbody></table>
+<div style="max-height:380px;overflow:auto;margin-top:10px;border:1px solid #ccc;border-radius:10px"><table><thead><tr><th>#</th><th>Panchayat</th><th>Pensioners</th><th>EKY Done</th><th>EKY Pending</th><th>Remark</th><th>X</th></tr></thead><tbody id="tbody"></tbody></table></div>
 </div>
 </div>
-
-</div>
-
 <button class="demand-btn" onclick="document.getElementById('demandPopup').style.display='flex'">📩 सहायता के लिए लिखें</button>
 <div id="demandPopup" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.7); z-index:10000; justify-content:center; align-items:center;"><div style="background:white; width:92%; max-width:400px; padding:20px; border-radius:15px;"><h3 style="color:#be123c; text-align:center;">🙏 Kaam Ki Demand</h3><input id="d_name" type="text" placeholder="Naam / Panchayat" style="width:100%; padding:12px; margin:6px 0; border-radius:8px; border:1px solid #ccc;"><input id="d_mobile" type="text" placeholder="Mobile Number" style="width:100%; padding:12px; margin:6px 0; border-radius:8px; border:1px solid #ccc;"><select id="d_kaam" style="width:100%; padding:12px; margin:6px 0; border-radius:8px; border:1px solid #ccc;"><option>Samagra Ka Kaam</option><option>Panchayat Darpan</option><option>MGNREGA</option><option>PM Awas</option><option>Any Other</option></select><textarea id="d_msg" placeholder="Kaam Ki Jankari..." style="width:100%; padding:12px; margin:6px 0; border-radius:8px; border:1px solid #ccc; height:80px;"></textarea><button onclick="sendDemand()" style="background:#16a34a; color:white; width:100%; padding:13px; border-radius:8px; border:none; font-weight:bold;">✅ Demand Bhejo</button><button onclick="document.getElementById('demandPopup').style.display='none'" style="background:#6b7280; color:white; width:100%; padding:10px; border-radius:8px; border:none; margin-top:8px;">Band Karo</button></div></div>
 <div id="demandListPanel" style="display:none; position:fixed; top:0; right:0; width:92%; max-width:380px; height:100%; background:white; z-index:10001; box-shadow:-5px 0 15px rgba(0,0,0,0.3); overflow-y:auto; padding:15px;"><div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #1e3a8a; padding-bottom:10px;"><h3 style="color:#1e3a8a;">📋 Demand List</h3><button onclick="document.getElementById('demandListPanel').style.display='none'" style="background:red; color:white; border:none; padding:5px 12px; border-radius:5px; font-weight:bold;">X</button></div><div id="demandItems" style="margin-top:10px;"></div><button onclick="clearAllDemand()" style="background:#000; color:white; width:100%; padding:10px; border-radius:8px; margin-top:15px; border:none;">🗑️ Sab Clear</button></div>
 <div class="footer">🌾 बनाया गया - सुनील कुमार यादव, GP निवानिया | 9755194687</div>
-
 <script>
-function openTab(id,el){
- document.querySelectorAll('.card').forEach(c=>c.classList.remove('active'));
- document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
- document.getElementById(id).classList.add('active');
- el.classList.add('active');
- if(id==='jankari') renderJankari();
-}
-let demands = JSON.parse(localStorage.getItem('panchayat_demands') || '[]');
-function updateCounter(){ let c=demands.length; let b=document.getElementById('demandCounter'); if(c>0){b.style.display='block';b.innerText=`🔔 ${c} Demand`;}else{b.style.display='none';} renderList(); }
-function openDemandList(){ document.getElementById('demandListPanel').style.display='block'; renderList(); }
-function renderList(){ let div=document.getElementById('demandItems'); if(demands.length==0){div.innerHTML='<p style="text-align:center;color:#666;margin-top:20px;">Koi Demand Nahi</p>';return;} let h=''; demands.forEach((d,i)=>{ h+=`<div style="border:1px solid #ccc;border-radius:10px;padding:10px;margin-bottom:10px"><b style="background:#1e3a8a;color:#fff;padding:2px 8px;border-radius:50%">${i+1}</b> <b>${d.name}</b><br><span style="font-size:12px">${d.mobile} | ${d.kaam}</span><br><span style="font-size:13px;background:#fef08a;padding:2px 6px;border-radius:5px">${d.msg}</span><div style="display:flex;gap:6px;margin-top:8px"><a href="https://wa.me/91${d.mobile}?text=Namaste" target="_blank" style="flex:1;background:#16a34a;color:#fff;text-align:center;padding:8px;border-radius:6px;text-decoration:none;font-size:12px">WhatsApp</a><button onclick="okDemand(${i})" style="flex:1;background:#2563eb;color:#fff;padding:8px;border-radius:6px;border:none;font-size:12px">✅ OK</button></div></div>`; }); div.innerHTML=h; }
-function okDemand(i){ if(confirm('Puri hui?')){ demands.splice(i,1); localStorage.setItem('panchayat_demands',JSON.stringify(demands)); updateCounter(); } }
-function clearAllDemand(){ if(confirm('Sab hatana hai?')){ demands=[]; localStorage.setItem('panchayat_demands','[]'); updateCounter(); } }
-function sendDemand(){ let n=document.getElementById('d_name').value, m=document.getElementById('d_mobile').value, k=document.getElementById('d_kaam').value, msg=document.getElementById('d_msg').value; if(!n||!msg){alert('Naam aur Kaam jaruri');return;} demands.push({name:n,mobile:m,kaam:k,msg:msg,time:new Date().toLocaleString()}); localStorage.setItem('panchayat_demands',JSON.stringify(demands)); updateCounter(); window.open(`https://wa.me/919755194687?text=*Nayi Demand - ${demands.length}*%0A${n}%0A${m}%0A${k}%0A${msg}`,'_blank'); alert('✅ Demand Save'); document.getElementById('demandPopup').style.display='none'; document.getElementById('d_name').value=''; document.getElementById('d_mobile').value=''; document.getElementById('d_msg').value=''; }
+function openTab(id,el){document.querySelectorAll('.card').forEach(c=>c.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.getElementById(id).classList.add('active');el.classList.add('active');if(id==='jankari')renderJankari();}
+let demands=JSON.parse(localStorage.getItem('panchayat_demands')||'[]');
+function updateCounter(){let c=demands.length;let b=document.getElementById('demandCounter');if(c>0){b.style.display='block';b.innerText=`🔔 ${c} Demand`;}else{b.style.display='none';}renderList();}
+function openDemandList(){document.getElementById('demandListPanel').style.display='block';renderList();}
+function renderList(){let div=document.getElementById('demandItems');if(demands.length==0){div.innerHTML='<p style="text-align:center;color:#666;margin-top:20px;">Koi Demand Nahi</p>';return;}let h='';demands.forEach((d,i)=>{h+=`<div style="border:1px solid #ccc;border-radius:10px;padding:10px;margin-bottom:10px"><b style="background:#1e3a8a;color:#fff;padding:2px 8px;border-radius:50%">${i+1}</b> <b>${d.name}</b><br><span style="font-size:12px">${d.mobile} | ${d.kaam}</span><br><span style="font-size:13px;background:#fef08a;padding:2px 6px;border-radius:5px">${d.msg}</span><div style="display:flex;gap:6px;margin-top:8px"><a href="https://wa.me/91${d.mobile}?text=Namaste" target="_blank" style="flex:1;background:#16a34a;color:#fff;text-align:center;padding:8px;border-radius:6px;text-decoration:none;font-size:12px">WhatsApp</a><button onclick="okDemand(${i})" style="flex:1;background:#2563eb;color:#fff;padding:8px;border-radius:6px;border:none;font-size:12px">✅ OK</button></div></div>`;});div.innerHTML=h;}
+function okDemand(i){if(confirm('Puri hui?')){demands.splice(i,1);localStorage.setItem('panchayat_demands',JSON.stringify(demands));updateCounter();}}
+function clearAllDemand(){if(confirm('Sab hatana hai?')){demands=[];localStorage.setItem('panchayat_demands','[]');updateCounter();}}
+function sendDemand(){let n=document.getElementById('d_name').value,m=document.getElementById('d_mobile').value,k=document.getElementById('d_kaam').value,msg=document.getElementById('d_msg').value;if(!n||!msg){alert('Naam aur Kaam jaruri');return;}demands.push({name:n,mobile:m,kaam:k,msg:msg,time:new Date().toLocaleString()});localStorage.setItem('panchayat_demands',JSON.stringify(demands));updateCounter();window.open(`https://wa.me/919755194687?text=*Nayi Demand - ${demands.length}*%0A${n}%0A${m}%0A${k}%0A${msg}`,'_blank');alert('✅ Demand Save');document.getElementById('demandPopup').style.display='none';document.getElementById('d_name').value='';document.getElementById('d_mobile').value='';document.getElementById('d_msg').value='';}
 setTimeout(updateCounter,500);
-
-let sprWb=null, prdWbs=[], finalSPR=[], extractedPRD=[], duplicatePRD=[], matched=[], notMatched=[], rowCounts=[], masterSet=new Set();
-function unmerge(ws,data){ if(ws['!merges']) ws['!merges'].forEach(m=>{ let v=data[m.s.r]?.[m.s.c]||""; for(let R=m.s.r;R<=m.e.r;R++) for(let C=m.s.c;C<=m.e.c;C++){ if(!data[R])data[R]=[]; data[R][C]=v; } }); for(let i=1;i<data.length;i++){ if(!data[i])data[i]=[]; if((!data[i][1]||String(data[i][1]).trim()=="") && data[i-1]?.[1]) data[i][1]=data[i-1][1]; } return data; }
-function extract8Digit(text){ let m=String(text||"").match(/\d{8}/); return m?m[0]:""; }
-document.getElementById('sprFile')?.addEventListener('change',e=>{ let r=new FileReader(); r.onload=x=>{ sprWb=XLSX.read(x.target.result,{type:'array'}); }; r.readAsArrayBuffer(e.target.files[0]); });
-document.getElementById('prdFiles')?.addEventListener('change',e=>{ prdWbs=[]; let files=[...e.target.files]; Promise.all(files.map(f=> new Promise(res=>{ let r=new FileReader(); r.onload=x=>{ prdWbs.push({name:f.name,wb:XLSX.read(x.target.result,{type:'array'})}); res(); }; r.readAsArrayBuffer(f); }))).then(()=>{ document.getElementById('log').innerText=`PRD Files: ${files.length} Ready`; }); });
-function process(){ if(!sprWb || prdWbs.length==0){alert("File dalo");return;} let ws1=sprWb.Sheets[sprWb.SheetNames[0]]; let d1=XLSX.utils.sheet_to_json(ws1,{header:1,defval:""}); d1=unmerge(ws1,d1); let seenSPR={}; let hSPR=d1[0]; finalSPR=[hSPR]; masterSet=new Set(); for(let i=1;i<d1.length;i++){ let fid=extract8Digit(d1[i][1])||String(d1[i][1]||"").trim(); if(!fid) continue; if(!seenSPR[fid]){ seenSPR[fid]=1; masterSet.add(fid); finalSPR.push(d1[i]); } } let allRows=[]; let hPRD=null; rowCounts=[["File Name","Sheet Name","Total Rows","Unique Rows","8-Digit Found"]]; let newHeader=null; prdWbs.forEach(item=>{ item.wb.SheetNames.forEach(sName=>{ let ws=item.wb.Sheets[sName]; let d=XLSX.utils.sheet_to_json(ws,{header:1,defval:""}); d=unmerge(ws,d); if(!hPRD) hPRD=d[0]; if(!newHeader) newHeader=(hPRD||[]).slice().concat(["8_Digit_Family_ID","Source_File","Source_Sheet"]); let totalRows = d.length-1; let seenLocal={}; let uniqueLocal=0; let eightFound=0; let tempRows=[]; for(let i=1;i<d.length;i++){ let orig=String(d[i][1]||"").trim(); let eight=extract8Digit(orig); if(!eight) continue; eightFound++; if(!seenLocal[eight]){ seenLocal[eight]=1; uniqueLocal++; tempRows.push([d[i],eight,item.name,sName]); } } rowCounts.push([item.name, sName, totalRows, uniqueLocal, eightFound]); tempRows.forEach(t=>{ allRows.push(t); }); }); }); let extractedHeader = newHeader; extractedPRD=[extractedHeader]; duplicatePRD=[extractedHeader.concat(["Duplicate_Count"])]; let seenGlobal={}; let countGlobal={}; allRows.forEach(obj=>{ let eight=obj[1]; if(!countGlobal[eight]) countGlobal[eight]=0; countGlobal[eight]++; if(!seenGlobal[eight]){ seenGlobal[eight]=1; let row = obj[0].slice(); row.push(eight, obj[2], obj[3]); extractedPRD.push(row); } else { let row = obj[0].slice(); row.push(eight, obj[2], obj[3]); row.push(countGlobal[eight]); duplicatePRD.push(row); } }); matched=[extractedHeader.concat(["Status"])]; notMatched=[extractedHeader.concat(["Status"])]; extractedPRD.slice(1).forEach(row=>{ let eight=String(row[row.length-3]||"").trim(); if(masterSet.has(eight)) matched.push(row.concat(["MATCHED"])); else notMatched.push(row.concat(["NOT_MATCHED"])); }); let html="<tr><th>File</th><th>Sheet</th><th>Total</th><th>Unique</th></tr>"; rowCounts.slice(1).forEach(r=>{ html+=`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`; }); document.getElementById('tbl').innerHTML=html; document.getElementById('log').innerText=`SPR: ${finalSPR.length-1} | PRD: ${extractedPRD.length-1} | Dup: ${duplicatePRD.length-1} | Matched: ${matched.length-1}`; document.getElementById('dl').style.display='block'; }
-function downloadAll(){ let newWb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(newWb, XLSX.utils.aoa_to_sheet(rowCounts), "0_Row_Ginti"); XLSX.utils.book_append_sheet(newWb, XLSX.utils.aoa_to_sheet(finalSPR), "1_SPR"); XLSX.utils.book_append_sheet(newWb, XLSX.utils.aoa_to_sheet(extractedPRD), "2_PRD_Unique"); XLSX.utils.book_append_sheet(newWb, XLSX.utils.aoa_to_sheet(duplicatePRD), "3_DUPLICATE"); XLSX.utils.book_append_sheet(newWb, XLSX.utils.aoa_to_sheet(matched), "4_Matched"); XLSX.utils.book_append_sheet(newWb, XLSX.utils.aoa_to_sheet(notMatched), "5_Not_Matched"); XLSX.writeFile(newWb,"FINAL_"+Date.now()+".xlsx"); }
-
-// SIRF 5 COLUMN - FINAL JANKARI SYSTEM
-const J_KEY="BIAORA_EKY_DATA";
-let jData=JSON.parse(localStorage.getItem(J_KEY)||"[]");
-document.getElementById('panchayat')?.addEventListener('change',function(){
-  let d=document.getElementById('otherPanchDiv'); if(d) d.style.display=this.value==="OTHER"?"block":"none";
-  autoPending();
-});
-document.getElementById('pensioners')?.addEventListener('input',autoPending);
-document.getElementById('ekyDone')?.addEventListener('input',autoPending);
-function autoPending(){
-  let total=parseInt(document.getElementById('pensioners')?.value||0);
-  let done=parseInt(document.getElementById('ekyDone')?.value||0);
-  if(total>0){ document.getElementById('ekyPending').value = total - done; }
-}
-function addJankari(){
-  let panch=document.getElementById('panchayat').value;
-  if(panch==="OTHER") panch=document.getElementById('otherPanch').value.trim().toUpperCase();
-  let pensioners=document.getElementById('pensioners').value.trim();
-  let done=document.getElementById('ekyDone').value.trim();
-  let pending=document.getElementById('ekyPending').value.trim();
-  let remark=document.getElementById('remark').value.trim();
-  if(!panch||!pensioners||!done||!pending){alert("4 * wale bharo - Panchayat, Pensioners, EKY Done, EKY Pending");return;}
-  jData.push({id:Date.now(),panchayat:panch,pensioners:pensioners,ekyDone:done,ekyPending:pending,remark:remark,date:new Date().toLocaleString('hi-IN')});
-  localStorage.setItem(J_KEY,JSON.stringify(jData));
-  renderJankari();
-  document.getElementById('pensioners').value="";document.getElementById('ekyDone').value="";document.getElementById('ekyPending').value="";document.getElementById('remark').value="";
-  alert("✅ Entry Ho Gayi - "+panch);
-}
-function renderJankari(){
-  let tbody=document.getElementById('tbody'); if(!tbody) return;
-  tbody.innerHTML=""; jData.forEach((r,i)=>{
-    let tr=document.createElement('tr');
-    tr.innerHTML=`<td>${i+1}</td><td><b>${r.panchayat}</b></td><td>${r.pensioners}</td><td style="color:green;font-weight:bold">${r.ekyDone}</td><td style="color:red;font-weight:bold">${r.ekyPending}</td><td>${r.remark}</td><td><button onclick="delJankari(${r.id})" style="background:red;color:#fff;border:none;padding:3px 8px;border-radius:4px">X</button></td>`;
-    tbody.appendChild(tr);
-  });
-  let c=document.getElementById('totalCount'); if(c) c.innerText=jData.length;
-}
-function delJankari(id){ jData=jData.filter(x=>x.id!==id); localStorage.setItem(J_KEY,JSON.stringify(jData)); renderJankari(); }
-function clearJankari(){ if(confirm("Sab clear karna hai? Excel download kiya kya?")){ jData=[]; localStorage.setItem(J_KEY,JSON.stringify(jData)); renderJankari(); } }
-function exportJankariExcel(){
-  if(jData.length===0){alert("Koi entry nahi hai");return;}
-  let ws_data=[["Kramank","Panchayat Ka Naam","Pensioners Ki Sankhya","EKY Done","EKY Pending","Remark","Date"]];
-  jData.forEach((r,i)=>{ ws_data.push([i+1,r.panchayat,r.pensioners,r.ekyDone,r.ekyPending,r.remark,r.date]); });
-  let ws=XLSX.utils.aoa_to_sheet(ws_data); let wb=XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb,ws,"EKY_Data");
-  XLSX.writeFile(wb,`BIAORA_EKY_${jData.length}_Panchayat_${new Date().toISOString().slice(0,10)}.xlsx`);
-}
-setTimeout(()=>{ renderJankari(); updateCounter(); },800);
+let sprWb=null,prdWbs=[],finalSPR=[],extractedPRD=[],duplicatePRD=[],matched=[],notMatched=[],rowCounts=[],masterSet=new Set();
+function unmerge(ws,data){if(ws['!merges'])ws['!merges'].forEach(m=>{let v=data[m.s.r]?.[m.s.c]||"";for(let R=m.s.r;R<=m.e.r;R++)for(let C=m.s.c;C<=m.e.c;C++){if(!data[R])data[R]=[];data[R][C]=v;}});for(let i=1;i<data.length;i++){if(!data[i])data[i]=[];if((!data[i][1]||String(data[i][1]).trim()=="")&&data[i-1]?.[1])data[i][1]=data[i-1][1];}return data;}
+function extract8Digit(text){let m=String(text||"").match(/\d{8}/);return m?m[0]:"";}
+document.getElementById('sprFile')?.addEventListener('change',e=>{let r=new FileReader();r.onload=x=>{sprWb=XLSX.read(x.target.result,{type:'array'});};r.readAsArrayBuffer(e.target.files[0]);});
+document.getElementById('prdFiles')?.addEventListener('change',e=>{prdWbs=[];let files=[...e.target.files];Promise.all(files.map(f=>new Promise(res=>{let r=new FileReader();r.onload=x=>{prdWbs.push({name:f.name,wb:XLSX.read(x.target.result,{type:'array'})});res();};r.readAsArrayBuffer(f);}))).then(()=>{document.getElementById('log').innerText=`PRD Files: ${files.length} Ready`;});});
+function process(){if(!sprWb||prdWbs.length==0){alert("File dalo");return;}let ws1=sprWb.Sheets[sprWb.SheetNames[0]];let d1=XLSX.utils.sheet_to_json(ws1,{header:1,defval:""});d1=unmerge(ws1,d1);let seenSPR={};let hSPR=d1[0];finalSPR=[hSPR];masterSet=new Set();for(let i=1;i<d1.length;i++){let fid=extract8Digit(d1[i][1])||String(d1[i][1]||"").trim();if(!fid)continue;if(!seenSPR[fid]){seenSPR[fid]=1;masterSet.add(fid);finalSPR.push(d1[i]);}}let allRows=[];let hPRD=null;rowCounts=[["File Name","Sheet Name","Total Rows","Unique Rows","8-Digit Found"]];let newHeader=null;prdWbs.forEach(item=>{item.wb.SheetNames.forEach(sName=>{let ws=item.wb.Sheets[sName];let d=XLSX.utils.sheet_to_json(ws,{header:1,defval:""});d=unmerge(ws,d);if(!hPRD)hPRD=d[0];if(!newHeader)newHeader=(hPRD||[]).slice().concat(["8_Digit_Family_ID","Source_File","Source_Sheet"]);let totalRows=d.length-1;let seenLocal={};let uniqueLocal=0;let eightFound=0;let tempRows=[];for(let i=1;i<d.length;i++){let orig=String(d[i][1]||"").trim();let eight=extract8Digit(orig);if(!eight)continue;eightFound++;if(!seenLocal[eight]){seenLocal[eight]=1;uniqueLocal++;tempRows.push([d[i],eight,item.name,sName]);}}rowCounts.push([item.name,sName,totalRows,uniqueLocal,eightFound]);tempRows.forEach(t=>{allRows.push(t);});});});let extractedHeader=newHeader;extractedPRD=[extractedHeader];duplicatePRD=[extractedHeader.concat(["Duplicate_Count"])];let seenGlobal={};let countGlobal={};allRows.forEach(obj=>{let eight=obj[1];if(!countGlobal[eight])countGlobal[eight]=0;countGlobal[eight]++;if(!seenGlobal[eight]){seenGlobal[eight]=1;let row=obj[0].slice();row.push(eight,obj[2],obj[3]);extractedPRD.push(row);}else{let row=obj[0].slice();row.push(eight,obj[2],obj[3]);row.push(countGlobal[eight]);duplicatePRD.push(row);}});matched=[extractedHeader.concat(["Status"])];notMatched=[extractedHeader.concat(["Status"])];extractedPRD.slice(1).forEach(row=>{let eight=String(row[row.length-3]||"").trim();if(masterSet.has(eight))matched.push(row.concat(["MATCHED"]));else notMatched.push(row.concat(["NOT_MATCHED"]));});let html="<tr><th>File</th><th>Sheet</th><th>Total</th><th>Unique</th></tr>";rowCounts.slice(1).forEach(r=>{html+=`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`;});document.getElementById('tbl').innerHTML=html;document.getElementById('log').innerText=`SPR: ${finalSPR.length-1} | PRD: ${extractedPRD.length-1} | Dup: ${duplicatePRD.length-1} | Matched: ${matched.length-1}`;document.getElementById('dl').style.display='block';}
+function downloadAll(){let newWb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(newWb,XLSX.utils.aoa_to_sheet(rowCounts),"0_Row_Ginti");XLSX.utils.book_append_sheet(newWb,XLSX.utils.aoa_to_sheet(finalSPR),"1_SPR");XLSX.utils.book_append_sheet(newWb,XLSX.utils.aoa_to_sheet(extractedPRD),"2_PRD_Unique");XLSX.utils.book_append_sheet(newWb,XLSX.utils.aoa_to_sheet(duplicatePRD),"3_DUPLICATE");XLSX.utils.book_append_sheet(newWb,XLSX.utils.aoa_to_sheet(matched),"4_Matched");XLSX.utils.book_append_sheet(newWb,XLSX.utils.aoa_to_sheet(notMatched),"5_Not_Matched");XLSX.writeFile(newWb,"FINAL_"+Date.now()+".xlsx");}
+let byawaraOld={},byawaraNew={},byawaraMerged=[],bCharts=[];
+function readByawaraExcel(file,cb){const r=new FileReader();r.onload=e=>{const wb=XLSX.read(new Uint8Array(e.target.result),{type:'array'});const ws=wb.Sheets[wb.SheetNames[0]];const json=XLSX.utils.sheet_to_json(ws,{defval:''});let map={};json.forEach(row=>{let keys=Object.keys(row);let lgd=row['LGD कोड']||row[keys[4]]||'';let bill=row['ऑनलाइन भुगतान किये गए बिलों की संख्या']||row[keys[7]]||0;let rashi=row['ऑनलाइन भुगतान की गयी राशि']||row[keys[12]]||row[keys[keys.length-1]]||0;let panch=row['ग्राम पंचायत्त']||row[keys[3]]||'';if(lgd){map[String(lgd).trim()]={lgd:String(lgd).trim(),panch, bill:Number(bill)||0, rashi:Number(rashi)||0};}});cb(map);};r.readAsArrayBuffer(file);}
+document.getElementById('fileOld')?.addEventListener('change',e=>{readByawaraExcel(e.target.files[0],m=>{byawaraOld=m;document.getElementById('oldStatus').innerText='✅ '+Object.keys(m).length+' GP';});});
+document.getElementById('fileNew')?.addEventListener('change',e=>{readByawaraExcel(e.target.files[0],m=>{byawaraNew=m;document.getElementById('newStatus').innerText='✅ '+Object.keys(m).length+' GP';});});
+function processByawara(){if(!Object.keys(byawaraOld).length||!Object.keys(byawaraNew).length){alert('Dono file dalo');return;}byawaraMerged=[];let all=new Set([...Object.keys(byawaraOld),...Object.keys(byawaraNew)]);all.forEach(lgd=>{let o=byawaraOld[lgd]||{bill:0,rashi:0,panch:byawaraNew[lgd]?.panch||''};let n=byawaraNew[lgd]||{bill:0,rashi:0,panch:byawaraOld[lgd]?.panch||''};byawaraMerged.push({lgd, panch:n.panch||o.panch, billOld:o.bill, billNew:n.bill, billGrowth:n.bill-o.bill, rashiOld:o.rashi, rashiNew:n.rashi, rashiGrowth:n.rashi-o.rashi});});byawaraMerged.sort((a,b)=>b.billGrowth-a.billGrowth);let sumOld=byawaraMerged.reduce((s,x)=>s+x.billOld,0),sumNew=byawaraMerged.reduce((s,x)=>s+x.billNew,0);let sumROld=byawaraMerged.reduce((s,x)=>s+x.rashiOld,0),sumRNew=byawaraMerged.reduce((s,x)=>s+x.rashiNew,0);let active=byawaraMerged.filter(x=>x.billGrowth!=0).length,zero=byawaraMerged.length-active;document.getElementById('kpiTotal').innerText=byawaraMerged.length;document.getElementById('kpiOld').innerText=sumOld;document.getElementById('kpiOldR').innerText='₹'+sumROld.toLocaleString();document.getElementById('kpiNew').innerText=sumNew;document.getElementById('kpiNewR').innerText='₹'+sumRNew.toLocaleString();document.getElementById('kpiGrowth').innerText=(sumNew-sumOld>0?'+':'')+(sumNew-sumOld);document.getElementById('kpiGrowthP').innerHTML=active+' Active<br>'+zero+' Zero';let top3=byawaraMerged.slice(0,3);document.getElementById('top3Box').innerHTML='<b>★ Top 3:</b><br>'+top3.map((x,i)=>`${i+1}. ${x.panch.replace('GRAM PANCHAYAT,','')} +${x.billGrowth}`).join('<br>');let tbody=document.getElementById('tbodyByawara');tbody.innerHTML='';byawaraMerged.forEach((x,i)=>{let tr=document.createElement('tr');tr.innerHTML=`<td>${i+1}</td><td>${x.lgd}</td><td style="text-align:left">${x.panch.replace('GRAM PANCHAYAT,','').slice(0,20)}</td><td>${x.billOld}</td><td>${x.billNew}</td><td style="color:${x.billGrowth>0?'green':'red'};font-weight:bold">${x.billGrowth}</td><td>+${x.rashiGrowth}</td>`;tbody.appendChild(tr);});bCharts.forEach(c=>c.destroy());bCharts=[];let top10=byawaraMerged.slice(0,10);bCharts.push(new Chart(document.getElementById('billChart'),{type:'bar',data:{labels:top10.map(x=>x.panch.replace('GRAM PANCHAYAT,','').slice(0,10)),datasets:[{label:'Growth',data:top10.map(x=>x.billGrowth),backgroundColor:'#16a34a'}]},options:{plugins:{title:{display:true,text:'Top 10 Bill Growth'}}}}));bCharts.push(new Chart(document.getElementById('pieChart'),{type:'doughnut',data:{labels:['Active '+active,'Zero '+zero],datasets:[{data:[active,zero],backgroundColor:['#16a34a','#ef4444']}]},options:{plugins:{title:{display:true,text:'Active vs Zero'}}}}));let topR=byawaraMerged.slice().sort((a,b)=>b.rashiGrowth-a.rashiGrowth).slice(0,10);bCharts.push(new Chart(document.getElementById('rashiChart'),{type:'bar',data:{labels:topR.map(x=>x.panch.replace('GRAM PANCHAYAT,','').slice(0,8)),datasets:[{label:'Rashi',data:topR.map(x=>x.rashiGrowth),backgroundColor:'#2563eb'}]},options:{plugins:{title:{display:true,text:'Top 10 Rashi Growth'}}}}));document.getElementById('byawaraDashboard').style.display='block';document.getElementById('dlBtnByawara').style.display='block';document.getElementById('summaryBox').innerHTML=`Total: ${sumOld} → ${sumNew}<br>Rashi: ₹${sumROld.toLocaleString()} → ₹${sumRNew.toLocaleString()}<br>Growth: +${sumNew-sumOld}`;}
+function filterByawara(){let q=document.getElementById('searchByawara').value.toLowerCase();document.querySelectorAll('#tbodyByawara tr').forEach(r=>{r.style.display=r.innerText.toLowerCase().includes(q)?'':'none';});}
+function downloadByawaraExcel(){let data=byawaraMerged.map((x,i)=>({Kr:i+1, LGD_Code:x.lgd, Gram_Panchayat:x.panch, Bill_Kal:x.billOld, Bill_Aaj:x.billNew, Bill_Growth:x.billGrowth, Rashi_Kal:x.rashiOld, Rashi_Aaj:x.rashiNew, Rashi_Growth:x.rashiGrowth}));let wb=XLSX.utils.book_new();let ws=XLSX.utils.json_to_sheet(data);XLSX.utils.book_append_sheet(wb,ws,"Byawara");XLSX.writeFile(wb,"Byawara_Dashboard_"+new Date().toISOString().slice(0,10)+".xlsx");}
+const J_KEY="BIAORA_EKY_DATA";let jData=JSON.parse(localStorage.getItem(J_KEY)||"[]");
+document.getElementById('panchayat')?.addEventListener('change',function(){let d=document.getElementById('otherPanchDiv');if(d)d.style.display=this.value==="OTHER"?"block":"none";autoPending();});
+document.getElementById('pensioners')?.addEventListener('input',autoPending);document.getElementById('ekyDone')?.addEventListener('input',autoPending);
+function autoPending(){let total=parseInt(document.getElementById('pensioners')?.value||0);let done=parseInt(document.getElementById('ekyDone')?.value||0);if(total>0){document.getElementById('ekyPending').value = total - done;}}
+function addJankari(){let panch=document.getElementById('panchayat').value;if(panch==="OTHER")panch=document.getElementById('otherPanch').value.trim().toUpperCase();let pensioners=document.getElementById('pensioners').value.trim();let done=document.getElementById('ekyDone').value.trim();let pending=document.getElementById('ekyPending').value.trim();let remark=document.getElementById('remark').value.trim();if(!panch||!pensioners||!done||!pending){alert("4 * wale bharo");return;}jData.push({id:Date.now(),panchayat:panch,pensioners,ekyDone:done,ekyPending:pending,remark,date:new Date().toLocaleString('hi-IN')});localStorage.setItem(J_KEY,JSON.stringify(jData));renderJankari();document.getElementById('pensioners').value="";document.getElementById('ekyDone').value="";document.getElementById('ekyPending').value="";document.getElementById('remark').value="";alert("✅ "+panch);}
+function renderJankari(){let tbody=document.getElementById('tbody');if(!tbody)return;tbody.innerHTML="";jData.forEach((r,i)=>{let tr=document.createElement('tr');tr.innerHTML=`<td>${i+1}</td><td><b>${r.panchayat}</b></td><td>${r.pensioners}</td><td style="color:green;font-weight:bold">${r.ekyDone}</td><td style="color:red;font-weight:bold">${r.ekyPending}</td><td>${r.remark}</td><td><button onclick="delJankari(${r.id})" style="background:red;color:#fff;border:none;padding:3px 8px;border-radius:4px">X</button></td>`;tbody.appendChild(tr);});let c=document.getElementById('totalCount');if(c)c.innerText=jData.length;}
+function delJankari(id){jData=jData.filter(x=>x.id!==id);localStorage.setItem(J_KEY,JSON.stringify(jData));renderJankari();}
+function clearJankari(){if(confirm("Sab clear?")){jData=[];localStorage.setItem(J_KEY,JSON.stringify(jData));renderJankari();}}
+function exportJankariExcel(){if(jData.length===0){alert("Koi entry nahi");return;}let ws_data=[["Kramank","Panchayat","Pensioners","EKY Done","EKY Pending","Remark","Date"]];jData.forEach((r,i)=>{ws_data.push([i+1,r.panchayat,r.pensioners,r.ekyDone,r.ekyPending,r.remark,r.date]);});let ws=XLSX.utils.aoa_to_sheet(ws_data);let wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,"EKY_Data");XLSX.writeFile(wb,`BIAORA_EKY_${jData.length}_${new Date().toISOString().slice(0,10)}.xlsx`);}
+setTimeout(()=>{renderJankari();updateCounter();},800);
 </script>
 </body>
 </html>
