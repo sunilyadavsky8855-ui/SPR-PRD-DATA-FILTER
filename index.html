@@ -230,9 +230,9 @@ function downloadByawaraExcel(){
   const wb=XLSX.utils.book_new();
   const top3 = byawaraResult.filter(r=>r.growth>0).slice(0,3);
   const dashboard=[
-    ['कार्यालय जिला पंचायत राजगढ़ (म.प्र.)'],
+    ['कार्यालय जनपद पंचायत ब्‍यावरा (म.प्र.)'],
     ['जनपद पंचायत ब्यावरा - 2 दिवसीय ऑनलाइन बिल एवं राजस्व प्रगति समीक्षा प्रतिवेदन'],
-    ['पंचायत दर्पण पोर्टल (e-Panchayat) | 30/10/2026 से 02/11/2026 तक'],
+    ['पंचायत दर्पण पोर्टल (e-Panchayat) |        से          तक'],
     [],
     ['DASHBOARD KPIs'],
     ['कुल पंचायतें', byawaraResult.length],
