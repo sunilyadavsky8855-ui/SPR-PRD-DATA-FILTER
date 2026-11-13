@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TAX FILTER - Panchayat</title>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<style>body{font-family:Segoe UI;padding:15px;background:#fff7ed}h1{color:#ea580c}input,select{width:95%;padding:11px;border:2px solid #ea580c;border-radius:8px;background:#fff;margin:5px 0}button{width:100%;padding:12px;background:#ea580c;color:#fff;border:none;border-radius:10px;font-weight:700;margin:8px 0}table{width:100%;border-collapse:collapse;background:#fff;font-size:13px}th,td{border:1px solid #ccc;padding:7px;text-align:left}th{background:#ea580c;color:#fff}.box{background:#fff;padding:12px;border-radius:12px;box-shadow:0 2px 8px #ddd}</style>
+</head>
+<body>
+<h1>🧾 TAX FILTER</h1>
+<div class="box">
+<p><b>1. Tax wali Excel yaha dalo</b></p>
+<input type="file" id="f" accept=".xlsx,.xls,.csv">
+<p><b>2. Naam / Gaon / Mobile se khojo</b></p>
+<input type="text" id="search" placeholder="Jaise - Niwariya, Ramesh, 97555..." onkeyup="filter()">
+<p><b>3. Kaunsa Column Filter karna hai?</b></p>
+<select id="colSel" onchange="filter()"></select>
+<select id="valSel" onchange="filter()"><option value="">-- Sab dikhao --</option></select>
+<p>Total: <b id="t">0</b> | Dikh raha hai: <b id="s">0</b></p>
+</div>
+<br>
+<div style="overflow:auto"><table><thead id="th"></thead><tbody id="tb"></tbody></table></div>
+<br><button onclick="download()">⬇️ Filtered Excel Download Karo</button>
+<script>
+let allData=[], headers=[];
+document.getElementById('f').addEventListener('change',e=>{
+let file=e.target.files[0]; if(!file) return;
+let r=new FileReader();
+r.onload=ev=>{
+let wb=XLSX.read(ev.target.result,{type:'array'});
+let ws=wb.Sheets[wb.SheetNames[0]];
+let aoa=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+headers=aoa[0]; allData=aoa.slice(1).filter(row=>row.join('').trim()!=='');
+document.getElementById('th').innerHTML='<tr>'+headers.map(h=>`<th>${h}</th>`).join('')+'</tr>';
+let cs=document.getElementById('colSel'); cs.innerHTML=headers.map((h,i)=>`<option value="${i}">${h}</option>`).join('');
+updateVals(); show(allData);
+};
+r.readAsArrayBuffer(file);
+});
+function updateVals(){
+let ci=document.getElementById('colSel').value;
+let vals=[...new Set(allData.map(r=>String(r[ci]||'').trim()).filter(v=>v))].sort();
+document.getElementById('valSel').innerHTML='<option value="">-- Sab dikhao --</option>'+vals.map(v=>`<option>${v}</option>`).join('');
+}
+function filter(){
+let q=document.getElementById('search').value.toLowerCase();
+let ci=document.getElementById('colSel').value;
+let vv=document.getElementById('valSel').value;
+let f=allData.filter(r=>{
+let okSearch=!q || r.join(' ').toLowerCase().includes(q);
+let okVal=!vv || String(r[ci]||'').trim()==vv;
+return okSearch && okVal;
+});
+show(f);
+}
+function show(data){
+document.getElementById('t').textContent=allData.length;
+document.getElementById('s').textContent=data.length;
+document.getElementById('tb').innerHTML=data.slice(0,500).map(r=>'<tr>'+r.map(c=>`<td>${c}</td>`).join('')+'</tr>').join('');
+window._filtered=data;
+}
+function download(){
+let data=window._filtered||[]; if(!data.length){alert('Pehle file dalo');return;}
+let ws=XLSX.utils.aoa_to_sheet([headers,...data]);
+let wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'Filtered');
+XLSX.writeFile(wb,'TAX_Filtered.xlsx');
+}
+</script>
+</body>
+</html>
