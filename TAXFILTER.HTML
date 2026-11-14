@@ -1,158 +1,168 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SPR PRD FINAL - Total Family Account</title>
+<title>SPR PRD SMART + PRD Double Entry</title>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<style>body{font-family:Segoe UI;padding:15px;background:#f8fafc}h1{color:#0f766e}h2{margin:5px 0;color:#fff;background:#0f766e;padding:10px;border-radius:8px;font-size:17px}input,select{width:95%;padding:11px;border:2px solid #0f766e;border-radius:8px;background:#fff;margin:5px 0}button{width:100%;padding:13px;background:#0f766e;color:#fff;border:none;border-radius:10px;font-weight:700;margin:8px 0;font-size:16px}.box{background:#fff;padding:12px;border-radius:12px;box-shadow:0 2px 8px #ddd;margin-bottom:12px}.card{display:flex;gap:8px;flex-wrap:wrap}.card div{flex:1;min-width:100px;background:#fff;padding:10px;border-radius:10px;text-align:center;box-shadow:0 1px 5px #ddd}.card b{font-size:22px;display:block}.green{color:#15803d}.red{color:#dc2626}.blue{color:#1d4ed8}table{width:100%;border-collapse:collapse;background:#fff;font-size:13px}th,td{border:1px solid #ccc;padding:7px;text-align:left}th{background:#0f766e;color:#fff}.tabs{display:flex;gap:5px;margin:10px 0}.tabs button{padding:10px;font-size:14px;background:#e2e8f0;color:#000}.tabs button.active{background:#0f766e;color:#fff}</style>
+<style>body{font-family:Segoe UI;padding:15px;background:#fff7ed}h1{color:#c2410c}h2{background:#c2410c;color:#fff;padding:10px;border-radius:8px;font-size:16px}input,select{width:95%;padding:11px;border:2px solid #c2410c;border-radius:8px;background:#fff;margin:5px 0}button{width:100%;padding:13px;background:#c2410c;color:#fff;border:none;border-radius:10px;font-weight:700;margin:8px 0;font-size:16px}.box{background:#fff;padding:12px;border-radius:12px;box-shadow:0 2px 8px #ddd;margin-bottom:12px}.card{display:flex;gap:8px;flex-wrap:wrap}.card div{flex:1;min-width:100px;background:#fff;padding:10px;border-radius:10px;text-align:center;box-shadow:0 1px 5px #ddd}.card b{font-size:20px;display:block}table{width:100%;border-collapse:collapse;background:#fff;font-size:13px}th,td{border:1px solid #ccc;padding:7px;text-align:left}th{background:#c2410c;color:#fff}.tabs{display:flex;gap:5px;flex-wrap:wrap}.tabs button{padding:10px;font-size:13px;background:#e2e8f0;color:#000}.tabs button.active{background:#c2410c;color:#fff}.dupbox{background:#fef2f2;border:2px solid #dc2626;padding:12px;border-radius:12px}</style>
 </head>
 <body>
-<h1>✅ SPR - PRD FINAL MATCHING</h1>
+<h1>🧠 SPR - PRD SMART + DOUBLE ENTRY</h1>
+<p><b>Niyam:</b> SPR me ek Family me sabse BADA bachega. PRD me DOUBLE ENTRY wale alag nikalenge.</p>
 
-<!-- STEP 1 -->
 <div class="box">
-<h2>STEP 1: SPR DATA Upload Karo</h2>
+<h2>STEP 1: Pehli Sheet Upload Karo - SPR ya Kisi Bhi Naam Ki</h2>
 <input type="file" id="sprFile" accept=".xlsx,.xls,.csv">
-<p id="sprInfo">SPR abhi upload nahi hui</p>
-<label>SPR me Family Column chuno:</label>
-<select id="sprCol"></select>
-<button onclick="doSPR()">1. SPR Duplicate Hatao - Total Family Account Banao</button>
-<p>Total SPR Row: <b id="s1">0</b> | Duplicate Hata: <b id="s2">0</b> | <b style="color:#15803d">Total Family Account: <span id="s3">0</span></b></p>
+<p id="sprInfo">Abhi upload nahi hui</p>
+<label>Family ID wala Column:</label><select id="sprFam"></select>
+<label>Age wala Column:</label><select id="sprAge"></select>
+<label>Naam wala Column:</label><select id="sprName"></select>
+<button onclick="doSPR()">1. Duplicate Hatao - Sirf Sabse Bada Rakho + Serial Number Lagao</button>
+<p>Total Row: <b id="s1">0</b> | Hat Gaya: <b id="s2">0</b> | <b style="color:green">Total Family: <span id="s3">0</span></b></p>
 </div>
 
-<!-- STEP 2 -->
 <div class="box">
-<h2>STEP 2: PRD DATA Upload Karo - 1,2,3 Jitni Ho</h2>
+<h2>STEP 2: PRD Naam Se Sabhi Gaon Ki Sheet Upload Karo</h2>
 <input type="file" id="prdFiles" accept=".xlsx,.xls,.csv" multiple>
-<p id="prdInfo">PRD abhi upload nahi hui</p>
-<label>PRD me Family Column chuno:</label>
-<select id="prdCol"></select>
-<button onclick="doPRD()">2. Sab PRD Ek Jagah Karo + Duplicate Hatao</button>
-<p>Total PRD Row: <b id="p1">0</b> | Duplicate Hata: <b id="p2">0</b> | <b style="color:#1d4ed8">Unique PRD Family: <span id="p3">0</span></b></p>
+<p id="prdInfo">Abhi upload nahi hui</p>
+<label>PRD me Family ID wala Column:</label><select id="prdFam"></select>
+<label>PRD me Naam wala Column:</label><select id="prdName"></select>
+<label>PRD me Gaon wala Column:</label><select id="prdVillage"></select>
+<button onclick="doPRD()">2. Sab PRD Merge Karo + Double Entry Nikalo</button>
+<p>Total PRD Row: <b id="p1">0</b> | Unique PRD: <b id="p3">0</b></p>
+<div class="dupbox">
+<h3 style="color:#dc2626;margin:0">⚠️ PRD DOUBLE ENTRY - Kin Parivaro Ki Double Entry Hui?</h3>
+<p>Double Entry wale Parivar (Family): <b id="dupFam" style="color:#dc2626">0</b> | Double Entry wali Total Row: <b id="dupRow" style="color:#dc2626">0</b></p>
+<button onclick="showTab('prddup')" style="background:#dc2626">👀 Double Entry Wali List Dekho</button>
+<button onclick="downloadDup()" style="background:#dc2626">⬇️ DOUBLE ENTRY Wali List Download Karo</button>
+</div>
 </div>
 
-<!-- STEP 3 -->
 <div class="box">
-<h2>STEP 3: MATCHING - SPR me se PRD Hatao</h2>
-<button onclick="doMatch()" style="background:#dc2626">3. MATCH KARO - REMAINING SPR NIKALO</button>
-<div class="card">
-<div>Total Family Account<b class="blue" id="m1">0</b></div>
-<div>Unique PRD<b class="blue" id="m2">0</b></div>
-<div>Match - Hat Gaya<b id="m3">0</b></div>
-<div style="background:#dcfce7">Remaining SPR<b class="red" id="m4">0</b></div>
-</div>
+<h2>STEP 3: MATCHING</h2>
+<button onclick="doMatch()" style="background:#15803d">3. MATCH KARO - Remaining SPR Nikalo</button>
+<div class="card"><div>SPR Total Family<b id="m1">0</b></div><div>PRD Unique<b id="m2">0</b></div><div>Match Ho Gaya<b id="m3">0</b></div><div style="background:#dcfce7">Remaining SPR<b style="color:#dc2626" id="m4">0</b></div></div>
 </div>
 
 <div class="tabs">
-<button id="tab1" class="active" onclick="showTab('spr')">📄 Total Family Account (SPR Unique)</button>
-<button id="tab2" onclick="showTab('prd')">📄 Unique PRD</button>
-<button id="tab3" onclick="showTab('rem')">📄 Remaining SPR</button>
+<button id="t1" class="active" onclick="showTab('spr')">📄 SPR - Sabse Bada + Serial</button>
+<button id="t2" onclick="showTab('prd')">📄 PRD - Merge + Separate</button>
+<button id="t4" onclick="showTab('prddup')">⚠️ PRD - DOUBLE ENTRY</button>
+<button id="t3" onclick="showTab('rem')">📄 Remaining SPR</button>
 </div>
-
-<div class="box">
-<input type="text" id="search" placeholder="Is list me Naam / Gaon / Family ID se khojo..." onkeyup="doSearch()">
-</div>
+<br>
+<input type="text" id="search" placeholder="Khojo - Naam / Gaon / Family ID..." onkeyup="doSearch()" style="width:95%;padding:11px;border:2px solid #c2410c;border-radius:8px">
+<br><br>
 <div style="overflow:auto"><table><thead id="th"></thead><tbody id="tb"></tbody></table></div>
 <br>
-<button onclick="downloadCurrent()">⬇️ Jo Sheet Dikh Rahi Hai Usko SEQUENCE me Download Karo</button>
-<button onclick="downloadAll()" style="background:#2563eb">⬇️ Teenon Sheet Ek Sath Download Karo (3 Sheet Wali Excel)</button>
+<button onclick="downloadCurrent()">⬇️ Jo Sheet Dikh Rahi Hai Usko Download Karo</button>
+<button onclick="downloadAll()" style="background:#2563eb">⬇️ Sabhi Sheet Ek Sath Download Karo (4 Sheet Wali Excel)</button>
 
 <script>
-let sprHeaders=[], sprRaw=[], sprUnique=[];
-let prdHeaders=[], prdRaw=[], prdUnique=[];
+let sprH=[], sprRaw=[], sprFinal=[];
+let prdH=[], prdRaw=[], prdFinal=[];
+let prdDup=[], prdDupHeaders=[];
 let remaining=[], matched=[];
 let current='spr';
-
-function readFile(file){return new Promise(res=>{let r=new FileReader();r.onload=ev=>{let wb=XLSX.read(ev.target.result,{type:'array'});let ws=wb.Sheets[wb.SheetNames[0]];let aoa=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});res(aoa);};r.readAsArrayBuffer(file);});}
-function clean(v){return String(v||'').trim().replace(/\s+/g,'');}
-function findFam(headers){let i=headers.findIndex(h=>String(h).toLowerCase().replace(/[^a-z]/g,'').includes('family'));if(i===-1)i=headers.findIndex(h=>String(h).toLowerCase().includes('parivar'));return i>=0?i:0;}
-function sortByFam(data,headers,idx){return [...data].sort((a,b)=>{let x=clean(a[idx]),y=clean(b[idx]);let nx=Number(x),ny=Number(y);if(!isNaN(nx)&&!isNaN(ny))return nx-ny;return x.localeCompare(y);});}
+function readFile(f){return new Promise(res=>{let r=new FileReader();r.onload=ev=>{let wb=XLSX.read(ev.target.result,{type:'array'});let ws=wb.Sheets[wb.SheetNames[0]];let aoa=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});res(aoa);};r.readAsArrayBuffer(f);});}
+function clean(v){return String(v||'').trim();}
+function getAge(v){let n=parseFloat(String(v||'').replace(/[^0-9.]/g,''));return isNaN(n)?0:n;}
+function findCol(h,words){for(let w of words){let i=h.findIndex(x=>String(x).toLowerCase().includes(w));if(i>=0)return i;}return 0;}
 
 document.getElementById('sprFile').addEventListener('change',async e=>{
-let aoa=await readFile(e.target.files[0]);
-sprHeaders=aoa[0]; sprRaw=aoa.slice(1).filter(r=>r.join('').trim()!=='');
-document.getElementById('sprInfo').textContent='SPR Upload Ho Gayi: '+sprRaw.length+' Row';
-let s=document.getElementById('sprCol');s.innerHTML=sprHeaders.map((h,i)=>`<option value="${i}">${h}</option>`).join('');s.value=findFam(sprHeaders);
+let aoa=await readFile(e.target.files[0]);sprH=aoa[0];sprRaw=aoa.slice(1).filter(r=>r.join('').trim()!=='');
+document.getElementById('sprInfo').textContent='Upload Ho Gayi: '+sprRaw.length+' Row';
+let opts=sprH.map((h,i)=>`<option value="${i}">${h}</option>`).join('');
+document.getElementById('sprFam').innerHTML=opts;document.getElementById('sprAge').innerHTML=opts;document.getElementById('sprName').innerHTML=opts;
+document.getElementById('sprFam').value=findCol(sprH,['family','parivar']);
+document.getElementById('sprAge').value=findCol(sprH,['age','ayu','umar','varsh','dob','janm']);
+document.getElementById('sprName').value=findCol(sprH,['name','naam']);
 });
 document.getElementById('prdFiles').addEventListener('change',async e=>{
 prdRaw=[];let allH=new Set();
-for(let f of e.target.files){let aoa=await readFile(f);let h=aoa[0];h.forEach(x=>allH.add(x));if(!prdHeaders.length)prdHeaders=h;let rows=aoa.slice(1).filter(r=>r.join('').trim()!=='');rows.forEach(r=>{let o={};h.forEach((c,i)=>o[c]=r[i]);prdRaw.push(o);});}
-document.getElementById('prdInfo').textContent='PRD Upload Ho Gayi: '+e.target.files.length+' Files, Total '+prdRaw.length+' Row';
-let s=document.getElementById('prdCol');let arr=[...allH];s.innerHTML=arr.map(h=>`<option value="${h}">${h}</option>`).join('');let fi=arr.findIndex(h=>String(h).toLowerCase().replace(/[^a-z]/g,'').includes('family'));if(fi>=0)s.value=arr[fi];
+for(let f of e.target.files){let aoa=await readFile(f);let h=aoa[0];h.forEach(x=>allH.add(x));if(!prdH.length)prdH=h;aoa.slice(1).filter(r=>r.join('').trim()!=='').forEach(r=>{let o={};h.forEach((c,i)=>o[c]=r[i]);o['_File']=f.name;prdRaw.push(o);});}
+document.getElementById('prdInfo').textContent='PRD Upload: '+e.target.files.length+' Files, Total '+prdRaw.length+' Row';
+let arr=[...allH];let opts=arr.map(h=>`<option value="${h}">${h}</option>`).join('');
+document.getElementById('prdFam').innerHTML=opts;document.getElementById('prdName').innerHTML=opts;document.getElementById('prdVillage').innerHTML=opts;
+document.getElementById('prdFam').value=arr.find(h=>String(h).toLowerCase().includes('family'))||arr[0];
+document.getElementById('prdName').value=arr.find(h=>String(h).toLowerCase().includes('naam')||String(h).toLowerCase().includes('name'))||arr[0];
+document.getElementById('prdVillage').value=arr.find(h=>String(h).toLowerCase().includes('gaon')||String(h).toLowerCase().includes('village'))||arr[0];
 });
 
 function doSPR(){
 if(!sprRaw.length){alert('Pehle SPR Upload karo');return;}
-let ci=parseInt(document.getElementById('sprCol').value);
-let seen=new Set();sprUnique=[];
-sprRaw.forEach(r=>{let fid=clean(r[ci]);if(!fid)return;if(!seen.has(fid)){seen.add(fid);sprUnique.push(r);}});
-sprUnique=sortByFam(sprUnique,sprHeaders,ci);
+let fam=parseInt(document.getElementById('sprFam').value);
+let age=parseInt(document.getElementById('sprAge').value);
+let map=new Map();
+sprRaw.forEach(r=>{let fid=clean(r[fam]).replace(/\s+/g,'');if(!fid)return;let a=getAge(r[age]);if(!map.has(fid)||a>getAge(map.get(fid)[age]))map.set(fid,r);});
+let arr=[...map.values()];
+arr.sort((a,b)=>{let x=clean(a[fam]),y=clean(b[fam]);let nx=Number(x),ny=Number(y);if(!isNaN(nx)&&!isNaN(ny))return nx-ny;return x.localeCompare(y);});
+sprFinal=arr.map((r,i)=>[i+1,...r]);
+sprH=['S.No.',...sprH];
 document.getElementById('s1').textContent=sprRaw.length;
-document.getElementById('s2').textContent=sprRaw.length-sprUnique.length;
-document.getElementById('s3').textContent=sprUnique.length;
-showTab('spr');alert('STEP 1 Ho Gaya!\\nTotal Family Account: '+sprUnique.length);
+document.getElementById('s2').textContent=sprRaw.length-arr.length;
+document.getElementById('s3').textContent=arr.length;
+showTab('spr');
+alert('STEP 1 Ho Gaya! Total Family: '+arr.length);
 }
 function doPRD(){
 if(!prdRaw.length){alert('Pehle PRD Upload karo');return;}
-let col=document.getElementById('prdCol').value;
-let seen=new Set();let uniqMap=new Map();
-prdRaw.forEach(o=>{let fid=clean(o[col]);if(!fid)return;if(!seen.has(fid)){seen.add(fid);uniqMap.set(fid,o);}});
-prdUnique=[...uniqMap.values()].map(o=>prdHeaders.map(h=>o[h]??''));
-let ci=prdHeaders.findIndex(h=>h===col);
-prdUnique=sortByFam(prdUnique,prdHeaders,ci);
+let famC=document.getElementById('prdFam').value;
+let nameC=document.getElementById('prdName').value;
+let villC=document.getElementById('prdVillage').value;
+// 1. Unique PRD
+let seen=new Set();let out=[];
+let counts={};
+prdRaw.forEach(o=>{let fid=clean(o[famC]).replace(/\s+/g,'');if(!fid)return;counts[fid]=(counts[fid]||0)+1;});
+prdRaw.forEach(o=>{let fid=clean(o[famC]).replace(/\s+/g,'');if(!fid)return;if(!seen.has(fid)){seen.add(fid);out.push([fid,clean(o[nameC]),clean(o[villC])]);}});
+out.sort((a,b)=>{let nx=Number(a[0]),ny=Number(b[0]);if(!isNaN(nx)&&!isNaN(ny))return nx-ny;return a[0].localeCompare(b[0]);});
+prdFinal=out.map((r,i)=>[i+1,...r]);
+prdH=['S.No.','Family ID','Naam','Gaon'];
+// 2. DOUBLE ENTRY - Jiski Family ID 2 baar ya zyada aayi
+let dupFids=Object.keys(counts).filter(fid=>counts[fid]>1);
+// Double wali saari rows - Family ID, Naam, Gaon, Kitni Baar, Kis File me
+prdDup=[];
+prdRaw.forEach(o=>{
+let fid=clean(o[famC]).replace(/\s+/g,'');
+if(dupFids.includes(fid)){prdDup.push([fid,clean(o[nameC]),clean(o[villC]),counts[fid],o['_File']]);}
+});
+prdDup.sort((a,b)=>a[0].localeCompare(b[0]));
+prdDupHeaders=['Family ID','Naam','Gaon','Kitni Baar Aayi','Kis File Me Thi'];
 document.getElementById('p1').textContent=prdRaw.length;
-document.getElementById('p2').textContent=prdRaw.length-prdUnique.length;
-document.getElementById('p3').textContent=prdUnique.length;
-showTab('prd');alert('STEP 2 Ho Gaya!\\nUnique PRD Family: '+prdUnique.length);
+document.getElementById('p3').textContent=out.length;
+document.getElementById('dupFam').textContent=dupFids.length;
+document.getElementById('dupRow').textContent=prdDup.length;
+showTab('prd');
+alert('STEP 2 Ho Gaya!\\nUnique PRD: '+out.length+'\\nDOUBLE ENTRY wale Parivar: '+dupFids.length+'\\nDouble Entry wali Row: '+prdDup.length+'\\n\\nDouble Entry dekhne ke liye DOUBLE ENTRY wala button dabao.');
 }
 function doMatch(){
-if(!sprUnique.length){alert('Pehle STEP 1 karo');return;}
-if(!prdUnique.length){alert('Pehle STEP 2 karo');return;}
-let sprCi=parseInt(document.getElementById('sprCol').value);
-let prdCol=document.getElementById('prdCol').value;
-let prdCi=prdHeaders.findIndex(h=>h===prdCol);
-let prdSet=new Set(prdUnique.map(r=>clean(r[prdCi])));
+if(!sprFinal.length){alert('Pehle STEP 1 karo');return;}
+if(!prdFinal.length){alert('Pehle STEP 2 karo');return;}
+let prdSet=new Set(prdFinal.map(r=>clean(r[1]).replace(/\s+/g,'')));
 remaining=[];matched=[];
-sprUnique.forEach(r=>{let fid=clean(r[sprCi]);if(prdSet.has(fid))matched.push(r);else remaining.push(r);});
-remaining=sortByFam(remaining,sprHeaders,sprCi);
-document.getElementById('m1').textContent=sprUnique.length;
-document.getElementById('m2').textContent=prdUnique.length;
+sprFinal.forEach(r=>{let fid=clean(r[1]).replace(/\s+/g,'');if(prdSet.has(fid))matched.push(r);else remaining.push(r);});
+remaining=remaining.map((r,i)=>[i+1,...r.slice(1)]);
+document.getElementById('m1').textContent=sprFinal.length;
+document.getElementById('m2').textContent=prdFinal.length;
 document.getElementById('m3').textContent=matched.length;
 document.getElementById('m4').textContent=remaining.length;
-showTab('rem');alert('FINAL Ho Gaya!\\nTotal Family: '+sprUnique.length+'\\nMatch Hat Gaya: '+matched.length+'\\nRemaining SPR: '+remaining.length);
+showTab('rem');
+alert('FINAL Ho Gaya! Remaining SPR: '+remaining.length);
 }
-function getCurrent(){if(current==='spr')return{headers:sprHeaders,data:sprUnique};if(current==='prd')return{headers:prdHeaders,data:prdUnique};return{headers:sprHeaders,data:remaining};}
-function showTab(t){
-current=t;
-document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
-document.getElementById(t==='spr'?'tab1':t==='prd'?'tab2':'tab3').classList.add('active');
-let c=getCurrent();
-document.getElementById('th').innerHTML='<tr>'+c.headers.map(h=>`<th>${h}</th>`).join('')+'</tr>';
-show(c.data);
+function getCur(){
+if(current==='spr')return{h:sprH,d:sprFinal};
+if(current==='prd')return{h:prdH,d:prdFinal};
+if(current==='prddup')return{h:prdDupHeaders,d:prdDup};
+return{h:sprH,d:remaining};
 }
-function show(data){
-document.getElementById('tb').innerHTML=data.slice(0,500).map(r=>'<tr>'+r.map(x=>`<td>${x}</td>`).join('')+'</tr>').join('');
-window._show=data;
+function showTab(t){current=t;document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));document.getElementById(t==='spr'?'t1':t==='prd'?'t2':t==='prddup'?'t4':'t3').classList.add('active');let c=getCur();document.getElementById('th').innerHTML='<tr>'+c.h.map(h=>`<th>${h}</th>`).join('')+'</tr>';show(c.d);}
+function show(d){document.getElementById('tb').innerHTML=d.slice(0,500).map(r=>'<tr>'+r.map(x=>`<td>${x}</td>`).join('')+'</tr>').join('');window._show=d;}
+function doSearch(){let q=document.getElementById('search').value.toLowerCase();let c=getCur();if(!q)return show(c.d);show(c.d.filter(r=>r.join(' ').toLowerCase().includes(q)));}
+function downloadDup(){
+if(!prdDup.length){alert('Pehle STEP 2 karo - Koi Double Entry nahi mili ya STEP 2 nahi chalaya');return;}
+let ws=XLSX.utils.aoa_to_sheet([prdDupHeaders,...prdDup]);let wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'PRD Double Entry');XLSX.writeFile(wb,'PRD_Double_Entry.xlsx');
 }
-function doSearch(){
-let q=document.getElementById('search').value.toLowerCase();
-let c=getCurrent();
-if(!q) return show(c.data);
-show(c.data.filter(r=>r.join(' ').toLowerCase().includes(q)));
-}
-function downloadCurrent(){
-let c=getCurrent();if(!c.data.length){alert('Pehle us Step ko chalao');return;}
-let ws=XLSX.utils.aoa_to_sheet([c.headers,...c.data]);
-let wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,current==='spr'?'Total Family Account':current==='prd'?'Unique PRD':'Remaining SPR');
-XLSX.writeFile(wb,current==='spr'?'Total_Family_Account.xlsx':current==='prd'?'Unique_PRD.xlsx':'Remaining_SPR.xlsx');
-}
-function downloadAll(){
-if(!sprUnique.length){alert('Pehle STEP 1,2,3 karo');return;}
-let wb=XLSX.utils.book_new();
-let ws1=XLSX.utils.aoa_to_sheet([sprHeaders,...sprUnique]);XLSX.utils.book_append_sheet(wb,ws1,'Total Family Account');
-let ws2=XLSX.utils.aoa_to_sheet([prdHeaders,...prdUnique]);XLSX.utils.book_append_sheet(wb,ws2,'Unique PRD');
-let ws3=XLSX.utils.aoa_to_sheet([sprHeaders,...remaining]);XLSX.utils.book_append_sheet(wb,ws3,'Remaining SPR');
-XLSX.writeFile(wb,'SPR_PRD_FINAL.xlsx');
-}
+function downloadCurrent(){let c=getCur();if(!c.d.length){alert('Pehle Step chalao');return;}let ws=XLSX.utils.aoa_to_sheet([c.h,...c.d]);let wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,current==='spr'?'SPR Sabse Bada':current==='prd'?'PRD Separate':current==='prddup'?'PRD Double Entry':'Remaining SPR');XLSX.writeFile(wb,current==='spr'?'SPR_Sabse_Bada.xlsx':current==='prd'?'PRD_Separate.xlsx':current==='prddup'?'PRD_Double_Entry.xlsx':'Remaining_SPR.xlsx');}
+function downloadAll(){if(!sprFinal.length){alert('Pehle STEP 1,2,3 karo');return;}let wb=XLSX.utils.book_new();let w1=XLSX.utils.aoa_to_sheet([sprH,...sprFinal]);XLSX.utils.book_append_sheet(wb,w1,'SPR Sabse Bada');let w2=XLSX.utils.aoa_to_sheet([prdH,...prdFinal]);XLSX.utils.book_append_sheet(wb,w2,'PRD Separate');let w3=XLSX.utils.aoa_to_sheet([prdDupHeaders,...prdDup]);XLSX.utils.book_append_sheet(wb,w3,'PRD Double Entry');let w4=XLSX.utils.aoa_to_sheet([sprH,...remaining]);XLSX.utils.book_append_sheet(wb,w4,'Remaining SPR');XLSX.writeFile(wb,'SPR_PRD_SMART_FINAL.xlsx');}
 </script>
 </body>
 </html>
