@@ -128,7 +128,7 @@ alert('स्टेप 1 हो गया! कुल एसपीआर पर�
 }
 function doPRD(){
 if(!prdRaw.length){alert('पहले पीआरडी डालो');return;}
-let valid=prdRaw.filter(o=>o.fid!=='0'&&o.fid!=='');
+126: let valid=prdRaw.filter(o=>o.fid && o.fid!=='0' && !isNaN(Number(o.fid)) && o.fid.length>=7);
 let counts={};
 valid.forEach(o=>{counts[o.fid]=(counts[o.fid]||0)+1;});
 let seen=new Set(), out=[];
