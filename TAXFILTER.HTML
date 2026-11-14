@@ -112,6 +112,9 @@ let seen=new Set(), arr=[];
 sprRaw.forEach(r=>{
   let fid=clean(r[1]).replace(/\s+/g,'');
   if(!fid||fid==='0') return;
+if(fid.toLowerCase().includes('family')) return;
+if(isNaN(Number(fid))) return;
+if(fid.length < 7) return;
   if(!seen.has(fid)){seen.add(fid);arr.push([fid]);}
 });
 arr.sort((a,b)=>Number(a[0])-Number(b[0]));
