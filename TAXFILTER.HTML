@@ -30,7 +30,7 @@
 </div>
 
 <div class="box">
-<h2>स्टेप 3: मिलान - एसपीआर-पीआरडी परिवार  </h2>
+<h2>स्टेप 3: मिलान - एसपीआर-पीआरडी परिवार </h2>
 <p class="note"></p>
 <button class="red" onclick="doMatch()">3. </button>
 <div class="card"><div>कुल एसपीआर परिवार<b id="m1">0</b></div><div>कुल पीआरडी <b id="m2">0</b></div><div>मिल गया - हट गया<b style="color:#dc2626" id="m3">0</b></div><div>टैक्स रजिस्ट्रेशन के लिए बचा हुआ<b style="color:green" id="m4">0</b></div></div>
@@ -104,7 +104,7 @@ for(let f of e.target.files){
     prdRaw.push({fid:parsed.fid, head:parsed.head, addr:clean(r[addrIdx>=0?addrIdx:3]), mob:clean(r[mobIdx>=0?mobIdx:4]), file:f.name});
   });
 }
-document.getElementById('prdInfo').textContent='पीआरडी आ गई: '+e.target.files.length+' फाईल, कुल पंक्ति (टेक्स्ट टू कॉलम के बाद): '+prdRaw.length;
+document.getElementById('prdInfo').textContent='पीआरडी आ गई: '+e.target.files.length+' फाईल, कुल परिवार  '+prdRaw.length;
 });
 function doSPR(){
 if(!sprRaw.length){alert('पहले एसपीआर डालो');return;}
