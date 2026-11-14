@@ -89,7 +89,7 @@ function clean(v){return String(v||'').trim();}
 document.getElementById('sprFile').addEventListener('change',async e=>{
 let aoa=await readFile(e.target.files[0]);
 sprH=aoa[0]; sprRaw=aoa.slice(1).filter(r=>r.join('').trim()!=='');
-document.getElementById('sprInfo').textContent='एसपीआर आ गई: '+sprRaw.length+' पंक्ति | फैमिली आईडी B कॉलम से लेगा - मैक्रो जैसा';
+document.getElementById('sprInfo').textContent='एसपीआर आ गई: '+sprRaw.length+'';
 });
 document.getElementById('prdFiles').addEventListener('change',async e=>{
 prdRaw=[];
