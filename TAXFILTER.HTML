@@ -7,14 +7,13 @@
 </head>
 <body>
 <h1>समग्र परिवार का डाटा</h1>
-<p style="text-align:center"><b>आपके Ctrl+T वाले मैक्रो का गिटहब वाला रूप - बिना एक्सेल मैक्रो के चलेगा</b></p>
 
 <div class="box">
 <h2>स्टेप 1: एसपीआर फाईल अपलोड करो</h2>
-<p class="note">मैक्रो में ये होता था: एसपीआर कॉपी -> C:N हटाओ -> B से डुप्लीकेट हटाओ -> 1,2,3... सीरियल लगाओ। यही यहाँ होगा।</p>
+<p class="note"></p>
 <input type="file" id="sprFile" accept=".xlsx,.xls,.csv">
 <p id="sprInfo">अभी एसपीआर नहीं डाली</p>
-<button onclick="doSPR()">1. एसपीआर डुप्लीकेट हटाओ</button>
+<button onclick="doSPR()">1. एसपीआर में कुल परिवार जॉंचे </button>
 <div class="card"><div>कुल पंक्ति<b id="s1">0</b></div><div>हट गए<b id="s2">0</b></div><div>कुल एसपीआर परिवार<b style="color:green" id="s3">0</b></div></div>
 <button class="blue" onclick="downloadSPR()">⬇️ कुल एसपीआर परिवार डाउनलोड करो</button>
 </div>
