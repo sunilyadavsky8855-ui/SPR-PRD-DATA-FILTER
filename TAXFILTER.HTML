@@ -1,64 +1,60 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TAX - GitHub Wala Macro - Ctrl+T Wala Kaam</title>
+<title>समग्र परिवार का डाटा</title>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<style>body{font-family:Segoe UI;padding:14px;background:#f0fdf4}h1{color:#15803d;text-align:center}h2{background:#15803d;color:#fff;padding:10px;border-radius:8px;font-size:16px}input{width:96%;padding:11px;border:2px solid #15803d;border-radius:8px;background:#fff;margin:5px 0}button{width:100%;padding:13px;background:#15803d;color:#fff;border:none;border-radius:10px;font-weight:700;margin:7px 0;font-size:15px}.box{background:#fff;padding:12px;border-radius:12px;box-shadow:0 2px 8px #ddd;margin-bottom:12px}.card{display:flex;gap:8px;flex-wrap:wrap}.card div{flex:1;min-width:110px;background:#fff;padding:10px;border-radius:10px;text-align:center;box-shadow:0 1px 5px #ddd}.card b{font-size:20px;display:block}table{width:100%;border-collapse:collapse;background:#fff;font-size:13px}th,td{border:1px solid #ccc;padding:7px;text-align:left}th{background:#15803d;color:#fff}.tabs{display:flex;gap:5px;flex-wrap:wrap}.tabs button{padding:10px;font-size:13px;background:#e2e8f0;color:#000}.tabs button.active{background:#15803d;color:#fff}.red{background:#dc2626!important}.blue{background:#2563eb!important}.orange{background:#ea580c!important}.note{background:#fffbeb;border:1px solid #facc15;padding:10px;border-radius:8px;font-size:13px}</style>
+<style>body{font-family:Segoe UI;padding:14px;background:#f0fdf4}h1{color:#15803d;text-align:center}h2{background:#15803d;color:#fff;padding:10px;border-radius:8px;font-size:17px}input{width:96%;padding:11px;border:2px solid #15803d;border-radius:8px;background:#fff;margin:5px 0}button{width:100%;padding:13px;background:#15803d;color:#fff;border:none;border-radius:10px;font-weight:700;margin:7px 0;font-size:16px}.box{background:#fff;padding:12px;border-radius:12px;box-shadow:0 2px 8px #ddd;margin-bottom:12px}.card{display:flex;gap:8px;flex-wrap:wrap}.card div{flex:1;min-width:110px;background:#fff;padding:10px;border-radius:10px;text-align:center;box-shadow:0 1px 5px #ddd}.card b{font-size:20px;display:block}table{width:100%;border-collapse:collapse;background:#fff;font-size:13px}th,td{border:1px solid #ccc;padding:7px;text-align:left}th{background:#15803d;color:#fff}.tabs{display:flex;gap:5px;flex-wrap:wrap}.tabs button{padding:10px;font-size:14px;background:#e2e8f0;color:#000}.tabs button.active{background:#15803d;color:#fff}.red{background:#dc2626!important}.blue{background:#2563eb!important}.orange{background:#ea580c!important}.note{background:#fffbeb;border:1px solid #facc15;padding:10px;border-radius:8px;font-size:14px}</style>
 </head>
 <body>
-<h1>समग्र परिवार का डाटा </h1>
-<p style="text-align:center"><b>Aapke Ctrl+T wale Macro ka GitHub wala roop - Bina Excel Macro ke chalega</b></p>
+<h1>समग्र परिवार का डाटा</h1>
+<p style="text-align:center"><b>आपके Ctrl+T वाले मैक्रो का गिटहब वाला रूप - बिना एक्सेल मैक्रो के चलेगा</b></p>
 
 <div class="box">
-<h2>STEP 1: SPR फाईल अपलोड करो </h2>
-<p class="note">Macro me ye hota tha: SPR copy -> C:N delete -> B se RemoveDuplicates -> 1,2,3... Serial. Yahi yaha hoga.</p>
+<h2>स्टेप 1: एसपीआर फाईल अपलोड करो</h2>
+<p class="note">मैक्रो में ये होता था: एसपीआर कॉपी -> C:N हटाओ -> B से डुप्लीकेट हटाओ -> 1,2,3... सीरियल लगाओ। यही यहाँ होगा।</p>
 <input type="file" id="sprFile" accept=".xlsx,.xls,.csv">
-<p id="sprInfo">Abhi SPR nahi dali</p>
-<button onclick="doSPR()">1. TAX - SPR Duplicate Hatao</button>
-<div class="card"><div>Total Row<b id="s1">0</b></div><div>Hat Gaye<b id="s2">0</b></div><div>total spr families<b style="color:green" id="s3">0</b></div></div>
-<button class="blue" onclick="downloadSPR()">⬇️ total spr families Download Karo</button>
+<p id="sprInfo">अभी एसपीआर नहीं डाली</p>
+<button onclick="doSPR()">1. एसपीआर डुप्लीकेट हटाओ</button>
+<div class="card"><div>कुल पंक्ति<b id="s1">0</b></div><div>हट गए<b id="s2">0</b></div><div>कुल एसपीआर परिवार<b style="color:green" id="s3">0</b></div></div>
+<button class="blue" onclick="downloadSPR()">⬇️ कुल एसपीआर परिवार डाउनलोड करो</button>
 </div>
 
 <div class="box">
-<h2>STEP 2: PRD File Dalo - Data_export 1,2,3 Jitni Ho</h2>
-<p class="note">Macro me ye hota tha: PRD B Column pe <b>TextToColumns - Fixed Width</b> - 0,6,9,33,65,154,159,164,166,264 pe todna. Yahi yaha Auto hoga.</p>
+<h2>स्टेप 2: पीआरडी फाईल डालो - डाटा एक्सपोर्ट 1,2,3 जितनी हो</h2>
+<p class="note">मैक्रो में ये होता था: पीआरडी B कॉलम पर <b>टेक्स्ट टू कॉलम - फिक्स्ड विड्थ</b> - 0,6,9,33,65,154,159,164,166,264 पर तोड़ना। यही यहाँ अपने आप होगा।</p>
 <input type="file" id="prdFiles" accept=".xlsx,.xls,.csv" multiple>
-<p id="prdInfo">Abhi PRD nahi dali</p>
-<button class="orange" onclick="doPRD()">2. TAX - PRD TextToColumns + Duplicate Nikalo</button>
-<div class="card"><div>Total PRD Row<b id="p1">0</b></div><div>total prd unique families<b style="color:green" id="p3">0</b></div><div>duplicate in prd<b style="color:#dc2626" id="dupFam">0</b></div><div>Duplicate Row<b style="color:#dc2626" id="dupRow">0</b></div></div>
-<button class="blue" onclick="downloadPRDUnique()">⬇️ total prd unique families Download Karo</button>
-<button class="red" onclick="downloadPRDDup()">⬇️ duplicate in prd Download Karo</button>
+<p id="prdInfo">अभी पीआरडी नहीं डाली</p>
+<button class="orange" onclick="doPRD()">2. पीआरडी टेक्स्ट टू कॉलम + डुप्लीकेट निकालो</button>
+<div class="card"><div>कुल पीआरडी पंक्ति<b id="p1">0</b></div><div>कुल पीआरडी यूनिक परिवार<b style="color:green" id="p3">0</b></div><div>पीआरडी में डुप्लीकेट<b style="color:#dc2626" id="dupFam">0</b></div><div>डुप्लीकेट पंक्ति<b style="color:#dc2626" id="dupRow">0</b></div></div>
+<button class="blue" onclick="downloadPRDUnique()">⬇️ कुल पीआरडी यूनिक परिवार डाउनलोड करो</button>
+<button class="red" onclick="downloadPRDDup()">⬇️ पीआरडी में डुप्लीकेट डाउनलोड करो</button>
 </div>
 
 <div class="box">
-<h2>STEP 3: MATCH - SPR vs PRD Unique - Remaining</h2>
-<p class="note">Macro me ye hota tha: PRD Unique ko SPR ke B me chipka ke Duplicate ko LAL karke, Bina Rang wali ko nikalna. Yahi yaha hoga.</p>
-<button class="red" onclick="doMatch()">3. TAX - MATCH Karo - Remaining Nikalo</button>
-<div class="card"><div>total spr families<b id="m1">0</b></div><div>total prd unique<b id="m2">0</b></div><div>Match Hat Gaya<b style="color:#dc2626" id="m3">0</b></div><div>remaining for tax registration<b style="color:green" id="m4">0</b></div></div>
-<button class="blue" onclick="downloadRemaining()">⬇️ remaining for tax registration Download Karo</button>
-<button onclick="downloadAll()" style="background:#7c3aed">⬇️ SABHI 4 SHEET EK SATH DOWNLOAD KARO - Jaise Macro me Save hota tha</button>
+<h2>स्टेप 3: मिलान - एसपीआर बनाम पीआरडी यूनिक - बचा हुआ</h2>
+<p class="note">मैक्रो में ये होता था: पीआरडी यूनिक को एसपीआर के B में चिपका के डुप्लीकेट को लाल करके, बिना रंग वाली को निकालना। यही यहाँ होगा।</p>
+<button class="red" onclick="doMatch()">3. मिलान करो - बचा हुआ निकालो</button>
+<div class="card"><div>कुल एसपीआर परिवार<b id="m1">0</b></div><div>कुल पीआरडी यूनिक<b id="m2">0</b></div><div>मिल गया - हट गया<b style="color:#dc2626" id="m3">0</b></div><div>टैक्स रजिस्ट्रेशन के लिए बचा हुआ<b style="color:green" id="m4">0</b></div></div>
+<button class="blue" onclick="downloadRemaining()">⬇️ टैक्स रजिस्ट्रेशन के लिए बचा हुआ डाउनलोड करो</button>
+<button onclick="downloadAll()" style="background:#7c3aed">⬇️ सभी 4 शीट एक साथ डाउनलोड करो - जैसे मैक्रो में सेव होता था</button>
 </div>
 
 <div class="tabs">
-<button id="t1" class="active" onclick="showTab('spr')">📄 total spr families</button>
-<button id="t2" onclick="showTab('prd')">📄 total prd unique families</button>
-<button id="t4" onclick="showTab('prddup')">⚠️ duplicate in prd</button>
-<button id="t3" onclick="showTab('rem')">📄 remaining for tax registration</button>
+<button id="t1" class="active" onclick="showTab('spr')">📄 कुल एसपीआर परिवार</button>
+<button id="t2" onclick="showTab('prd')">📄 कुल पीआरडी यूनिक परिवार</button>
+<button id="t4" onclick="showTab('prddup')">⚠️ पीआरडी में डुप्लीकेट</button>
+<button id="t3" onclick="showTab('rem')">📄 टैक्स रजिस्ट्रेशन के लिए बचा हुआ</button>
 </div>
 <br>
-<input type="text" id="search" placeholder="Khojo - Family ID / Naam..." onkeyup="doSearch()" style="width:96%;padding:11px;border:2px solid #15803d;border-radius:8px">
+<input type="text" id="search" placeholder="खोजो - फैमिली आईडी / नाम..." onkeyup="doSearch()" style="width:96%;padding:11px;border:2px solid #15803d;border-radius:8px">
 <br><br>
 <div style="overflow:auto"><table><thead id="th"></thead><tbody id="tb"></tbody></table></div>
 
 <script>
 let sprH=[], sprRaw=[], sprFinal=[];
 let prdRaw=[], prdUnique=[], prdDup=[];
-let prdDupH=['S.No.','Family ID','Family Head Name','Address','Mobile','Kitni Baar','Kis File Me'];
+let prdDupH=['क्र.','फैमिली आईडी','परिवार मुखिया का नाम','पता','मोबाइल','कितनी बार आई','किस फाईल में'];
 let remaining=[], matched=[], current='spr';
-
-// ===== MACRO WALA TEXT TO COLUMNS - FIXED WIDTH =====
-// Macro me tha: FieldInfo Array(0,1),(6,1),(9,1),(33,1),(65,1),(154,1),(159,1),(164,1),(166,1),(264,1)
-// Matlab: 0-6, 6-9, 9-33, 33-65, 65-154, 154-159, 159-164, 164-166, 166-264, 264-end
 function fixedWidthSplit(s){
   s = String(s||'');
   let pos=[0,6,9,33,65,154,159,164,166,264];
@@ -72,15 +68,11 @@ function fixedWidthSplit(s){
 }
 function parseMemberDetails(cell){
   let s=String(cell||'');
-  // Pehle Fixed Width se todo - Macro wala tarika
   let parts=fixedWidthSplit(s);
-  // parts[2] me Family ID jaisa kuch ho sakta hai - usme se number nikalo
   let fid='';
-  // 1. "Family ID : 23358255" pattern
   let m=s.match(/Family ID\s*:\s*(\d+)/);
   if(m) fid=m[1];
   else {
-    // 2. Fixed Width wale parts me se pehla 7-10 digit wala number
     for(let p of parts){ let mm=p.match(/\b\d{7,10}\b/); if(mm){fid=mm[0];break;} }
     if(!fid){ let mm=s.match(/\b\d{7,10}\b/); if(mm) fid=mm[0]; }
   }
@@ -90,7 +82,6 @@ function parseMemberDetails(cell){
   return {fid:fid, head:head, parts:parts};
 }
 function readFile(f){return new Promise(res=>{let r=new FileReader();r.onload=ev=>{let wb=XLSX.read(ev.target.result,{type:'array'});let ws=wb.Sheets[wb.SheetNames[0]];let aoa=XLSX.utils.sheet_to_json(ws,{header:1,defval:'',raw:false});
-  // Header dhoondho - "Member Details" wali line
   let hi=0; for(let i=0;i<Math.min(5,aoa.length);i++){ if(aoa[i].join(' ').toLowerCase().includes('member details')){hi=i;break;} }
   if(hi>0) aoa=aoa.slice(hi);
   res(aoa);};r.readAsArrayBuffer(f);});}
@@ -98,9 +89,8 @@ function clean(v){return String(v||'').trim();}
 
 document.getElementById('sprFile').addEventListener('change',async e=>{
 let aoa=await readFile(e.target.files[0]);
-// SPR me header pehli line hai - Family ID B Column (index 1) me hai jaise Macro me tha
 sprH=aoa[0]; sprRaw=aoa.slice(1).filter(r=>r.join('').trim()!=='');
-document.getElementById('sprInfo').textContent='SPR aa gayi: '+sprRaw.length+' Row | Family ID B Column se lega - Macro jaisa';
+document.getElementById('sprInfo').textContent='एसपीआर आ गई: '+sprRaw.length+' पंक्ति | फैमिली आईडी B कॉलम से लेगा - मैक्रो जैसा';
 });
 document.getElementById('prdFiles').addEventListener('change',async e=>{
 prdRaw=[];
@@ -115,30 +105,27 @@ for(let f of e.target.files){
     prdRaw.push({fid:parsed.fid, head:parsed.head, addr:clean(r[addrIdx>=0?addrIdx:3]), mob:clean(r[mobIdx>=0?mobIdx:4]), file:f.name});
   });
 }
-document.getElementById('prdInfo').textContent='PRD aa gayi: '+e.target.files.length+' Files, Total Row (TextToColumns ke baad): '+prdRaw.length;
+document.getElementById('prdInfo').textContent='पीआरडी आ गई: '+e.target.files.length+' फाईल, कुल पंक्ति (टेक्स्ट टू कॉलम के बाद): '+prdRaw.length;
 });
-
-// STEP 1 - SPR - Macro jaisa: B se RemoveDuplicates
 function doSPR(){
-if(!sprRaw.length){alert('Pehle SPR dalo');return;}
+if(!sprRaw.length){alert('पहले एसपीआर डालो');return;}
 let seen=new Set(), arr=[];
 sprRaw.forEach(r=>{
-  let fid=clean(r[1]).replace(/\s+/g,''); // B Column = Family ID
+  let fid=clean(r[1]).replace(/\s+/g,'');
   if(!fid||fid==='0') return;
   if(!seen.has(fid)){seen.add(fid);arr.push([fid]);}
 });
 arr.sort((a,b)=>Number(a[0])-Number(b[0]));
 sprFinal=arr.map((r,i)=>[i+1,r[0]]);
-sprH=['S.No.','Family ID'];
+sprH=['क्र.','फैमिली आईडी'];
 document.getElementById('s1').textContent=sprRaw.length;
 document.getElementById('s2').textContent=sprRaw.length-arr.length;
 document.getElementById('s3').textContent=arr.length;
 showTab('spr');
-alert('STEP 1 HO GAYA! total spr families: '+arr.length);
+alert('स्टेप 1 हो गया! कुल एसपीआर परिवार: '+arr.length);
 }
-// STEP 2 - PRD - Macro jaisa
 function doPRD(){
-if(!prdRaw.length){alert('Pehle PRD dalo');return;}
+if(!prdRaw.length){alert('पहले पीआरडी डालो');return;}
 let valid=prdRaw.filter(o=>o.fid!=='0'&&o.fid!=='');
 let counts={};
 valid.forEach(o=>{counts[o.fid]=(counts[o.fid]||0)+1;});
@@ -156,12 +143,11 @@ document.getElementById('p3').textContent=out.length;
 document.getElementById('dupFam').textContent=dupFids.length;
 document.getElementById('dupRow').textContent=prdDup.length;
 showTab('prd');
-alert('STEP 2 HO GAYA! total prd unique families: '+out.length+' | duplicate in prd: '+dupFids.length);
+alert('स्टेप 2 हो गया! कुल पीआरडी यूनिक परिवार: '+out.length+' | पीआरडी में डुप्लीकेट: '+dupFids.length);
 }
-// STEP 3 - MATCH
 function doMatch(){
-if(!sprFinal.length){alert('Pehle STEP 1 karo');return;}
-if(!prdUnique.length){alert('Pehle STEP 2 karo');return;}
+if(!sprFinal.length){alert('पहले स्टेप 1 करो');return;}
+if(!prdUnique.length){alert('पहले स्टेप 2 करो');return;}
 let prdSet=new Set(prdUnique.map(r=>String(r[1])));
 remaining=[];matched=[];
 sprFinal.forEach(r=>{let fid=String(r[1]); if(prdSet.has(fid)) matched.push(r); else remaining.push(r);});
@@ -171,18 +157,18 @@ document.getElementById('m2').textContent=prdUnique.length;
 document.getElementById('m3').textContent=matched.length;
 document.getElementById('m4').textContent=remaining.length;
 showTab('rem');
-alert('STEP 3 HO GAYA! remaining for tax registration: '+remaining.length);
+alert('स्टेप 3 हो गया! टैक्स रजिस्ट्रेशन के लिए बचा हुआ: '+remaining.length);
 }
-function getCur(){if(current==='spr')return{h:sprH,d:sprFinal};if(current==='prd')return{h:['S.No.','Family ID','Family Head Name','Address','Mobile'],d:prdUnique};if(current==='prddup')return{h:prdDupH,d:prdDup};return{h:['S.No.','Family ID'],d:remaining};}
+function getCur(){if(current==='spr')return{h:sprH,d:sprFinal};if(current==='prd')return{h:['क्र.','फैमिली आईडी','परिवार मुखिया का नाम','पता','मोबाइल'],d:prdUnique};if(current==='prddup')return{h:prdDupH,d:prdDup};return{h:['क्र.','फैमिली आईडी'],d:remaining};}
 function showTab(t){current=t;document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));document.getElementById(t==='spr'?'t1':t==='prd'?'t2':t==='prddup'?'t4':'t3').classList.add('active');let c=getCur();document.getElementById('th').innerHTML='<tr>'+c.h.map(h=>`<th>${h}</th>`).join('')+'</tr>';show(c.d);}
 function show(d){document.getElementById('tb').innerHTML=d.slice(0,500).map(r=>'<tr>'+r.map(x=>`<td>${x}</td>`).join('')+'</tr>').join('');}
 function doSearch(){let q=document.getElementById('search').value.toLowerCase();let c=getCur();if(!q)return show(c.d);show(c.d.filter(r=>r.join(' ').toLowerCase().includes(q)));}
-function dl(name, headers, data, sheetName){if(!data.length){alert('Pehle Step chalao');return;}let ws=XLSX.utils.aoa_to_sheet([headers,...data]);let wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,sheetName);XLSX.writeFile(wb,name);}
-function downloadSPR(){dl('total_spr_families.xlsx',sprH,sprFinal,'total spr families');}
-function downloadPRDUnique(){dl('total_prd_unique_families.xlsx',['S.No.','Family ID','Family Head Name','Address','Mobile'],prdUnique,'total prd unique families');}
-function downloadPRDDup(){dl('duplicate_in_prd.xlsx',prdDupH,prdDup,'duplicate in prd');}
-function downloadRemaining(){dl('remaining_for_tax_registration.xlsx',['S.No.','Family ID'],remaining,'remaining for tax registration');}
-function downloadAll(){if(!sprFinal.length){alert('Pehle STEP 1,2,3 karo');return;}let wb=XLSX.utils.book_new();let w1=XLSX.utils.aoa_to_sheet([sprH,...sprFinal]);XLSX.utils.book_append_sheet(wb,w1,'total spr families');let w2=XLSX.utils.aoa_to_sheet([['S.No.','Family ID','Family Head Name','Address','Mobile'],...prdUnique]);XLSX.utils.book_append_sheet(wb,w2,'total prd unique families');let w3=XLSX.utils.aoa_to_sheet([prdDupH,...prdDup]);XLSX.utils.book_append_sheet(wb,w3,'duplicate in prd');let w4=XLSX.utils.aoa_to_sheet([['S.No.','Family ID'],...remaining]);XLSX.utils.book_append_sheet(wb,w4,'remaining for tax registration');XLSX.writeFile(wb,'TAX_GITHUB_FINAL.xlsx');}
+function dl(name, headers, data, sheetName){if(!data.length){alert('पहले स्टेप चलाओ');return;}let ws=XLSX.utils.aoa_to_sheet([headers,...data]);let wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,sheetName);XLSX.writeFile(wb,name);}
+function downloadSPR(){dl('kul_SPR_parivar.xlsx',sprH,sprFinal,'kul SPR parivar');}
+function downloadPRDUnique(){dl('kul_PRD_unique_parivar.xlsx',['क्र.','फैमिली आईडी','परिवार मुखिया का नाम','पता','मोबाइल'],prdUnique,'kul PRD unique parivar');}
+function downloadPRDDup(){dl('PRD_me_duplicate.xlsx',prdDupH,prdDup,'PRD me duplicate');}
+function downloadRemaining(){dl('tax_registration_ke_liye_bacha_hua.xlsx',['क्र.','फैमिली आईडी'],remaining,'tax ke liye bacha hua');}
+function downloadAll(){if(!sprFinal.length){alert('पहले स्टेप 1,2,3 करो');return;}let wb=XLSX.utils.book_new();let w1=XLSX.utils.aoa_to_sheet([sprH,...sprFinal]);XLSX.utils.book_append_sheet(wb,w1,'kul SPR parivar');let w2=XLSX.utils.aoa_to_sheet([['क्र.','फैमिली आईडी','परिवार मुखिया का नाम','पता','मोबाइल'],...prdUnique]);XLSX.utils.book_append_sheet(wb,w2,'kul PRD unique parivar');let w3=XLSX.utils.aoa_to_sheet([prdDupH,...prdDup]);XLSX.utils.book_append_sheet(wb,w3,'PRD me duplicate');let w4=XLSX.utils.aoa_to_sheet([['क्र.','फैमिली आईडी'],...remaining]);XLSX.utils.book_append_sheet(wb,w4,'tax ke liye bacha hua');XLSX.writeFile(wb,'TAX_GITHUB_FINAL.xlsx');}
 </script>
 </body>
 </html>
