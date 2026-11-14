@@ -19,23 +19,23 @@
 </div>
 
 <div class="box">
-<h2>स्टेप 2: पीआरडी फाईल डालो - डाटा एक्सपोर्ट 1,2,3 जितनी हो</h2>
-<p class="note">मैक्रो में ये होता था: पीआरडी B कॉलम पर <b>टेक्स्ट टू कॉलम - फिक्स्ड विड्थ</b> - 0,6,9,33,65,154,159,164,166,264 पर तोड़ना। यही यहाँ अपने आप होगा।</p>
+<h2>स्टेप 2: पीआरडी फाईल डालो - डाटा एक्सपोर्ट 1,2,3 जितनी हो सभी गॉंवो की </h2>
+<p class="note"></b> - 0,6,9,33,65,154,159,164,166,264 पर तोड़ना। यही यहाँ अपने आप होगा।</p>
 <input type="file" id="prdFiles" accept=".xlsx,.xls,.csv" multiple>
 <p id="prdInfo">अभी पीआरडी नहीं डाली</p>
-<button class="orange" onclick="doPRD()">2. पीआरडी टेक्स्ट टू कॉलम + डुप्लीकेट निकालो</button>
-<div class="card"><div>कुल पीआरडी पंक्ति<b id="p1">0</b></div><div>कुल पीआरडी यूनिक परिवार<b style="color:green" id="p3">0</b></div><div>पीआरडी में डुप्लीकेट<b style="color:#dc2626" id="dupFam">0</b></div><div>डुप्लीकेट पंक्ति<b style="color:#dc2626" id="dupRow">0</b></div></div>
-<button class="blue" onclick="downloadPRDUnique()">⬇️ कुल पीआरडी यूनिक परिवार डाउनलोड करो</button>
+<button class="orange" onclick="doPRD()">2. पीआरडी की जानकारी जॉंचे </button>
+<div class="card"><div>कुल पीआरडी परिवार <b id="p1">0</b></div><div>कुल पीआरडी वास्‍तविक परिवार <b style="color:green" id="p3">0</b></div><div>पीआरडी में डुप्लीकेट<b style="color:#dc2626" id="dupFam">0</b></div><div>डुप्लीकेट पंक्ति<b style="color:#dc2626" id="dupRow">0</b></div></div>
+<button class="blue" onclick="downloadPRDUnique()">⬇️ कुल पीआरडी परिवार डाउनलोड करो</button>
 <button class="red" onclick="downloadPRDDup()">⬇️ पीआरडी में डुप्लीकेट डाउनलोड करो</button>
 </div>
 
 <div class="box">
 <h2>स्टेप 3: मिलान - एसपीआर बनाम पीआरडी यूनिक - बचा हुआ</h2>
-<p class="note">मैक्रो में ये होता था: पीआरडी यूनिक को एसपीआर के B में चिपका के डुप्लीकेट को लाल करके, बिना रंग वाली को निकालना। यही यहाँ होगा।</p>
-<button class="red" onclick="doMatch()">3. मिलान करो - बचा हुआ निकालो</button>
-<div class="card"><div>कुल एसपीआर परिवार<b id="m1">0</b></div><div>कुल पीआरडी यूनिक<b id="m2">0</b></div><div>मिल गया - हट गया<b style="color:#dc2626" id="m3">0</b></div><div>टैक्स रजिस्ट्रेशन के लिए बचा हुआ<b style="color:green" id="m4">0</b></div></div>
+<p class="note"></p>
+<button class="red" onclick="doMatch()">3. </button>
+<div class="card"><div>कुल एसपीआर परिवार<b id="m1">0</b></div><div>कुल पीआरडी <b id="m2">0</b></div><div>मिल गया - हट गया<b style="color:#dc2626" id="m3">0</b></div><div>टैक्स रजिस्ट्रेशन के लिए बचा हुआ<b style="color:green" id="m4">0</b></div></div>
 <button class="blue" onclick="downloadRemaining()">⬇️ टैक्स रजिस्ट्रेशन के लिए बचा हुआ डाउनलोड करो</button>
-<button onclick="downloadAll()" style="background:#7c3aed">⬇️ सभी 4 शीट एक साथ डाउनलोड करो - जैसे मैक्रो में सेव होता था</button>
+<button onclick="downloadAll()" style="background:#7c3aed">⬇️ सभी 4 शीट एक साथ डाउनलोड करोा</button>
 </div>
 
 <div class="tabs">
