@@ -36,16 +36,7 @@ table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}th,td{b
 <div class="tabs">
 <button class="tab-btn" onclick="openTab('samagra',this)">समग्र</button>
 <button class="tab-btn" onclick="openTab('darpan',this)" style="background:#dc2626;color:#fff">📋 पंचायत दर्पण</button><script>
-function checkDarpanPass(){
-  let p = document.getElementById('darpanPass').value;
-  if(p === '123456789'){
-    document.getElementById('darpanLock').style.display='none';
-    document.getElementById('darpanMain').style.display='block';
-    alert('Password Sahi Hai - Panchayat Darpan Khul Gaya');
-  } else {
-    alert('Galat Password');
-  }
-}
+
 </script>
 <button class="tab-btn" onclick="openTab('mgnrega',this)">मनरेगा MR</button>
 <button class="tab-btn active" onclick="openTab('byawara',this)" style="background:#16a34a;color:#fff">📊 ब्यावरा डैशबोर्ड पंचायत दर्पण टेक्‍स रिर्पोट</button>
@@ -53,16 +44,7 @@ function checkDarpanPass(){
 </div>
 <div class="container">
 <div id="samagra" class="card"><h2>समग्र</h2><a class="btn btn-green" href="https://samagra.gov.in/" target="_blank">समग्र पोर्टल</a></div>
-<!-- ===== PANCHAYAT DARPAN - PASSWORD LOCK ===== -->
-<div id="darpan" class="card">
-<h2>🔐 पंचायत दर्पण - Password se Kholiye</h2>
-<p style="font-size:13px;color:#555;margin:8px 0">पंचायत दर्पण - आदेश प्रोग्राम खोलने के लिए Password डालें</p>
 
-<div id="darpanLock" style="text-align:center;background:#f0f4ff;padding:15px;border-radius:10px">
-<input id="darpanPass" type="password" placeholder="Password डालें" style="padding:14px;width:90%;border-radius:8px;border:1px solid #ccc;text-align:center;font-size:16px">
-<button class="btn" onclick="checkDarpanPass()">🔓 Unlock - पंचायत दर्पण खोलो</button>
-<p style="font-size:12px;color:#888;margin-top:8px">Password sirf aapko pata hona chahiye</p>
-</div>
 
 <div id="darpanMain" style="display:none">
 <a class="btn btn-green" href="https://sunilyadavsky8855-ui.github.io/SPR-PRD-DATA-FILTER/TAXFILTER.HTML" target="_blank">📋 पंचायत दर्पण - आदेश प्रोग्राम फुल स्क्रीन में खोलो</a>
