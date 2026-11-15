@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>समग्र परिवार का डाटा</title>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<style>body{font-family:Segoe UI;padding:14px;background:#f0fdf4}h1{color:#15803d;text-align:center}h2{background:#15803d;color:#fff;padding:10px;border-radius:8px;font-size:17px}input{width:96%;padding:11px;border:2px solid #15803d;border-radius:8px;background:#fff;margin:5px 0}button{width:100%;padding:13px;background:#15803d;color:#fff;border:none;border-radius:10px;font-weight:700;margin:7px 0;font-size:16px}.box{background:#fff;padding:12px;border-radius:12px;box-shadow:0 2px 8px #ddd;margin-bottom:12px}.card{display:flex;gap:8px;flex-wrap:wrap}.card div{flex:1;min-width:110px;background:#fff;padding:10px;border-radius:10px;text-align:center;box-shadow:0 1px 5px #ddd}.card b{font-size:20px;display:block}table{width:100%;border-collapse:collapse;background:#fff;font-size:13px}th,td{border:1px solid #ccc;padding:7px;text-align:left}th{background:#15803d;color:#fff}.tabs{display:flex;gap:5px;flex-wrap:wrap}.tabs button{padding:10px;font-size:14px;background:#e2e8f0;color:#000}.tabs button.active{background:#15803d;color:#fff}.red{background:#dc2626!important}.blue{background:#2563eb!important}.orange{background:#ea580c!important}.note{background:#fffbeb;border:1px solid #facc15;padding:10px;border-radius:8px;font-size:14px}</style>
+</head>
+<body>
+<h1>समग्र परिवार का डाटा</h1>
+
+<div class="box">
+<h2>स्टेप 1: एसपीआर फाईल अपलोड करो</h2>
+<p class="note"></p>
+<input type="file" id="sprFile" accept=".xlsx,.xls,.csv">
+<p id="sprInfo">अभी एसपीआर नहीं डाली</p>
+<button onclick="doSPR()">1. एसपीआर में कुल परिवार जॉंचे </button>
+<div class="card"><div>कुल परिवार <b id="s1">0</b></div><div>सदस्‍य हटाये <b id="s2">0</b></div><div>कुल एसपीआर परिवार<b style="color:green" id="s3">0</b></div></div>
+<button class="blue" onclick="downloadSPR()">⬇️ कुल एसपीआर परिवार डाउनलोड करो</button>
+</div>
+
+<div class="box">
+<h2>स्टेप 2: पीआरडी फाईल डालो - डाटा एक्सपोर्ट 1,2,3 जितनी हो सभी गॉंवो की </h2>
+<p class="note"></b> सभी गॉंवो की एक फाईल बनेगी </p>
+<input type="file" id="prdFiles" accept=".xlsx,.xls,.csv" multiple>
+<p id="prdInfo">अभी पीआरडी नहीं डाली</p>
+<button class="orange" onclick="doPRD()">2. पीआरडी की जानकारी जॉंचे </button>
+<div class="card"><div>कुल पीआरडी परिवार <b id="p1">0</b></div><div>कुल पीआरडी वास्‍तविक परिवार <b style="color:green" id="p3">0</b></div><div>पीआरडी में डुप्लीकेट<b style="color:#dc2626" id="dupFam">0</b></div><div>डुप्लीकेट पंक्ति<b style="color:#dc2626" id="dupRow">0</b></div></div>
+<button class="blue" onclick="downloadPRDUnique()">⬇️ कुल पीआरडी परिवार डाउनलोड करो</button>
+<button class="red" onclick="downloadPRDDup()">⬇️ पीआरडी में डुप्लीकेट डाउनलोड करो</button>
+</div>
+
+<div class="box">
+<h2>स्टेप 3: मिलान - एसपीआर-पीआरडी परिवार </h2>
+<p class="note"></p>
+<button class="red" onclick="doMatch()">3.पहली और दूसरी स्‍टेप के बाद यहॉं शेष परिवार देखें </button>
+<div class="card"><div>कुल एसपीआर परिवार<b id="m1">0</b></div><div>कुल पीआरडी <b id="m2">0</b></div><div>मिल गया - हट गया<b style="color:#dc2626" id="m3">0</b></div><div>टैक्स रजिस्ट्रेशन के लिए बचा हुआ<b style="color:green" id="m4">0</b></div></div>
+<button class="blue" onclick="downloadRemaining()">⬇️ टैक्स रजिस्ट्रेशन के लिए बचा हुआ डाउनलोड करो</button>
+<button onclick="downloadAll()" style="background:#7c3aed">⬇️ सभी 4 शीट एक साथ डाउनलोड करोा</button>
+</div>
+
+<div class="tabs">
+<button id="t1" class="active" onclick="showTab('spr')">📄 कुल एसपीआर परिवार</button>
+<button id="t2" onclick="showTab('prd')">📄 कुल पीआरडी यूनिक परिवार</button>
+<button id="t4" onclick="showTab('prddup')">⚠️ पीआरडी में डुप्लीकेट</button>
+<button id="t3" onclick="showTab('rem')">📄 टैक्स रजिस्ट्रेशन के लिए बचा हुआ</button>
+</div>
+<br>
+<input type="text" id="search" placeholder="खोजो - फैमिली आईडी / नाम..." onkeyup="doSearch()" style="width:96%;padding:11px;border:2px solid #15803d;border-radius:8px">
+<br><br>
+<div style="overflow:auto"><table><thead id="th"></thead><tbody id="tb"></tbody></table></div>
+
+<script>
+let sprH=[], sprRaw=[], sprFinal=[];
+let prdRaw=[], prdUnique=[], prdDup=[];
+let prdDupH=['क्र.','फैमिली आईडी','परिवार मुखिया का नाम','पता','मोबाइल','कितनी बार आई','किस फाईल में'];
+let remaining=[], matched=[], current='spr';
+function fixedWidthSplit(s){
+  s = String(s||'');
+  let pos=[0,6,9,33,65,154,159,164,166,264];
+  let out=[];
+  for(let i=0;i<pos.length;i++){
+    let start=pos[i];
+    let end=(i+1<pos.length)?pos[i+1]:s.length;
+    out.push(s.substring(start,end).trim());
+  }
+  return out;
+}
+function parseMemberDetails(cell){
+  let s=String(cell||'');
+  let parts=fixedWidthSplit(s);
+  let fid='';
+  let m=s.match(/Family ID\s*:\s*(\d+)/);
+  if(m) fid=m[1];
+  else {
+    for(let p of parts){ let mm=p.match(/\b\d{7,10}\b/); if(mm){fid=mm[0];break;} }
+    if(!fid){ let mm=s.match(/\b\d{7,10}\b/); if(mm) fid=mm[0]; }
+  }
+  let head='';
+  let h=s.match(/Family Head Name\s*:\s*([\s\S]*?)\s*Member ID/);
+  if(h) head=h[1].replace(/\s+/g,' ').trim();
+  return {fid:fid, head:head, parts:parts};
+}
+function readFile(f){return new Promise(res=>{let r=new FileReader();r.onload=ev=>{let wb=XLSX.read(ev.target.result,{type:'array'});let ws=wb.Sheets[wb.SheetNames[0]];let aoa=XLSX.utils.sheet_to_json(ws,{header:1,defval:'',raw:false});
+  let hi=0; for(let i=0;i<Math.min(5,aoa.length);i++){ if(aoa[i].join(' ').toLowerCase().includes('member details')){hi=i;break;} }
+  if(hi>0) aoa=aoa.slice(hi);
+  res(aoa);};r.readAsArrayBuffer(f);});}
+function clean(v){return String(v||'').trim();}
+
+document.getElementById('sprFile').addEventListener('change',async e=>{
+let aoa=await readFile(e.target.files[0]);
+sprH=aoa[0]; sprRaw=aoa.slice(1).filter(r=>r.join('').trim()!=='');
+document.getElementById('sprInfo').textContent='एसपीआर आ गई: '+sprRaw.length+'';
+});
+document.getElementById('prdFiles').addEventListener('change',async e=>{
+prdRaw=[];
+for(let f of e.target.files){
+  let aoa=await readFile(f); let h=aoa[0];
+  let mdIdx=h.findIndex(x=>String(x).toLowerCase().includes('member details'));
+  let addrIdx=h.findIndex(x=>String(x).toLowerCase().includes('address'));
+  let mobIdx=h.findIndex(x=>String(x).toLowerCase().includes('mobile'));
+  aoa.slice(1).forEach(r=>{
+    let parsed=parseMemberDetails(r[mdIdx>=0?mdIdx:1]);
+    if(!parsed.fid) return;
+    prdRaw.push({fid:parsed.fid, head:parsed.head, addr:clean(r[addrIdx>=0?addrIdx:3]), mob:clean(r[mobIdx>=0?mobIdx:4]), file:f.name});
+  });
+}
+document.getElementById('prdInfo').textContent='पीआरडी आ गई: '+e.target.files.length+' फाईल, कुल परिवार  '+prdRaw.length;
+});
+function doSPR(){
+if(!sprRaw.length){alert('पहले एसपीआर डालो');return;}
+let seen=new Set(), arr=[];
+sprRaw.forEach(r=>{
+  let fid=clean(r[1]).replace(/\s+/g,'');
+  if(!fid||fid==='0') return;
+if(fid.toLowerCase().includes('family')) return;
+if(isNaN(Number(fid))) return;
+if(fid.length < 7) return;
+  if(!seen.has(fid)){seen.add(fid);arr.push([fid]);}
+});
+arr.sort((a,b)=>Number(a[0])-Number(b[0]));
+sprFinal=arr.map((r,i)=>[i+1,r[0]]);
+sprH=['क्र.','फैमिली आईडी'];
+document.getElementById('s1').textContent=sprRaw.length;
+document.getElementById('s2').textContent=sprRaw.length-arr.length;
+document.getElementById('s3').textContent=arr.length;
+showTab('spr');
+alert('स्टेप 1 हो गया! कुल एसपीआर परिवार: '+arr.length);
+}
+function doPRD(){
+if(!prdRaw.length){alert('पहले पीआरडी डालो');return;}
+let valid=prdRaw.filter(o=>o.fid && o.fid!=='0' && !isNaN(Number(o.fid)) && o.fid.length>=7);
+let counts={};
+valid.forEach(o=>{counts[o.fid]=(counts[o.fid]||0)+1;});
+let seen=new Set(), out=[];
+valid.forEach(o=>{if(!seen.has(o.fid)){seen.add(o.fid);out.push([o.fid,o.head,o.addr,o.mob]);}});
+out.sort((a,b)=>Number(a[0])-Number(b[0]));
+prdUnique=out.map((r,i)=>[i+1,...r]);
+let dupFids=Object.keys(counts).filter(f=>counts[f]>1);
+prdDup=[];
+valid.forEach(o=>{if(dupFids.includes(o.fid)) prdDup.push([o.fid,o.head,o.addr,o.mob,counts[o.fid],o.file]);});
+prdDup.sort((a,b)=>a[0].localeCompare(b[0]));
+prdDup=prdDup.map((r,i)=>[i+1,...r]);
+document.getElementById('p1').textContent=prdRaw.length;
+document.getElementById('p3').textContent=out.length;
+document.getElementById('dupFam').textContent=dupFids.length;
+document.getElementById('dupRow').textContent=prdDup.length;
+showTab('prd');
+alert('स्टेप 2 हो गया! कुल पीआरडी यूनिक परिवार: '+out.length+' | पीआरडी में डुप्लीकेट: '+dupFids.length);
+}
+function doMatch(){
+if(!sprFinal.length){alert('पहले स्टेप 1 करो');return;}
+if(!prdUnique.length){alert('पहले स्टेप 2 करो');return;}
+let prdSet=new Set(prdUnique.map(r=>String(r[1])));
+remaining=[];matched=[];
+sprFinal.forEach(r=>{let fid=String(r[1]); if(prdSet.has(fid)) matched.push(r); else remaining.push(r);});
+remaining=remaining.map((r,i)=>[i+1,r[1]]);
+document.getElementById('m1').textContent=sprFinal.length;
+document.getElementById('m2').textContent=prdUnique.length;
+document.getElementById('m3').textContent=matched.length;
+document.getElementById('m4').textContent=remaining.length;
+showTab('rem');
+alert('स्टेप 3 हो गया! टैक्स रजिस्ट्रेशन के लिए बचा हुआ: '+remaining.length);
+}
+function getCur(){if(current==='spr')return{h:sprH,d:sprFinal};if(current==='prd')return{h:['क्र.','फैमिली आईडी','परिवार मुखिया का नाम','पता','मोबाइल'],d:prdUnique};if(current==='prddup')return{h:prdDupH,d:prdDup};return{h:['क्र.','फैमिली आईडी'],d:remaining};}
+function showTab(t){current=t;document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));document.getElementById(t==='spr'?'t1':t==='prd'?'t2':t==='prddup'?'t4':'t3').classList.add('active');let c=getCur();document.getElementById('th').innerHTML='<tr>'+c.h.map(h=>`<th>${h}</th>`).join('')+'</tr>';show(c.d);}
+function show(d){document.getElementById('tb').innerHTML=d.slice(0,500).map(r=>'<tr>'+r.map(x=>`<td>${x}</td>`).join('')+'</tr>').join('');}
+function doSearch(){let q=document.getElementById('search').value.toLowerCase();let c=getCur();if(!q)return show(c.d);show(c.d.filter(r=>r.join(' ').toLowerCase().includes(q)));}
+function dl(name, headers, data, sheetName){if(!data.length){alert('पहले स्टेप चलाओ');return;}let ws=XLSX.utils.aoa_to_sheet([headers,...data]);let wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,sheetName);XLSX.writeFile(wb,name);}
+function downloadSPR(){dl('kul_SPR_parivar.xlsx',sprH,sprFinal,'kul SPR parivar');}
+function downloadPRDUnique(){dl('kul_PRD_unique_parivar.xlsx',['क्र.','फैमिली आईडी','परिवार मुखिया का नाम','पता','मोबाइल'],prdUnique,'kul PRD unique parivar');}
+function downloadPRDDup(){dl('PRD_me_duplicate.xlsx',prdDupH,prdDup,'PRD me duplicate');}
+function downloadRemaining(){dl('tax_registration_ke_liye_bacha_hua.xlsx',['क्र.','फैमिली आईडी'],remaining,'tax ke liye bacha hua');}
+function downloadAll(){if(!sprFinal.length){alert('पहले स्टेप 1,2,3 करो');return;}let wb=XLSX.utils.book_new();let w1=XLSX.utils.aoa_to_sheet([sprH,...sprFinal]);XLSX.utils.book_append_sheet(wb,w1,'kul SPR parivar');let w2=XLSX.utils.aoa_to_sheet([['क्र.','फैमिली आईडी','परिवार मुखिया का नाम','पता','मोबाइल'],...prdUnique]);XLSX.utils.book_append_sheet(wb,w2,'kul PRD unique parivar');let w3=XLSX.utils.aoa_to_sheet([prdDupH,...prdDup]);XLSX.utils.book_append_sheet(wb,w3,'PRD me duplicate');let w4=XLSX.utils.aoa_to_sheet([['क्र.','फैमिली आईडी'],...remaining]);XLSX.utils.book_append_sheet(wb,w4,'tax ke liye bacha hua');XLSX.writeFile(wb,'TAX_FINALlist.xlsx');}
+</script>
+</body>
+</html>
+
