@@ -3,61 +3,63 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Yadav Samaj Samuhik Vivah Sammelan - Entry Portal</title>
+<title>यादव समाज सामूहिक विवाह सम्मेलन - एंट्री पोर्टल</title>
 <style>
 *{box-sizing:border-box;font-family:Arial,sans-serif}
 body{margin:0;background:#FFF8E1}
-.header{background:#8E24AA;color:#fff;text-align:center;padding:20px 10px}
-.header h1{margin:0;font-size:22px}
-.header p{color:#FFEB3B;margin:5px 0}
-.info{background:#fff;text-align:center;padding:10px;font-size:14px;border-bottom:2px solid #E1BEE7}
+.header{background:#8E24AA;color:#fff;text-align:center;padding:0 0 15px 0;overflow:hidden}
+.header img{width:100%;max-height:280px;object-fit:cover;display:block}
+.header h1{margin:12px 10px 0 10px;font-size:23px;line-height:1.3}
+.header p{color:#FFEB3B;margin:5px 0;font-size:15px}
+.info{background:#fff;text-align:center;padding:12px;font-size:15px;border-bottom:2px solid #E1BEE7}
 .box{max-width:600px;margin:15px auto;background:#fff;padding:18px;border-radius:12px;box-shadow:0 2px 10px #0002}
-.box h2{text-align:center;color:#4A148C;font-size:18px}
-label{font-weight:bold;display:block;margin-top:12px}
-input,select{width:100%;padding:12px;margin-top:5px;border:1.5px solid #CE93D8;border-radius:8px;font-size:15px}
-button{width:100%;padding:14px;margin-top:18px;background:#2E7D32;color:#fff;border:none;border-radius:8px;font-size:17px;font-weight:bold}
+.box h2{text-align:center;color:#4A148C;font-size:19px}
+label{font-weight:bold;display:block;margin-top:14px;font-size:16px}
+input,select{width:100%;padding:12px;margin-top:5px;border:1.5px solid #CE93D8;border-radius:8px;font-size:16px}
+button{width:100%;padding:14px;margin-top:20px;background:#2E7D32;color:#fff;border:none;border-radius:8px;font-size:18px;font-weight:bold}
 .token{display:none;text-align:center;background:#E8F5E9;border:2px dashed #2E7D32;padding:15px;border-radius:10px;margin-top:15px}
-.token b{color:#2E7D32;font-size:20px}
+.token b{color:#2E7D32;font-size:21px}
 table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
 th,td{border:1px solid #ddd;padding:8px;text-align:left}
 th{background:#F3E5F5}
-.footer{text-align:center;color:#8E24AA;font-weight:bold;padding:15px}
+.footer{text-align:center;color:#8E24AA;font-weight:bold;padding:15px;font-size:16px}
 </style>
 </head>
 <body>
 <div class="header">
-<h1>🌸 YADAV SAMAJ SAMUHIK VIVAH SAMMELAN 🌸</h1>
-<p>Jila Rajgarh (Byavra) | 20 January 2027</p>
-<p style="color:#fff;font-size:13px">Hanuman Mandir, Nivaniya, Byavra | Baithak: 15 Nov 2026, 12 Baje</p>
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Krishna_and_Radha.jpg/800px-Krishna_and_Radha.jpg" alt="श्री कृष्ण - राधा">
+<h1>🌸 यादव समाज सामूहिक विवाह सम्मेलन 🌸</h1>
+<p>जिला राजगढ़ (ब्यावरा) | 20 जनवरी 2027</p>
+<p style="color:#fff;font-size:13px">स्थान: हनुमान मंदिर, निवानिया, ब्यावरा | बैठक: 15 नवंबर 2026, दोपहर 12 बजे</p>
 </div>
-<div class="info">🙏 Jay Yadav • Jay Madhav 🙏 - Entry Manual Verification se hogi</div>
+<div class="info">🙏 जय यादव • जय माधव 🙏 - एंट्री मैनुअल जांच से होगी</div>
 
 <div class="box">
-<h2>ENTRY FORM - MANUAL VERIFICATION</h2>
-<label>1. Aapka Naam</label><input id="naam" placeholder="Apna pura naam likhein">
-<label>2. Pita ka Naam</label><input id="pita" placeholder="Pita ji ka naam">
-<label>3. Gaon / Nagar</label><input id="gaon" placeholder="Jaise - Nivaniya, Byavra">
-<label>4. Mobile Number</label><input id="mobile" type="tel" maxlength="10" placeholder="10 ank ka mobile number">
-<label>5. Aap Kaun Hain?</label>
-<select id="type"><option>Dulha</option><option>Dulhan</option><option>Mehman</option><option>Samiti</option></select>
-<button onclick="entryKaro()">ENTRY KARO -> TOKEN LO</button>
+<h2>एंट्री फॉर्म - मैनुअल जांच</h2>
+<label>1. आपका नाम</label><input id="naam" placeholder="अपना पूरा नाम लिखें">
+<label>2. पिता का नाम</label><input id="pita" placeholder="पिता जी का नाम">
+<label>3. गांव / नगर</label><input id="gaon" placeholder="जैसे - निवानिया, ब्यावरा">
+<label>4. मोबाइल नंबर</label><input id="mobile" type="tel" maxlength="10" placeholder="10 अंक का मोबाइल नंबर">
+<label>5. आप कौन हैं?</label>
+<select id="type"><option>दूल्हा</option><option>दुल्हन</option><option>मेहमान</option><option>समिति</option></select>
+<button onclick="entryKaro()">एंट्री करो -> टोकन लो</button>
 <div class="token" id="tokenBox">
 <b id="tokenNo"></b><br><br>
-<span>Aapki Entry ho gayi. Samiti se sampark karein.</span><br>
-<small>Is Token ko screenshot karke rakh lein.</small>
+<span>आपकी एंट्री हो गई है। समिति से संपर्क करें।</span><br>
+<small>इस टोकन का स्क्रीनशॉट लेकर रख लें।</small>
 </div>
 </div>
 
 <div class="box">
-<h2>📋 ENTRY LIST - Samiti ke liye (Manual Tick)</h2>
-<p style="font-size:13px;color:#666">Samiti yahan se MANUAL tick karein - Paisa / Kagaz check karke.</p>
+<h2>📋 एंट्री लिस्ट - समिति के लिए (मैनुअल टिक)</h2>
+<p style="font-size:13px;color:#666">समिति यहाँ से मैनुअल टिक करें - पैसा / कागज जांच करके।</p>
 <table>
-<thead><tr><th>Token</th><th>Naam</th><th>Gaon</th><th>Mobile</th><th>Type</th><th>Paisa ✓</th><th>Kagaz ✓</th></tr></thead>
+<thead><tr><th>टोकन</th><th>नाम</th><th>गांव</th><th>मोबाइल</th><th>प्रकार</th><th>पैसा ✓</th><th>कागज ✓</th></tr></thead>
 <tbody id="list"></tbody>
 </table>
-<p style="text-align:center;font-size:13px">Total Entry: <b id="total">0</b></p>
+<p style="text-align:center;font-size:14px">कुल एंट्री: <b id="total">0</b></p>
 </div>
-<div class="footer">Jay Yadav • Jay Madhav</div>
+<div class="footer">🌺 जय यादव • जय माधव 🌺</div>
 
 <script>
 let count = Number(localStorage.getItem('yadav_count')||0);
@@ -72,12 +74,12 @@ function entryKaro(){
   let gaon=document.getElementById('gaon').value.trim();
   let mobile=document.getElementById('mobile').value.trim();
   let type=document.getElementById('type').value;
-  if(!naam||!pita||!gaon||mobile.length!=10){alert('Kripya sahi Naam, Pita, Gaon aur 10 ank ka Mobile bharein');return;}
+  if(!naam||!pita||!gaon||mobile.length!=10){alert('कृपया सही नाम, पिता का नाम, गांव और 10 अंक का मोबाइल भरें');return;}
   count++; let token='YADAV-'+String(count).padStart(3,'0');
   data.push({token,naam,pita,gaon,mobile,type});
   localStorage.setItem('yadav_count',count);
   localStorage.setItem('yadav_data',JSON.stringify(data));
-  document.getElementById('tokenNo').innerText='Aapka Token: '+token;
+  document.getElementById('tokenNo').innerText='आपका टोकन: '+token;
   document.getElementById('tokenBox').style.display='block';
   render();
   window.scrollTo({top:0,behavior:'smooth'});
