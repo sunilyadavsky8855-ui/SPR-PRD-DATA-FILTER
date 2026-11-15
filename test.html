@@ -39,34 +39,69 @@ th{background:#0d6efd;color:#fff}
 @media(max-width:600px){.chart-wrap{grid-template-columns:1fr}}
 .j-input{width:100%;padding:11px;border:1px solid #ccc;border-radius:8px}
 
-/* ब्यावरा डैशबोर्ड के छोटे अपलोड बॉक्स और बटन */
+/* ब्यावरा डैशबोर्ड - नया आकर्षक अपलोड डिजाइन */
+.byawara-upload-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin:12px 0;
+}
+
 .byawara-upload-box{
-  padding:6px!important;
-  border-radius:7px!important;
+  padding:12px;
+  border-radius:12px;
+  min-width:0;
+  box-shadow:0 2px 7px rgba(0,0,0,.05);
+  transition:.2s;
 }
+
 .byawara-upload-box b{
-  font-size:11px!important;
+  display:block;
+  font-size:13px;
+  margin-bottom:7px;
 }
+
 .byawara-upload-box input[type=file]{
-  width:100%!important;
-  padding:4px!important;
-  margin:3px 0!important;
-  font-size:10px!important;
-  border-width:1px!important;
+  width:100%;
+  padding:7px;
+  margin:0;
+  font-size:11px;
+  border:1px dashed #94a3b8;
+  border-radius:7px;
+  background:#fff;
 }
+
+.byawara-upload-box div{
+  margin-top:5px;
+  overflow-wrap:anywhere;
+}
+
 .byawara-actions{
   display:flex;
-  gap:6px;
+  gap:9px;
   align-items:center;
   flex-wrap:wrap;
-  margin:7px 0!important;
+  margin:12px 0!important;
 }
+
 .byawara-actions .btn{
   width:auto!important;
-  padding:7px 12px!important;
+  min-width:100px;
+  padding:9px 17px!important;
   margin:0!important;
-  font-size:12px!important;
-  border-radius:7px!important;
+  font-size:13px!important;
+  border-radius:8px!important;
+  box-shadow:0 2px 5px rgba(0,0,0,.12);
+}
+
+@media(max-width:600px){
+  .byawara-upload-grid{
+    grid-template-columns:1fr;
+    gap:8px;
+  }
+  .byawara-upload-box{
+    padding:10px;
+  }
 }
 </style>
 </head>
@@ -136,37 +171,44 @@ th{background:#0d6efd;color:#fff}
 पंचायत दर्पण पोर्टल से डाउनलोड की गई एक्‍सल सीट यहा डाले
 </p>
 
-<!-- छोटे अपलोड बॉक्स -->
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+<!-- आकर्षक फाइल अपलोड सेक्शन -->
+<div class="byawara-upload-grid">
 
-<div class="byawara-upload-box" style="border:1px dashed #16a34a;background:#f0fdf4">
-<b>पुरानी फाइल</b>
-<input type="file" id="fileOld" accept=".xlsx,.xls,.csv">
-<div id="oldStatus" style="font-size:10px;color:#166534"></div>
+  <div class="byawara-upload-box"
+       style="border:1px solid #86efac;background:linear-gradient(135deg,#f0fdf4,#dcfce7)">
+    <b style="color:#166534">📁 पुरानी फाइल</b>
+    <input type="file" id="fileOld" accept=".xlsx,.xls,.csv">
+    <div id="oldStatus" style="font-size:11px;color:#166534"></div>
+  </div>
+
+  <div class="byawara-upload-box"
+       style="border:1px solid #93c5fd;background:linear-gradient(135deg,#eff6ff,#dbeafe)">
+    <b style="color:#1d4ed8">📂 नई फाइल</b>
+    <input type="file" id="fileNew" accept=".xlsx,.xls,.csv">
+    <div id="newStatus" style="font-size:11px;color:#1d4ed8"></div>
+  </div>
+
 </div>
 
-<div class="byawara-upload-box" style="border:1px dashed #2563eb;background:#eff6ff">
-<b>नई फाइल</b>
-<input type="file" id="fileNew" accept=".xlsx,.xls,.csv">
-<div id="newStatus" style="font-size:10px;color:#1d4ed8"></div>
-</div>
-
-</div>
-
-<!-- छोटे बटन -->
+<!-- एक लाइन में आकर्षक बटन -->
 <div class="byawara-actions">
 
-<button class="btn" style="background:#16a34a" onclick="processByawara()">
-🔄 तुलना करें
-</button>
+  <button class="btn" style="background:#16a34a"
+          onclick="processByawara()">
+    🔄 तुलना करें
+  </button>
 
-<button class="btn" id="dlBtnByawara" style="background:#1e3a8a;display:none" onclick="downloadByawaraExcel()">
-⬇️ Excel
-</button>
+  <button class="btn" id="dlBtnByawara"
+          style="background:#1e3a8a;display:none"
+          onclick="downloadByawaraExcel()">
+    ⬇️ Excel
+  </button>
 
-<button class="btn" id="pdfBtnByawara" style="background:#be123c;display:none" onclick="downloadByawaraPDF()">
-📄 PDF
-</button>
+  <button class="btn" id="pdfBtnByawara"
+          style="background:#be123c;display:none"
+          onclick="downloadByawaraPDF()">
+    📄 PDF
+  </button>
 
 </div>
 
