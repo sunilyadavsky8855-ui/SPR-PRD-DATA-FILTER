@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="hi">
 <head>
@@ -15,36 +16,9 @@
 body{background:#f0f4ff;padding-bottom:90px}
 .header{background:linear-gradient(135deg,#1e3a8a,#3b82f6);color:#fff;padding:20px 15px;text-align:center;border-radius:0 0 25px 25px}
 .tabs{display:flex;overflow-x:auto;gap:8px;padding:12px 10px;background:#fff;position:sticky;top:0;z-index:10}
-
-.brand-title{
-display:flex;
-align-items:center;
-justify-content:center;
-gap:12px;
-margin:0 0 8px;
-font-size:clamp(23px,4vw,32px);
-font-weight:800;
-letter-spacing:.2px
-}
-.keyboard-logo{
-display:inline-flex;
-align-items:center;
-justify-content:center;
-width:48px;
-height:44px;
-flex:0 0 48px;
-background:linear-gradient(145deg,#ffffff,#dbeafe);
-color:#1e40af;
-border:1px solid rgba(255,255,255,.75);
-border-radius:12px;
-font-size:27px;
-box-shadow:0 4px 12px rgba(0,0,0,.22);
-text-shadow:0 1px 0 #fff
-}
-@media(max-width:600px){
-.brand-title{gap:9px}
-.keyboard-logo{width:42px;height:40px;flex-basis:42px;font-size:24px}
-}
+.brand-title{display:flex;align-items:center;justify-content:center;gap:12px;margin:0 0 8px;font-size:clamp(23px,4vw,32px);font-weight:800;letter-spacing:.2px}
+.keyboard-logo{display:inline-flex;align-items:center;justify-content:center;width:48px;height:44px;flex:0 0 48px;background:linear-gradient(145deg,#ffffff,#dbeafe);color:#1e40af;border:1px solid rgba(255,255,255,.75);border-radius:12px;font-size:27px;box-shadow:0 4px 12px rgba(0,0,0,.22);text-shadow:0 1px 0 #fff}
+@media(max-width:600px){.brand-title{gap:9px}.keyboard-logo{width:42px;height:40px;flex-basis:42px;font-size:24px}}
 
 .tab-btn{white-space:nowrap;padding:8px 18px;border-radius:20px;border:1px solid #3b82f6;background:#fff;color:#1e3a8a;font-weight:600;cursor:pointer}
 .tab-btn.active{background:#1e3a8a;color:#fff}
@@ -64,6 +38,36 @@ th{background:#0d6efd;color:#fff}
 .chart-wrap{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
 @media(max-width:600px){.chart-wrap{grid-template-columns:1fr}}
 .j-input{width:100%;padding:11px;border:1px solid #ccc;border-radius:8px}
+
+/* ब्यावरा डैशबोर्ड के छोटे अपलोड बॉक्स और बटन */
+.byawara-upload-box{
+  padding:6px!important;
+  border-radius:7px!important;
+}
+.byawara-upload-box b{
+  font-size:11px!important;
+}
+.byawara-upload-box input[type=file]{
+  width:100%!important;
+  padding:4px!important;
+  margin:3px 0!important;
+  font-size:10px!important;
+  border-width:1px!important;
+}
+.byawara-actions{
+  display:flex;
+  gap:6px;
+  align-items:center;
+  flex-wrap:wrap;
+  margin:7px 0!important;
+}
+.byawara-actions .btn{
+  width:auto!important;
+  padding:7px 12px!important;
+  margin:0!important;
+  font-size:12px!important;
+  border-radius:7px!important;
+}
 </style>
 </head>
 
@@ -87,15 +91,19 @@ th{background:#0d6efd;color:#fff}
 
 <div class="container">
 
+<!-- समग्र -->
 <div id="samagra" class="card">
 <h2>समग्र</h2>
 <a class="btn btn-green" href="https://samagra.gov.in/" target="_blank">समग्र पोर्टल</a>
 </div>
 
+<!-- पंचायत दर्पण -->
 <div id="darpan" class="card">
+
 <div id="lock" style="text-align:center">
 <h2>🔒 Password: 123456789</h2>
 <input id="p" type="password" placeholder="Password" style="padding:14px;width:90%;border-radius:8px;border:1px solid #ccc">
+
 <button onclick="if(document.getElementById('p').value==='123456789'){document.getElementById('lock').style.display='none';document.getElementById('main').style.display='block'}else{alert('Galat')}" class="btn">Unlock</button>
 </div>
 
@@ -111,11 +119,13 @@ th{background:#0d6efd;color:#fff}
 </div>
 </div>
 
+<!-- मनरेगा -->
 <div id="mgnrega" class="card">
 <h2>MGNREGA</h2>
 <a class="btn" style="background:#166534" href="https://mnregaweb4.nic.in/netnrega/dynamic_muster.aspx" target="_blank">MR Report</a>
 </div>
 
+<!-- ब्यावरा डैशबोर्ड -->
 <div id="byawara" class="card active">
 
 <h2 style="color:#16a34a;border-left:4px solid #16a34a;padding-left:10px">
@@ -126,26 +136,38 @@ th{background:#0d6efd;color:#fff}
 पंचायत दर्पण पोर्टल से डाउनलोड की गई एक्‍सल सीट यहा डाले
 </p>
 
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+<!-- छोटे अपलोड बॉक्स -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
 
-<div style="border:2px dashed #16a34a;padding:10px;border-radius:10px;background:#f0fdf4">
-<b style="font-size:12px">STEP 1 – पुरानी</b>
-<input type="file" id="fileOld" accept=".xlsx,.xls,.csv" style="width:100%;margin-top:8px">
-<div id="oldStatus" style="font-size:11px;color:#166534"></div>
+<div class="byawara-upload-box" style="border:1px dashed #16a34a;background:#f0fdf4">
+<b>पुरानी फाइल</b>
+<input type="file" id="fileOld" accept=".xlsx,.xls,.csv">
+<div id="oldStatus" style="font-size:10px;color:#166534"></div>
 </div>
 
-<div style="border:2px dashed #2563eb;padding:10px;border-radius:10px;background:#eff6ff">
-<b style="font-size:12px">STEP 2 – नई</b>
-<input type="file" id="fileNew" accept=".xlsx,.xls,.csv" style="width:100%;margin-top:8px">
-<div id="newStatus" style="font-size:11px;color:#1d4ed8"></div>
+<div class="byawara-upload-box" style="border:1px dashed #2563eb;background:#eff6ff">
+<b>नई फाइल</b>
+<input type="file" id="fileNew" accept=".xlsx,.xls,.csv">
+<div id="newStatus" style="font-size:10px;color:#1d4ed8"></div>
 </div>
 
 </div>
 
-<div style="display:flex;gap:8px;margin:10px 0;flex-wrap:wrap">
-<button class="btn" style="flex:1;background:#16a34a;min-width:120px" onclick="processByawara()">🔄 तुलना करें</button>
-<button class="btn" id="dlBtnByawara" style="flex:1;background:#1e3a8a;display:none;min-width:120px" onclick="downloadByawaraExcel()">⬇️ Excel (Dashboard जैसा)</button>
-<button class="btn" id="pdfBtnByawara" style="flex:1;background:#be123c;display:none;min-width:120px" onclick="downloadByawaraPDF()">📄 PDF (Dashboard जैसा)</button>
+<!-- छोटे बटन -->
+<div class="byawara-actions">
+
+<button class="btn" style="background:#16a34a" onclick="processByawara()">
+🔄 तुलना करें
+</button>
+
+<button class="btn" id="dlBtnByawara" style="background:#1e3a8a;display:none" onclick="downloadByawaraExcel()">
+⬇️ Excel
+</button>
+
+<button class="btn" id="pdfBtnByawara" style="background:#be123c;display:none" onclick="downloadByawaraPDF()">
+📄 PDF
+</button>
+
 </div>
 
 <div id="byawaraError" style="display:none;background:#fee2e2;color:#991b1b;padding:10px;border-radius:8px;font-size:13px;margin-bottom:10px"></div>
@@ -160,15 +182,22 @@ th{background:#0d6efd;color:#fff}
 </div>
 
 <div id="top3Box" style="background:#fefce8;border:2px solid #facc15;border-radius:10px;padding:10px;font-size:12px;margin-bottom:10px"></div>
+
 <div id="reviewBox" style="background:#eff6ff;border:1px solid #93c5fd;border-radius:10px;padding:10px;font-size:12px;margin-bottom:10px"></div>
 
 <div class="chart-wrap">
-<div style="background:#fff;border-radius:10px;padding:8px;border:1px solid #ccc"><canvas id="billChart"></canvas></div>
-<div style="background:#fff;border-radius:10px;padding:8px;border:1px solid #ccc"><canvas id="pieChart"></canvas></div>
+<div style="background:#fff;border-radius:10px;padding:8px;border:1px solid #ccc">
+<canvas id="billChart"></canvas>
+</div>
+<div style="background:#fff;border-radius:10px;padding:8px;border:1px solid #ccc">
+<canvas id="pieChart"></canvas>
+</div>
 </div>
 
 <div class="chart-wrap">
-<div style="background:#fff;border-radius:10px;padding:8px;border:1px solid #ccc"><canvas id="rashiChart"></canvas></div>
+<div style="background:#fff;border-radius:10px;padding:8px;border:1px solid #ccc">
+<canvas id="rashiChart"></canvas>
+</div>
 <div style="background:#fff;border-radius:10px;padding:10px;border:1px solid #ccc">
 <h4>सारांश समीक्षा</h4>
 <div id="summaryBox" style="font-size:12px;line-height:1.7"></div>
@@ -199,7 +228,9 @@ th{background:#0d6efd;color:#fff}
 </div>
 </div>
 
+<!-- जानकारी दर्ज -->
 <div id="jankari" class="card">
+
 <h2>📝 जानकारी दर्ज</h2>
 
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px">
@@ -221,6 +252,7 @@ th{background:#0d6efd;color:#fff}
 <div><input id="ekyDone" type="number" placeholder="EKY Done" class="j-input"></div>
 <div><input id="ekyPending" type="number" placeholder="Pending" class="j-input"></div>
 <div><input id="remark" placeholder="Remark" class="j-input"></div>
+
 </div>
 
 <button class="btn btn-green" onclick="addJankari()">Entry जोड़ो</button>
@@ -235,18 +267,26 @@ th{background:#0d6efd;color:#fff}
 <div style="max-height:380px;overflow:auto;margin-top:10px;border:1px solid #ccc;border-radius:10px">
 <table>
 <thead>
-<tr><th>#</th><th>Panchayat</th><th>Done</th><th>Pending</th><th>X</th></tr>
+<tr>
+<th>#</th>
+<th>Panchayat</th>
+<th>Done</th>
+<th>Pending</th>
+<th>X</th>
+</tr>
 </thead>
 <tbody id="tbody"></tbody>
 </table>
 </div>
-</div>
 
+</div>
 </div>
 
 <div class="footer">🌾 सुनील कुमार यादव, GP निवानिया | 9755194687</div>
 
 <script>
+
+/* मुख्य टैब */
 function openTab(id,el){
   document.querySelectorAll('.card').forEach(c=>c.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
@@ -255,14 +295,18 @@ function openTab(id,el){
   if(id==='jankari')renderJankari();
 }
 
+/* ब्यावरा डैशबोर्ड */
 let byawaraOldWb=null, byawaraNewWb=null, byawaraResult=[], byawaraFiltered=[], byawaraSummary=[], byawaraCharts={};
 
 function byawaraReadFile(file){
   return new Promise((resolve,reject)=>{
     const reader=new FileReader();
     reader.onload=e=>{
-      try{resolve(XLSX.read(e.target.result,{type:'array',cellDates:true}));}
-      catch(err){reject(err);}
+      try{
+        resolve(XLSX.read(e.target.result,{type:'array',cellDates:true}));
+      }catch(err){
+        reject(err);
+      }
     };
     reader.onerror=()=>reject(new Error('फाइल पढ़ने में समस्या'));
     reader.readAsArrayBuffer(file);
@@ -300,6 +344,7 @@ function bwNum(v){
   return Number.isFinite(n)?n:0;
 }
 
+/* पंचायत नाम साफ करना */
 function cleanPanchayatName(fullName){
   let s=String(fullName||'').trim();
   s=s.replace(/^\s*GRAM\s+PANCHAYAT\s*,?\s*/i,'');
@@ -315,8 +360,10 @@ function cleanPanchayatName(fullName){
 
 function bwExtract(wb,label){
   if(!wb||!wb.SheetNames.length)throw new Error(label+' Excel खाली है');
+
   const ws=wb.Sheets[wb.SheetNames[0]];
   const aoa=XLSX.utils.sheet_to_json(ws,{header:1,defval:'',raw:false});
+
   if(!aoa.length)throw new Error(label+' में डेटा नहीं');
 
   let hr=aoa.findIndex((r,i)=>i<10&&r&&r.some(c=>String(c).toLowerCase().includes('lgd')));
@@ -336,7 +383,12 @@ function bwExtract(wb,label){
     if(!/^\d+$/.test(rawLgd))continue;
 
     const cleanedName=cleanPanchayatName(rawFullName);
-    const rec={lgd:rawLgd,name:cleanedName,bill:bwNum(r[bill]),amount:bwNum(r[amount])};
+    const rec={
+      lgd:rawLgd,
+      name:cleanedName,
+      bill:bwNum(r[bill]),
+      amount:bwNum(r[amount])
+    };
 
     if(map.has(rawLgd)){
       const old=map.get(rawLgd);
@@ -352,18 +404,26 @@ function bwExtract(wb,label){
 }
 
 function bwMoney(n){
-  return '₹'+Number(n||0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
+  return '₹'+Number(n||0).toLocaleString('en-IN',{
+    minimumFractionDigits:2,
+    maximumFractionDigits:2
+  });
 }
 
+/* तुलना करें */
 function processByawara(){
   const err=document.getElementById('byawaraError');
-  if(err){err.style.display='none';err.textContent='';}
+  if(err){
+    err.style.display='none';
+    err.textContent='';
+  }
 
   try{
     if(!byawaraOldWb||!byawaraNewWb)throw new Error('कृपया कल और आज – दोनों Excel अपलोड करें।');
 
     const oldData=bwExtract(byawaraOldWb,'पुरानी');
     const newData=bwExtract(byawaraNewWb,'नई');
+
     const ids=[...new Set([...oldData.map.keys(),...newData.map.keys()])];
 
     byawaraResult=ids.map(id=>{
@@ -384,6 +444,7 @@ function processByawara(){
     }).sort((a,b)=>b.growth-a.growth);
 
     const sum=(k)=>byawaraResult.reduce((s,r)=>s+r[k],0);
+
     const positive=byawaraResult.filter(r=>r.growth>0).length;
     const negative=byawaraResult.filter(r=>r.growth<0).length;
     const same=byawaraResult.filter(r=>r.growth===0).length;
@@ -416,14 +477,20 @@ function processByawara(){
 
     if(topBox){
       topBox.innerHTML='<b>★ शीर्ष 3 पंचायत (केवल नाम)</b><br>'+
-      (top.length?top.map((r,i)=>`${i+1}. ${r.name} (LGD ${r.lgd}) : <b>+${r.growth}</b> बिल, ${bwMoney(r.amountGrowth)}`).join('<br>'):'कोई वृद्धि नहीं');
+      (top.length?top.map((r,i)=>
+        `${i+1}. ${r.name} (LGD ${r.lgd}) : <b>+${r.growth}</b> बिल, ${bwMoney(r.amountGrowth)}`
+      ).join('<br>'):'कोई वृद्धि नहीं');
     }
 
     const reviewBox=document.getElementById('reviewBox');
-    if(reviewBox)reviewBox.innerHTML=`<b>समीक्षा:</b> कुल ${ids.length} में <b style="color:#15803d">${positive} में वृद्धि</b>, <b style="color:#dc2626">${negative} में कमी</b>, <b>${same} में समान</b>`;
+    if(reviewBox){
+      reviewBox.innerHTML=`<b>समीक्षा:</b> कुल ${ids.length} में <b style="color:#15803d">${positive} में वृद्धि</b>, <b style="color:#dc2626">${negative} में कमी</b>, <b>${same} में समान</b>`;
+    }
 
     const summaryBox=document.getElementById('summaryBox');
-    if(summaryBox)summaryBox.innerHTML=`पुरानी बिल: <b>${sum('oldBill')}</b> | नई बिल: <b>${sum('newBill')}</b> | वृद्धि: <b style="color:green">+${sum('growth')}</b><br>पुरानी राशि: <b>${bwMoney(sum('oldAmount'))}</b><br>नई राशि: <b>${bwMoney(sum('newAmount'))}</b><br>राशि वृद्धि: <b style="color:green">${bwMoney(sum('amountGrowth'))}</b>`;
+    if(summaryBox){
+      summaryBox.innerHTML=`पुरानी बिल: <b>${sum('oldBill')}</b> | नई बिल: <b>${sum('newBill')}</b> | वृद्धि: <b style="color:green">+${sum('growth')}</b><br>पुरानी राशि: <b>${bwMoney(sum('oldAmount'))}</b><br>नई राशि: <b>${bwMoney(sum('newAmount'))}</b><br>राशि वृद्धि: <b style="color:green">${bwMoney(sum('amountGrowth'))}</b>`;
+    }
 
     document.getElementById('byawaraDashboard').style.display='block';
     document.getElementById('dlBtnByawara').style.display='block';
@@ -441,6 +508,7 @@ function processByawara(){
   }
 }
 
+/* पंचायत खोज */
 function filterByawara(){
   const q=(document.getElementById('searchByawara')?.value||'').toLowerCase();
 
@@ -468,6 +536,7 @@ function filterByawara(){
   }).join('');
 }
 
+/* चार्ट */
 function bwDrawCharts(){
   if(typeof Chart==='undefined')return;
 
@@ -488,12 +557,18 @@ function bwDrawCharts(){
           plugins:{legend:{display:type==='pie'}}
         }
       });
-    }catch(e){console.error(e);}
+    }catch(e){
+      console.error(e);
+    }
   };
 
   make('billChart','bar',{
     labels:top.map(r=>r.name),
-    datasets:[{label:'बिल वृद्धि',data:top.map(r=>r.growth),backgroundColor:'#16a34a'}]
+    datasets:[{
+      label:'बिल वृद्धि',
+      data:top.map(r=>r.growth),
+      backgroundColor:'#16a34a'
+    }]
   });
 
   const up=byawaraResult.filter(r=>r.growth>0).length;
@@ -502,17 +577,28 @@ function bwDrawCharts(){
 
   make('pieChart','pie',{
     labels:['वृद्धि','कमी','समान'],
-    datasets:[{data:[up,down,flat],backgroundColor:['#16a34a','#dc2626','#9ca3af']}]
+    datasets:[{
+      data:[up,down,flat],
+      backgroundColor:['#16a34a','#dc2626','#9ca3af']
+    }]
   });
 
   make('rashiChart','bar',{
     labels:top.map(r=>r.name),
-    datasets:[{label:'राशि वृद्धि',data:top.map(r=>r.amountGrowth),backgroundColor:'#2563eb'}]
+    datasets:[{
+      label:'राशि वृद्धि',
+      data:top.map(r=>r.amountGrowth),
+      backgroundColor:'#2563eb'
+    }]
   });
 }
 
+/* Excel डाउनलोड */
 function downloadByawaraExcel(){
-  if(!byawaraResult.length){alert('पहले तुलना करें');return;}
+  if(!byawaraResult.length){
+    alert('पहले तुलना करें');
+    return;
+  }
 
   const rows=byawaraFiltered.length?byawaraFiltered:byawaraResult;
   const sum=(k)=>byawaraResult.reduce((s,r)=>s+r[k],0);
@@ -538,21 +624,44 @@ function downloadByawaraExcel(){
   ];
 
   rows.forEach((r,i)=>{
-    dashboard.push([i+1,r.lgd,r.name,r.oldBill,r.newBill,r.growth,r.oldAmount,r.newAmount,r.amountGrowth,r.status]);
+    dashboard.push([
+      i+1,r.lgd,r.name,r.oldBill,r.newBill,r.growth,
+      r.oldAmount,r.newAmount,r.amountGrowth,r.status
+    ]);
   });
 
   dashboard.push([]);
-  dashboard.push(['','','महायोग ('+byawaraResult.length+' GP)',sum('oldBill'),sum('newBill'),sum('growth'),sum('oldAmount'),sum('newAmount'),sum('amountGrowth'),'']);
+  dashboard.push([
+    '',
+    '',
+    'महायोग ('+byawaraResult.length+' GP)',
+    sum('oldBill'),
+    sum('newBill'),
+    sum('growth'),
+    sum('oldAmount'),
+    sum('newAmount'),
+    sum('amountGrowth'),
+    ''
+  ]);
 
   const ws=XLSX.utils.aoa_to_sheet(dashboard);
-  ws['!cols']=[{wch:8},{wch:18},{wch:28},{wch:12},{wch:12},{wch:16},{wch:14},{wch:14},{wch:18},{wch:12}];
+
+  ws['!cols']=[
+    {wch:8},{wch:18},{wch:28},{wch:12},{wch:12},
+    {wch:16},{wch:14},{wch:14},{wch:18},{wch:12}
+  ];
 
   XLSX.utils.book_append_sheet(wb,ws,'Byawara_Keval_Naam');
+
   XLSX.writeFile(wb,'Byawara_KEVAL_NAAM_'+new Date().toISOString().slice(0,10)+'.xlsx');
 }
 
+/* PDF डाउनलोड */
 function downloadByawaraPDF(){
-  if(!byawaraResult.length){alert('पहले तुलना करें');return;}
+  if(!byawaraResult.length){
+    alert('पहले तुलना करें');
+    return;
+  }
 
   const {jsPDF}=window.jspdf;
   const doc=new jsPDF('l','mm','a4');
@@ -568,10 +677,21 @@ function downloadByawaraPDF(){
   doc.text(`Kul GP: ${byawaraResult.length} | Bill: ${sum('oldBill')} -> ${sum('newBill')} (+${sum('growth')})`,14,18);
 
   const tableData=rows.map((r,i)=>[
-    i+1,r.lgd,r.name,r.oldBill,r.newBill,r.growth,r.oldAmount,r.newAmount,r.amountGrowth
+    i+1,r.lgd,r.name,r.oldBill,r.newBill,r.growth,
+    r.oldAmount,r.newAmount,r.amountGrowth
   ]);
 
-  tableData.push(['','','MAHAYOG ('+byawaraResult.length+' GP)',sum('oldBill'),sum('newBill'),sum('growth'),sum('oldAmount'),sum('newAmount'),sum('amountGrowth')]);
+  tableData.push([
+    '',
+    '',
+    'MAHAYOG ('+byawaraResult.length+' GP)',
+    sum('oldBill'),
+    sum('newBill'),
+    sum('growth'),
+    sum('oldAmount'),
+    sum('newAmount'),
+    sum('amountGrowth')
+  ]);
 
   doc.autoTable({
     startY:22,
@@ -585,6 +705,7 @@ function downloadByawaraPDF(){
   doc.save('Byawara_KEVAL_NAAM_'+new Date().toISOString().slice(0,10)+'.pdf');
 }
 
+/* जानकारी दर्ज */
 const J_KEY="BIAORA_EKY_DATA";
 let jData=JSON.parse(localStorage.getItem(J_KEY)||"[]");
 
@@ -595,7 +716,10 @@ document.getElementById('panchayat')?.addEventListener('change',function(){
 
 function addJankari(){
   let panch=document.getElementById('panchayat').value;
-  if(panch==="OTHER")panch=document.getElementById('otherPanch').value.trim().toUpperCase();
+
+  if(panch==="OTHER"){
+    panch=document.getElementById('otherPanch').value.trim().toUpperCase();
+  }
 
   let pensioners=document.getElementById('pensioners').value.trim();
   let done=document.getElementById('ekyDone').value.trim();
@@ -629,7 +753,15 @@ function renderJankari(){
 
   jData.forEach((r,i)=>{
     let tr=document.createElement('tr');
-    tr.innerHTML=`<td>${i+1}</td><td><b>${r.panchayat}</b></td><td>${r.pensioners}</td><td>${r.ekyDone}</td><td>${r.ekyPending}</td><td>${r.remark}</td><td><button onclick="delJankari(${r.id})" style="background:red;color:#fff;border:none;padding:3px 8px;border-radius:4px">X</button></td>`;
+
+    tr.innerHTML=`<td>${i+1}</td>
+    <td><b>${r.panchayat}</b></td>
+    <td>${r.pensioners}</td>
+    <td>${r.ekyDone}</td>
+    <td>${r.ekyPending}</td>
+    <td>${r.remark}</td>
+    <td><button onclick="delJankari(${r.id})" style="background:red;color:#fff;border:none;padding:3px 8px;border-radius:4px">X</button></td>`;
+
     tbody.appendChild(tr);
   });
 
@@ -660,18 +792,24 @@ function exportJankariExcel(){
   let ws_data=[["Kramank","Panchayat","Pensioners","EKY Done","EKY Pending","Remark","Date"]];
 
   jData.forEach((r,i)=>{
-    ws_data.push([i+1,r.panchayat,r.pensioners,r.ekyDone,r.ekyPending,r.remark,r.date]);
+    ws_data.push([
+      i+1,r.panchayat,r.pensioners,r.ekyDone,
+      r.ekyPending,r.remark,r.date
+    ]);
   });
 
   let ws=XLSX.utils.aoa_to_sheet(ws_data);
   let wb=XLSX.utils.book_new();
 
   XLSX.utils.book_append_sheet(wb,ws,"EKY_Data");
+
   XLSX.writeFile(wb,`BIAORA_EKY_${jData.length}_${new Date().toISOString().slice(0,10)}.xlsx`);
 }
 
-setTimeout(()=>{renderJankari();},500);
-</script>
+setTimeout(()=>{
+  renderJankari();
+},500);
 
+</script>
 </body>
 </html>
