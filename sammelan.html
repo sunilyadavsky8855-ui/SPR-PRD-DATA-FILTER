@@ -11,27 +11,23 @@ body {
     background: #f2f5f9;
     padding: 15px;
 }
-
 .container {
-    max-width: 550px;
+    max-width: 750px;
     margin: auto;
     background: white;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 2px 10px #ccc;
 }
-
 h2 {
     text-align: center;
     color: #174b80;
 }
-
 label {
     display: block;
     margin-top: 15px;
     font-weight: bold;
 }
-
 input {
     width: 100%;
     padding: 11px;
@@ -40,17 +36,46 @@ input {
     border: 1px solid #bbb;
     border-radius: 5px;
 }
-
 button {
-    width: 100%;
     padding: 12px;
-    margin-top: 20px;
+    margin-top: 15px;
     background: #1769aa;
     color: white;
     border: none;
     border-radius: 5px;
-    font-size: 17px;
     cursor: pointer;
+}
+.submit {
+    width: 100%;
+    font-size: 17px;
+}
+#message {
+    text-align: center;
+    font-weight: bold;
+}
+.table-box {
+    overflow-x: auto;
+    margin-top: 20px;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 9px;
+    text-align: left;
+}
+th {
+    background: #1769aa;
+    color: white;
+}
+.count {
+    text-align: center;
+    font-size: 20px;
+    color: #1769aa;
+    font-weight: bold;
 }
 </style>
 </head>
@@ -60,6 +85,10 @@ button {
 <div class="container">
 
 <h2>सम्मेलन पंजीयन फॉर्म</h2>
+
+<div class="count">
+कुल पंजीयन: <span id="total">0</span>
+</div>
 
 <form id="registrationForm">
 
@@ -71,8 +100,7 @@ button {
 
 <label>मोबाइल नंबर</label>
 <input type="tel" id="mobile"
-pattern="[0-9]{10}"
-maxlength="10" required>
+pattern="[0-9]{10}" maxlength="10" required>
 
 <label>गाँव का नाम</label>
 <input type="text" id="village" required>
@@ -83,21 +111,142 @@ maxlength="10" required>
 <label>जिला</label>
 <input type="text" id="district" required>
 
-<button type="submit">पंजीयन करें</button>
+<button type="submit" class="submit">
+पंजीयन करें
+</button>
 
 </form>
 
 <p id="message"></p>
 
+<hr>
+
+<h2>पंजीयन सूची</h2>
+
+<div class="table-box">
+<table>
+<thead>
+<tr>
+<th>क्रमांक</th>
+<th>पंजीयन नंबर</th>
+<th>नाम</th>
+<th>मोबाइल</th>
+<th>गाँव</th>
+<th>तहसील</th>
+<th>जिला</th>
+</tr>
+</thead>
+<tbody id="registrationList"></tbody>
+</table>
+</div>
+
 </div>
 
 <script>
-document.getElementById("registrationForm")
-.addEventListener("submit", function(e) {
+
+const STORAGE_KEY = "sammelan_registrations";
+
+let registrations = [];
+
+try {
+    registrations = JSON.parse(
+        localStorage.getItem(STORAGE_KEY) || "[]"
+    );
+
+    if (!Array.isArray(registrations)) {
+        registrations = [];
+    }
+} catch (error) {
+    registrations = [];
+}
+
+const form = document.getElementById("registrationForm");
+const message = document.getElementById("message");
+
+function saveData() {
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(registrations)
+    );
+}
+
+function showData() {
+
+    const list = document.getElementById("registrationList");
+    list.replaceChildren();
+
+    registrations.forEach((item, index) => {
+
+        const row = document.createElement("tr");
+
+        [
+            index + 1,
+            item.regNo,
+            item.name,
+            item.mobile,
+            item.village,
+            item.tehsil,
+            item.district
+        ].forEach(value => {
+            const cell = document.createElement("td");
+            cell.textContent = value;
+            row.appendChild(cell);
+        });
+
+        list.appendChild(row);
+    });
+
+    document.getElementById("total").textContent =
+        registrations.length;
+}
+
+form.addEventListener("submit", function(e) {
+
     e.preventDefault();
 
-    alert("पंजीयन फॉर्म सफलतापूर्वक भरा गया है।");
+    const data = {
+        regNo: document.getElementById("regNo").value.trim(),
+        name: document.getElementById("name").value.trim(),
+        mobile: document.getElementById("mobile").value.trim(),
+        village: document.getElementById("village").value.trim(),
+        tehsil: document.getElementById("tehsil").value.trim(),
+        district: document.getElementById("district").value.trim()
+    };
+
+    const duplicate = registrations.some(item =>
+        item.regNo.toLowerCase() === data.regNo.toLowerCase() ||
+        item.mobile === data.mobile
+    );
+
+    if (duplicate) {
+        message.style.color = "red";
+        message.textContent =
+            "यह पंजीयन क्रमांक या मोबाइल नंबर पहले से मौजूद है!";
+        return;
+    }
+
+    registrations.push(data);
+
+    try {
+        saveData();
+    } catch (error) {
+        registrations.pop();
+        message.style.color = "red";
+        message.textContent =
+            "डेटा सेव नहीं हुआ। ब्राउज़र की स्टोरेज जाँचें।";
+        return;
+    }
+
+    showData();
+
+    message.style.color = "green";
+    message.textContent = "पंजीयन सफलतापूर्वक सेव हो गया!";
+
+    form.reset();
 });
+
+showData();
+
 </script>
 
 </body>
