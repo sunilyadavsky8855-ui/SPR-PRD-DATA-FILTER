@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>सम्मेलन पंजीयन</title>
+<title>सम्मेलन वर-वधु पंजीयन फॉर्म</title>
 
 <style>
 body {
@@ -12,7 +13,7 @@ body {
     padding: 15px;
 }
 .container {
-    max-width: 750px;
+    max-width: 850px;
     margin: auto;
     background: white;
     padding: 20px;
@@ -28,7 +29,7 @@ label {
     margin-top: 15px;
     font-weight: bold;
 }
-input {
+input, select {
     width: 100%;
     padding: 11px;
     margin-top: 5px;
@@ -49,6 +50,11 @@ button {
     width: 100%;
     font-size: 17px;
 }
+.download {
+    background: #168447;
+    width: 100%;
+    font-size: 16px;
+}
 #message {
     text-align: center;
     font-weight: bold;
@@ -60,7 +66,7 @@ button {
 table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 600px;
+    min-width: 700px;
 }
 th, td {
     border: 1px solid #ddd;
@@ -73,9 +79,10 @@ th {
 }
 .count {
     text-align: center;
-    font-size: 20px;
+    font-size: 22px;
     color: #1769aa;
     font-weight: bold;
+    margin: 15px;
 }
 </style>
 </head>
@@ -84,13 +91,20 @@ th {
 
 <div class="container">
 
-<h2>सम्मेलन पंजीयन फॉर्म</h2>
+<h2>सम्मेलन वर-वधु पंजीयन फॉर्म</h2>
 
 <div class="count">
 कुल पंजीयन: <span id="total">0</span>
 </div>
 
 <form id="registrationForm">
+
+<label>पंजीयन प्रकार</label>
+<select id="type" required>
+<option value="">चुनें</option>
+<option value="वर">वर</option>
+<option value="वधु">वधु</option>
+</select>
 
 <label>पंजीयन क्रमांक</label>
 <input type="text" id="regNo" required>
@@ -123,11 +137,16 @@ pattern="[0-9]{10}" maxlength="10" required>
 
 <h2>पंजीयन सूची</h2>
 
+<button type="button" class="download" onclick="downloadExcel()">
+Excel डाउनलोड करें
+</button>
+
 <div class="table-box">
 <table>
 <thead>
 <tr>
 <th>क्रमांक</th>
+<th>प्रकार</th>
 <th>पंजीयन नंबर</th>
 <th>नाम</th>
 <th>मोबाइल</th>
@@ -181,6 +200,7 @@ function showData() {
 
         [
             index + 1,
+            item.type || "पुराना रिकॉर्ड",
             item.regNo,
             item.name,
             item.mobile,
@@ -188,9 +208,11 @@ function showData() {
             item.tehsil,
             item.district
         ].forEach(value => {
+
             const cell = document.createElement("td");
-            cell.textContent = value;
+            cell.textContent = value ?? "";
             row.appendChild(cell);
+
         });
 
         list.appendChild(row);
@@ -205,6 +227,7 @@ form.addEventListener("submit", function(e) {
     e.preventDefault();
 
     const data = {
+        type: document.getElementById("type").value,
         regNo: document.getElementById("regNo").value.trim(),
         name: document.getElementById("name").value.trim(),
         mobile: document.getElementById("mobile").value.trim(),
@@ -233,7 +256,7 @@ form.addEventListener("submit", function(e) {
         registrations.pop();
         message.style.color = "red";
         message.textContent =
-            "डेटा सेव नहीं हुआ। ब्राउज़र की स्टोरेज जाँचें।";
+            "डेटा सेव नहीं हुआ। ब्राउज़र स्टोरेज जाँचें।";
         return;
     }
 
@@ -244,6 +267,69 @@ form.addEventListener("submit", function(e) {
 
     form.reset();
 });
+
+// Excel डाउनलोड
+
+function downloadExcel() {
+
+    if (registrations.length === 0) {
+        alert("डाउनलोड करने के लिए कोई पंजीयन उपलब्ध नहीं है।");
+        return;
+    }
+
+    const headers = [
+        "क्रमांक",
+        "प्रकार",
+        "पंजीयन नंबर",
+        "नाम",
+        "मोबाइल",
+        "गाँव",
+        "तहसील",
+        "जिला"
+    ];
+
+    const rows = registrations.map((item, index) => [
+        index + 1,
+        item.type || "पुराना रिकॉर्ड",
+        item.regNo,
+        item.name,
+        item.mobile,
+        item.village,
+        item.tehsil,
+        item.district
+    ]);
+
+    function escapeCSV(value) {
+        let text = String(value ?? "");
+
+        if (/^[\s]*[=+\-@]/.test(text)) {
+            text = "'" + text;
+        }
+
+        return '"' + text.replace(/"/g, '""') + '"';
+    }
+
+    const csv = [headers, ...rows]
+        .map(row => row.map(escapeCSV).join(","))
+        .join("\r\n");
+
+    const blob = new Blob(
+        ["\uFEFF" + csv],
+        { type: "text/csv;charset=utf-8;" }
+    );
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = "सम्मेलन_वर-वधु_पंजीयन.csv";
+
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    URL.revokeObjectURL(url);
+}
 
 showData();
 
