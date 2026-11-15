@@ -22,7 +22,6 @@ label{font-weight:bold;display:block;margin-top:14px;font-size:16px}
 input,select{width:100%;padding:12px;margin-top:5px;border:1.5px solid #CE93D8;border-radius:8px;font-size:16px}
 button{width:100%;padding:15px;margin-top:15px;background:#2E7D32;color:#fff;border:none;border-radius:10px;font-size:17px;font-weight:bold}
 .admin-btn{background:#4A148C !important}
-.small-btn{padding:8px;font-size:13px;margin-top:8px}
 .logout-btn{background:#B71C1C !important}
 .delete-btn{background:#B71C1C !important;padding:5px 8px;font-size:12px;margin:0}
 .token{display:none;text-align:center;background:#E8F5E9;border:2px dashed #2E7D32;padding:15px;border-radius:10px;margin-top:15px}
@@ -40,16 +39,13 @@ th{background:#F3E5F5}
 </head>
 <body>
 <div class="topbar">🌸 🌼 शुभ विवाह • सामूहिक विवाह सम्मेलन • शुभ विवाह 🌼 🌸</div>
-
 <div class="header">
-<img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=900&q=80" alt="सामूहिक विवाह मंडप">
+<img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=900&q=80">
 <h1>🌸 यादव समाज सामूहिक विवाह सम्मेलन 🌸</h1>
 <p>जिला राजगढ़ (ब्यावरा) | 20 जनवरी 2027</p>
 <p style="color:#fff;font-size:13px">स्थान: हनुमान मंदिर, निवानिया, ब्यावरा | बैठक: 15 नवंबर 2026, दोपहर 12 बजे</p>
 </div>
-
 <div class="marquee">🙏 जय यादव • जय माधव • जय श्री कृष्ण 🙏</div>
-
 <div class="gallery">
 <div><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Krishna_and_Radha.jpg/400px-Krishna_and_Radha.jpg"><br>श्री राधा-कृष्ण</div>
 <div><img src="https://images.unsplash.com/photo-1595407753234-0882f1e77954?w=400&q=80"><br>दुल्हन श्रृंगार</div>
@@ -71,22 +67,16 @@ th{background:#F3E5F5}
 <div class="token" id="tokenBox"><b id="tokenNo"></b><br><br><span>आपकी एंट्री हो गई है। समिति से संपर्क करें।</span><br><small>इस टोकन का स्क्रीनशॉट लेकर रख लें।</small></div>
 </div>
 
-<!-- LOGIN BOX -->
 <div class="box" id="loginBox">
 <h2>🔐 समिति लॉगिन - Admin / Member</h2>
-<p style="text-align:center;font-size:13px;color:#666">Admin aur Member dono yahin se Login करेंगे।<br>आम लोगों को लिस्ट नहीं दिखेगी।</p>
 <div class="login-box">
-<label>Username (नाम)</label><input id="loginUser" placeholder="जैसे - sunil">
+<label>Username</label><input id="loginUser" placeholder="जैसे - sunil">
 <label>Password</label><input type="password" id="loginPass" placeholder="पासवर्ड डालें">
 <button class="admin-btn" onclick="doLogin()">लॉगिन करो</button>
-<p style="text-align:center;font-size:12px;color:#999;margin:10px 0 0 0">
-<b>पहला Admin:</b><br>Username: <b>sunil</b> &nbsp; Password: <b>YADAV2027</b><br>
-फिर Admin अंदर से नए Member बना सकता है।
-</p>
+<p style="text-align:center;font-size:13px;color:#2E7D32;margin:10px 0 0 0"><b>TRY KARO:</b><br>Username: <b>sunil</b> &nbsp; Password: <b>12345</b></p>
 </div>
 </div>
 
-<!-- ADMIN / MEMBER PANEL -->
 <div class="box admin-box" id="adminPanel">
 <h2>📋 एंट्री लिस्ट - <span id="welcomeUser"></span></h2>
 <p style="text-align:center;font-size:13px">आपका Role: <b id="welcomeRole"></b></p>
@@ -96,39 +86,38 @@ th{background:#F3E5F5}
 </table>
 <p style="text-align:center;font-size:14px">कुल एंट्री: <b id="total">0</b> | दूल्हा: <b id="dulhaCount">0</b> | दुल्हन: <b id="dulhanCount">0</b></p>
 <button onclick="downloadCSV()">📥 लिस्ट डाउनलोड करो (Excel)</button>
-
-<!-- SIRF ADMIN KO DIKHEGA - MEMBER BANAO -->
 <div class="member-box" id="createMemberBox" style="display:none">
 <h3 style="text-align:center;color:#2E7D32;margin:5px">➕ नया Member बनाओ (सिर्फ Admin)</h3>
 <label>Member का Username</label><input id="newUser" placeholder="जैसे - ramesh">
-<label>Member का Password</label><input id="newPass" placeholder="जैसे - 1234">
-<label>Role</label>
-<select id="newRole"><option value="member">Member - सिर्फ देख सकता है</option><option value="admin">Admin - सब कर सकता है</option></select>
+<label>Member का Password</label><input id="newPass" placeholder="जैसे - 12345">
+<label>Role</label><select id="newRole"><option value="member">Member - सिर्फ देख सकता है</option><option value="admin">Admin - सब कर सकता है</option></select>
 <button onclick="createMember()">Member बनाओ</button>
 <p style="font-size:13px;text-align:center">बने हुए Login:</p>
 <div id="userList" style="font-size:13px"></div>
 </div>
-
 <button class="logout-btn" onclick="doLogout()">लॉगआउट करो</button>
 </div>
 
 <div class="footer">
-<img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=900&q=80" alt="वर वधू">
+<img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=900&q=80">
 🌺 जय यादव • जय माधव • जय श्री कृष्ण 🌺<br>
 <span style="font-size:13px">यादव समाज, जिला राजगढ़ - ब्यावरा</span>
 </div>
 
 <script>
-// DEFAULT USERS - Pehli baar me ye 1 Admin hoga
 let users = JSON.parse(localStorage.getItem('yadav_users')||'null');
+// TRY KE LIYE PASSWORD 12345 - Purana password ho to bhi 12345 ho jayega
 if(!users){
-  users=[{user:'sunil', pass:'YADAV2027', role:'admin'}];
+  users=[{user:'sunil', pass:'12345', role:'admin'}];
   localStorage.setItem('yadav_users', JSON.stringify(users));
+} else {
+  // Agar pehle se sunil hai to uska password 12345 kar do - TRY ke liye
+  let s = users.find(x=>x.user.toLowerCase()==='sunil');
+  if(s && s.pass!=='12345'){ s.pass='12345'; localStorage.setItem('yadav_users', JSON.stringify(users)); }
 }
 let count = Number(localStorage.getItem('yadav_count')||0);
 let data = JSON.parse(localStorage.getItem('yadav_data')||'[]');
 let currentUser = JSON.parse(sessionStorage.getItem('yadav_current')||'null');
-
 function saveUsers(){ localStorage.setItem('yadav_users', JSON.stringify(users)); }
 function render(){
   let isAdmin = currentUser && currentUser.role==='admin';
@@ -158,10 +147,8 @@ function doLogin(){
   let u=document.getElementById('loginUser').value.trim().toLowerCase();
   let p=document.getElementById('loginPass').value;
   let found=users.find(x=>x.user.toLowerCase()===u && x.pass===p);
-  if(found){
-    currentUser=found; sessionStorage.setItem('yadav_current', JSON.stringify(found));
-    showPanel(); alert('नमस्ते '+found.user+' जी! Login हो गया - Role: '+found.role);
-  }else{ alert('गलत Username / Password है!'); }
+  if(found){ currentUser=found; sessionStorage.setItem('yadav_current', JSON.stringify(found)); showPanel(); alert('नमस्ते '+found.user+' जी! Login हो गया - Role: '+found.role); }
+  else{ alert('गलत Username / Password है! TRY: sunil / 12345'); }
 }
 function showPanel(){
   document.getElementById('loginBox').style.display='none';
