@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>सम्मेलन वर-वधु पंजीयन</title>
+<title>सम्मेलन वर-वधु पंजीयन पोर्टल</title>
 <style>
 *{box-sizing:border-box}
 body{font-family:Arial,sans-serif;background:#f3f5f9;margin:0;padding:15px;color:#222}
@@ -12,292 +12,280 @@ body{font-family:Arial,sans-serif;background:#f3f5f9;margin:0;padding:15px;color
 h1{text-align:center;color:#174b83}
 h2{color:#174b83}
 .card{background:white;padding:18px;margin:15px 0;border-radius:10px;box-shadow:0 2px 8px #0001}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
 label{font-weight:bold;display:block;margin-bottom:5px}
-input,select,textarea{width:100%;padding:11px;border:1px solid #bbb;border-radius:6px;font-size:16px}
-textarea{min-height:75px}
+input,select{width:100%;padding:11px;border:1px solid #bbb;border-radius:6px;font-size:16px}
 button,.btn{border:0;padding:11px 17px;border-radius:6px;background:#1769aa;color:white;font-size:15px;cursor:pointer;margin:5px 3px}
 button:hover,.btn:hover{opacity:.88}
 .green{background:#168044}
 .orange{background:#d87913}
 .red{background:#c62828}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.gray{background:#555}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
 .stat{background:#eaf3ff;padding:15px;border-radius:8px;text-align:center}
-.stat strong{display:block;font-size:24px;color:#174b83;margin-top:7px}
+.stat strong{display:block;font-size:23px;color:#174b83;margin-top:7px}
 .income{background:#e8f5e9}
 .expense{background:#ffebee}
 .balance{background:#e3f2fd}
-.donation{background:#fff4e5}
-.other{background:#f3e5f5}
 .table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;min-width:800px}
+table{width:100%;border-collapse:collapse;min-width:750px}
 th,td{border:1px solid #ddd;padding:9px;text-align:center}
 th{background:#174b83;color:white}
 tr:nth-child(even){background:#f7f9fc}
-.hidden{display:none}
+.hidden{display:none!important}
 .note{color:#666;font-size:13px}
-.section-title{border-bottom:2px solid #e4eaf2;padding-bottom:8px}
+.nav{display:flex;flex-wrap:wrap;gap:5px;margin:10px 0}
+.nav button{margin:2px}
 .public-table{min-width:400px}
 </style>
 </head>
 <body>
 <div class="container">
 
-<!-- अंदरूनी पंजीयन पेज -->
-<div id="mainArea">
-<h1>सम्मेलन वर-वधु पंजीयन</h1>
-
-<div class="card">
-<h2>नया पंजीयन</h2>
-<form id="registrationForm">
+<!-- LOGIN -->
+<div id="loginArea" class="card">
+<h1>सम्मेलन पंजीयन पोर्टल</h1>
+<h2>लॉगिन करें</h2>
+<form id="loginForm">
 <div class="grid">
 <div>
-<label>पंजीयन प्रकार *</label>
-<select id="type" required>
-<option value="">चुनें</option>
-<option value="वर">वर</option>
-<option value="वधु">वधु</option>
-</select>
+<label>यूजर ID</label>
+<input id="loginId" required placeholder="अपना यूजर ID">
 </div>
 <div>
-<label>पंजीयन क्रमांक *</label>
-<input id="regNo" required placeholder="पंजीयन क्रमांक">
+<label>पासवर्ड</label>
+<input id="loginPassword" type="password" required placeholder="पासवर्ड">
+</div>
+</div>
+<br>
+<button class="green" type="submit">लॉगिन करें</button>
+</form>
+<p class="note">डेमो Admin ID: admin | Password: admin123</p>
+<a href="#public" class="btn">सार्वजनिक डैशबोर्ड देखें</a>
+</div>
+
+<!-- ADMIN AREA -->
+<div id="adminArea" class="hidden">
+<h1>Admin Dashboard</h1>
+<div class="card">
+<div class="nav">
+<button onclick="showAdminTab('adminHome')">डैशबोर्ड</button>
+<button onclick="showAdminTab('operatorManage')">ऑपरेटर प्रबंधन</button>
+<button onclick="showAdminTab('adminRegistrations')">सभी पंजीयन</button>
+<button onclick="showAdminTab('adminFinance')">आय-व्यय</button>
+<button class="red" onclick="logout()">लॉगआउट</button>
+</div>
+<p id="adminWelcome"></p>
+</div>
+
+<div id="adminHome" class="adminTab">
+<div class="card">
+<h2>मुख्य रिपोर्ट</h2>
+<div class="stats">
+<div class="stat">कुल पंजीयन<strong id="adminTotal">0</strong></div>
+<div class="stat">वर<strong id="adminGroom">0</strong></div>
+<div class="stat">वधु<strong id="adminBride">0</strong></div>
+<div class="stat">कुल ऑपरेटर<strong id="adminOperators">0</strong></div>
+</div>
+</div>
+</div>
+
+<div id="operatorManage" class="adminTab hidden">
+<div class="card">
+<h2>नया ऑपरेटर बनाएँ</h2>
+<form id="operatorForm">
+<div class="grid">
+<div>
+<label>ऑपरेटर का नाम *</label>
+<input id="operatorName" required>
 </div>
 <div>
-<label>व्यक्ति का नाम *</label>
-<input id="name" required placeholder="पूरा नाम">
-</div>
-<div>
-<label>पिता का नाम</label>
-<input id="father" placeholder="पिता का नाम">
-</div>
-<div>
-<label>दादाजी का नाम</label>
-<input id="grandfather" placeholder="दादाजी का नाम">
+<label>ऑपरेटर ID *</label>
+<input id="operatorId" required>
 </div>
 <div>
 <label>मोबाइल नंबर *</label>
-<input id="mobile" type="tel" maxlength="10" pattern="[0-9]{10}" required placeholder="10 अंकों का मोबाइल नंबर">
+<input id="operatorMobile" maxlength="10" pattern="[0-9]{10}" required>
 </div>
 <div>
-<label>गाँव का नाम *</label>
-<input id="village" required placeholder="गाँव का नाम">
+<label>पासवर्ड *</label>
+<input id="operatorPassword" required>
 </div>
-<div>
-<label>तहसील *</label>
-<input id="tehsil" required placeholder="तहसील">
 </div>
-<div>
-<label>जिला *</label>
-<input id="district" required placeholder="जिला">
+<br>
+<button type="submit" class="green">ऑपरेटर जोड़ें</button>
+</form>
 </div>
-<div>
-<label>पंजीयन राशि (₹) *</label>
-<input id="amount" type="number" min="0" step="0.01" required placeholder="राशि दर्ज करें">
+
+<div class="card">
+<h2>ऑपरेटर सूची</h2>
+<div class="table-wrap">
+<table>
+<thead><tr>
+<th>क्रमांक</th><th>नाम</th><th>ऑपरेटर ID</th><th>मोबाइल</th><th>भूमिका</th>
+</tr></thead>
+<tbody id="operatorTable"></tbody>
+</table>
 </div>
+</div>
+</div>
+
+<div id="adminRegistrations" class="adminTab hidden">
+<div class="card">
+<h2>सभी पंजीयन</h2>
+<input id="adminSearch" placeholder="नाम, गाँव, मोबाइल या ऑपरेटर खोजें">
+<br><br>
+<button onclick="downloadRegistrations()">पंजीयन CSV डाउनलोड</button>
+<div class="table-wrap">
+<table>
+<thead><tr>
+<th>क्रमांक</th><th>प्रकार</th><th>पंजीयन नं.</th><th>नाम</th>
+<th>मोबाइल</th><th>गाँव</th><th>राशि</th><th>ऑपरेटर</th><th>तारीख</th>
+</tr></thead>
+<tbody id="adminRegistrationTable"></tbody>
+</table>
+</div>
+</div>
+</div>
+
+<div id="adminFinance" class="adminTab hidden">
+<div class="card">
+<h2>आय एवं व्यय डैशबोर्ड</h2>
+<div class="stats">
+<div class="stat income">पंजीयन आय<strong id="fReg">₹0</strong></div>
+<div class="stat income">दान आय<strong id="fDonation">₹0</strong></div>
+<div class="stat income">अन्य आय<strong id="fOther">₹0</strong></div>
+<div class="stat income">कुल आय<strong id="fIncome">₹0</strong></div>
+<div class="stat expense">कुल व्यय<strong id="fExpense">₹0</strong></div>
+<div class="stat balance">शेष राशि<strong id="fBalance">₹0</strong></div>
+</div>
+</div>
+
+<div class="card">
+<h2>दान से आय</h2>
+<form id="donationForm">
+<div class="grid">
+<div><label>दानदाता का नाम</label><input id="donorName" required></div>
+<div><label>तारीख</label><input id="donationDate" type="date" required></div>
+<div><label>राशि (₹)</label><input id="donationAmount" type="number" min="0.01" step="0.01" required></div>
+<div><label>विवरण</label><input id="donationDetail"></div>
+</div>
+<button class="green">दान आय जोड़ें</button>
+</form>
+</div>
+
+<div class="card">
+<h2>अन्य आय</h2>
+<form id="otherIncomeForm">
+<div class="grid">
+<div><label>आय का स्रोत</label><input id="otherSource" required></div>
+<div><label>तारीख</label><input id="otherDate" type="date" required></div>
+<div><label>राशि (₹)</label><input id="otherAmount" type="number" min="0.01" step="0.01" required></div>
+<div><label>विवरण</label><input id="otherDetail"></div>
+</div>
+<button class="green">अन्य आय जोड़ें</button>
+</form>
+</div>
+
+<div class="card">
+<h2>व्यय दर्ज करें</h2>
+<form id="expenseForm">
+<div class="grid">
+<div><label>खर्च का नाम</label><input id="expenseName" required></div>
+<div><label>तारीख</label><input id="expenseDate" type="date" required></div>
+<div><label>राशि (₹)</label><input id="expenseAmount" type="number" min="0.01" step="0.01" required></div>
+<div><label>विवरण</label><input id="expenseDetail"></div>
+</div>
+<button class="red">व्यय जोड़ें</button>
+</form>
+</div>
+
+<div class="card">
+<h2>दान आय सूची</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>नाम</th><th>तारीख</th><th>राशि</th><th>विवरण</th><th>हटाएँ</th></tr></thead>
+<tbody id="donationTable"></tbody>
+</table></div>
+</div>
+
+<div class="card">
+<h2>अन्य आय सूची</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>स्रोत</th><th>तारीख</th><th>राशि</th><th>विवरण</th><th>हटाएँ</th></tr></thead>
+<tbody id="otherIncomeTable"></tbody>
+</table></div>
+</div>
+
+<div class="card">
+<h2>व्यय सूची</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>खर्च</th><th>तारीख</th><th>राशि</th><th>विवरण</th><th>हटाएँ</th></tr></thead>
+<tbody id="expenseTable"></tbody>
+</table></div>
+</div>
+</div>
+</div>
+
+<!-- OPERATOR AREA -->
+<div id="operatorArea" class="hidden">
+<h1>Operator Dashboard</h1>
+<div class="card">
+<p id="operatorWelcome"></p>
+<div class="nav">
+<button onclick="showOperatorTab('operatorHome')">डैशबोर्ड</button>
+<button onclick="showOperatorTab('operatorEntry')">नया पंजीयन</button>
+<button onclick="showOperatorTab('operatorList')">मेरे पंजीयन</button>
+<button class="red" onclick="logout()">लॉगआउट</button>
+</div>
+</div>
+
+<div id="operatorHome" class="operatorTab">
+<div class="card">
+<h2>मेरी रिपोर्ट</h2>
+<div class="stats">
+<div class="stat">मेरे कुल पंजीयन<strong id="myTotal">0</strong></div>
+<div class="stat">वर<strong id="myGroom">0</strong></div>
+<div class="stat">वधु<strong id="myBride">0</strong></div>
+</div>
+</div>
+</div>
+
+<div id="operatorEntry" class="operatorTab hidden">
+<div class="card">
+<h2>नया पंजीयन दर्ज करें</h2>
+<form id="registrationForm">
+<div class="grid">
+<div><label>पंजीयन प्रकार *</label>
+<select id="type" required><option value="">चुनें</option><option>वर</option><option>वधु</option></select></div>
+<div><label>पंजीयन क्रमांक *</label><input id="regNo" required></div>
+<div><label>व्यक्ति का नाम *</label><input id="name" required></div>
+<div><label>पिता का नाम</label><input id="father"></div>
+<div><label>दादाजी का नाम</label><input id="grandfather"></div>
+<div><label>मोबाइल नंबर *</label><input id="mobile" type="tel" maxlength="10" pattern="[0-9]{10}" required></div>
+<div><label>गाँव का नाम *</label><input id="village" required></div>
+<div><label>तहसील *</label><input id="tehsil" required></div>
+<div><label>जिला *</label><input id="district" required></div>
+<div><label>पंजीयन राशि (₹) *</label><input id="amount" type="number" min="0" step="0.01" required></div>
 </div>
 <br>
 <button type="submit" class="green">पंजीयन सुरक्षित करें</button>
 <button type="reset" class="orange">फॉर्म साफ करें</button>
 </form>
-<p class="note">* वाले सभी कॉलम भरना अनिवार्य है।</p>
+</div>
 </div>
 
-<!-- पंजीयन रिपोर्ट -->
+<div id="operatorList" class="operatorTab hidden">
 <div class="card">
-<h2>पंजीयन रिपोर्ट</h2>
-<div class="stats">
-<div class="stat">कुल पंजीयन<strong id="totalCount">0</strong></div>
-<div class="stat">वर पंजीयन<strong id="groomCount">0</strong></div>
-<div class="stat">वधु पंजीयन<strong id="brideCount">0</strong></div>
-<div class="stat">पंजीयन से आय<strong id="registrationIncome">₹0</strong></div>
+<h2>मेरे पंजीयन</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>क्रमांक</th><th>प्रकार</th><th>पंजीयन नं.</th><th>नाम</th><th>मोबाइल</th><th>गाँव</th><th>राशि</th><th>तारीख</th></tr></thead>
+<tbody id="myRegistrationTable"></tbody>
+</table></div>
 </div>
-</div>
-
-<!-- आय व्यय डैशबोर्ड -->
-<div class="card" id="financeDashboard">
-<h2 class="section-title">आय एवं व्यय डैशबोर्ड</h2>
-
-<div class="stats">
-<div class="stat income">
-पंजीयन से आय
-<strong id="dashRegistrationIncome">₹0</strong>
-</div>
-<div class="stat donation">
-दान से आय
-<strong id="dashDonationIncome">₹0</strong>
-</div>
-<div class="stat other">
-अन्य आय
-<strong id="dashOtherIncome">₹0</strong>
-</div>
-<div class="stat income">
-कुल आय
-<strong id="dashTotalIncome">₹0</strong>
-</div>
-<div class="stat expense">
-कुल व्यय
-<strong id="dashTotalExpense">₹0</strong>
-</div>
-<div class="stat balance">
-शेष राशि
-<strong id="dashBalance">₹0</strong>
 </div>
 </div>
 
-<p class="note">पंजीयन आय पंजीयन फॉर्म की राशि से अपने-आप जुड़ती है। दान, अन्य आय और व्यय नीचे अलग से दर्ज करें।</p>
-</div>
-
-<!-- दान से आय -->
-<div class="card">
-<h2>दान से आय दर्ज करें</h2>
-<form id="donationForm">
-<div class="grid">
-<div>
-<label>दानदाता का नाम *</label>
-<input id="donorName" required placeholder="दानदाता का नाम">
-</div>
-<div>
-<label>दान की तारीख *</label>
-<input id="donationDate" type="date" required>
-</div>
-<div>
-<label>दान राशि (₹) *</label>
-<input id="donationAmount" type="number" min="0.01" step="0.01" required placeholder="दान राशि">
-</div>
-<div>
-<label>विवरण</label>
-<input id="donationDetail" placeholder="दान का विवरण">
-</div>
-</div>
-<br>
-<button type="submit" class="green">दान की आय जोड़ें</button>
-</form>
-</div>
-
-<!-- अन्य आय -->
-<div class="card">
-<h2>अन्य आय दर्ज करें</h2>
-<form id="otherIncomeForm">
-<div class="grid">
-<div>
-<label>आय का स्रोत / नाम *</label>
-<input id="otherSource" required placeholder="आय का स्रोत">
-</div>
-<div>
-<label>तारीख *</label>
-<input id="otherDate" type="date" required>
-</div>
-<div>
-<label>राशि (₹) *</label>
-<input id="otherAmount" type="number" min="0.01" step="0.01" required placeholder="अन्य आय">
-</div>
-<div>
-<label>विवरण</label>
-<input id="otherDetail" placeholder="आय का विवरण">
-</div>
-</div>
-<br>
-<button type="submit" class="green">अन्य आय जोड़ें</button>
-</form>
-</div>
-
-<!-- व्यय -->
-<div class="card">
-<h2>व्यय दर्ज करें</h2>
-<form id="expenseForm">
-<div class="grid">
-<div>
-<label>खर्च का नाम *</label>
-<input id="expenseName" required placeholder="जैसे भोजन, टेंट, सजावट">
-</div>
-<div>
-<label>खर्च की तारीख *</label>
-<input id="expenseDate" type="date" required>
-</div>
-<div>
-<label>खर्च राशि (₹) *</label>
-<input id="expenseAmount" type="number" min="0.01" step="0.01" required placeholder="खर्च राशि">
-</div>
-<div>
-<label>विवरण</label>
-<input id="expenseDetail" placeholder="खर्च का विवरण">
-</div>
-</div>
-<br>
-<button type="submit" class="red">व्यय जोड़ें</button>
-</form>
-</div>
-
-<!-- आय की सूची -->
-<div class="card">
-<h2>दान से आय की सूची</h2>
-<div class="table-wrap">
-<table>
-<thead>
-<tr>
-<th>क्रमांक</th><th>दानदाता</th><th>तारीख</th><th>राशि</th><th>विवरण</th><th>कार्रवाई</th>
-</tr>
-</thead>
-<tbody id="donationTable"></tbody>
-</table>
-</div>
-</div>
-
-<div class="card">
-<h2>अन्य आय की सूची</h2>
-<div class="table-wrap">
-<table>
-<thead>
-<tr>
-<th>क्रमांक</th><th>आय का स्रोत</th><th>तारीख</th><th>राशि</th><th>विवरण</th><th>कार्रवाई</th>
-</tr>
-</thead>
-<tbody id="otherIncomeTable"></tbody>
-</table>
-</div>
-</div>
-
-<div class="card">
-<h2>व्यय की सूची</h2>
-<div class="table-wrap">
-<table>
-<thead>
-<tr>
-<th>क्रमांक</th><th>खर्च का नाम</th><th>तारीख</th><th>राशि</th><th>विवरण</th><th>कार्रवाई</th>
-</tr>
-</thead>
-<tbody id="expenseTable"></tbody>
-</table>
-</div>
-</div>
-
-<!-- पंजीयन सूची -->
-<div class="card">
-<h2>पंजीयन सूची</h2>
-<input id="search" placeholder="नाम, मोबाइल, गाँव या पंजीयन क्रमांक से खोजें">
-<br><br>
-<button onclick="downloadCSV()">पंजीयन सूची Excel में डाउनलोड करें</button>
-<div class="table-wrap">
-<table>
-<thead>
-<tr>
-<th>क्रमांक</th><th>प्रकार</th><th>पंजीयन क्रमांक</th><th>नाम</th>
-<th>पिता का नाम</th><th>दादाजी का नाम</th><th>मोबाइल</th>
-<th>गाँव</th><th>तहसील</th><th>जिला</th><th>राशि</th><th>तारीख</th>
-</tr>
-</thead>
-<tbody id="registrationTable"></tbody>
-</table>
-</div>
-</div>
-
-<div class="card">
-<a href="#public" class="btn" target="_blank">सार्वजनिक डैशबोर्ड देखें</a>
-</div>
-</div>
-
-<!-- सार्वजनिक डैशबोर्ड: केवल गाँववार पंजीयन -->
+<!-- PUBLIC PORTAL -->
 <div id="publicDashboard" class="hidden">
 <h1>सम्मेलन पंजीयन - सार्वजनिक रिपोर्ट</h1>
 <div class="card">
@@ -309,400 +297,344 @@ tr:nth-child(even){background:#f7f9fc}
 <br>
 <input id="villageSearch" placeholder="गाँव का नाम खोजें">
 <br><br>
-<div class="table-wrap">
-<table class="public-table">
-<thead>
-<tr>
-<th>क्रमांक</th><th>गाँव का नाम</th><th>वर पंजीयन</th><th>वधु पंजीयन</th><th>कुल</th>
-</tr>
-</thead>
+<div class="table-wrap"><table class="public-table">
+<thead><tr><th>क्रमांक</th><th>गाँव</th><th>वर</th><th>वधु</th><th>कुल</th></tr></thead>
 <tbody id="villageTable"></tbody>
-</table>
-</div>
+</table></div>
 <br>
-<a href="#" class="btn">पंजीयन फॉर्म पर वापस जाएँ</a>
+<a href="#" class="btn">लॉगिन पेज पर वापस जाएँ</a>
 </div>
-<p class="note">यह सार्वजनिक रिपोर्ट केवल सामूहिक पंजीयन संख्या दिखाती है।</p>
+<p class="note">यह रिपोर्ट केवल सामूहिक पंजीयन संख्या दिखाती है।</p>
 </div>
 
 </div>
 
 <script>
-const STORAGE_KEY = "sammelan_registrations";
-const DONATION_KEY = "sammelan_donations";
-const OTHER_INCOME_KEY = "sammelan_other_income";
-const EXPENSE_KEY = "sammelan_expenses";
+const KEYS={
+ registrations:"sammelan_registrations",
+ donations:"sammelan_donations",
+ other:"sammelan_other_income",
+ expenses:"sammelan_expenses",
+ operators:"sammelan_operators"
+};
 
-function readList(key){
-    try{
-        const data = JSON.parse(localStorage.getItem(key) || "[]");
-        return Array.isArray(data) ? data : [];
-    }catch(e){
-        return [];
-    }
+let currentUser=null;
+
+function read(key){
+ try{
+  const x=JSON.parse(localStorage.getItem(key)||"[]");
+  return Array.isArray(x)?x:[];
+ }catch(e){return []}
 }
-
-function writeList(key, data){
-    localStorage.setItem(key, JSON.stringify(data));
+function write(key,data){localStorage.setItem(key,JSON.stringify(data))}
+function money(n){return "₹"+Number(n||0).toLocaleString("en-IN",{maximumFractionDigits:2})}
+function esc(v){
+ return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
 }
-
-function getRecords(){
-    return readList(STORAGE_KEY);
-}
-
-function money(value){
-    return "₹" + Number(value || 0).toLocaleString("en-IN", {
-        minimumFractionDigits:0,
-        maximumFractionDigits:2
-    });
-}
-
-function escapeHTML(value){
-    return String(value ?? "").replace(/[&<>"']/g, function(ch){
-        return {
-            "&":"&amp;","<":"&lt;",">":"&gt;",
-            '"':"&quot;","'":"&#039;"
-        }[ch];
-    });
-}
-
 function today(){
-    const d = new Date();
-    const offset = d.getTimezoneOffset();
-    return new Date(d.getTime() - offset * 60000).toISOString().slice(0,10);
+ const d=new Date(),offset=d.getTimezoneOffset();
+ return new Date(d.getTime()-offset*60000).toISOString().slice(0,10);
 }
-
-// तारीख के कॉलम में आज की तारीख
 ["donationDate","otherDate","expenseDate"].forEach(id=>{
-    document.getElementById(id).value = today();
+ document.getElementById(id).value=today();
 });
 
-// पंजीयन जोड़ना
+function showOnly(id){
+ ["loginArea","adminArea","operatorArea","publicDashboard"].forEach(x=>
+  document.getElementById(x).classList.add("hidden")
+ );
+ document.getElementById(id).classList.remove("hidden");
+}
+function showAdminTab(id){
+ document.querySelectorAll(".adminTab").forEach(x=>x.classList.add("hidden"));
+ document.getElementById(id).classList.remove("hidden");
+}
+function showOperatorTab(id){
+ document.querySelectorAll(".operatorTab").forEach(x=>x.classList.add("hidden"));
+ document.getElementById(id).classList.remove("hidden");
+}
+function logout(){
+ currentUser=null;
+ sessionStorage.removeItem("sammelan_demo_user");
+ showOnly("loginArea");
+ location.hash="";
+}
+function getOperators(){return read(KEYS.operators)}
+
+document.getElementById("loginForm").addEventListener("submit",function(e){
+ e.preventDefault();
+ const id=document.getElementById("loginId").value.trim();
+ const password=document.getElementById("loginPassword").value;
+
+ if(id==="admin" && password==="admin123"){
+  currentUser={role:"admin",id:"admin",name:"Admin"};
+  sessionStorage.setItem("sammelan_demo_user",JSON.stringify(currentUser));
+  openAdmin();
+  return;
+ }
+
+ const op=getOperators().find(x=>x.id.toLowerCase()===id.toLowerCase() && x.password===password);
+ if(!op){
+  alert("यूजर ID या पासवर्ड गलत है।");
+  return;
+ }
+ currentUser={role:"operator",id:op.id,name:op.name};
+ sessionStorage.setItem("sammelan_demo_user",JSON.stringify(currentUser));
+ openOperator();
+});
+
+function openAdmin(){
+ showOnly("adminArea");
+ document.getElementById("adminWelcome").textContent="लॉगिन: Admin";
+ showAdminTab("adminHome");
+ renderAll();
+}
+function openOperator(){
+ showOnly("operatorArea");
+ document.getElementById("operatorWelcome").textContent=
+  "ऑपरेटर: "+currentUser.name+" | ID: "+currentUser.id;
+ showOperatorTab("operatorHome");
+ renderAll();
+}
+
+// ऑपरेटर बनाना
+document.getElementById("operatorForm").addEventListener("submit",function(e){
+ e.preventDefault();
+ if(!currentUser || currentUser.role!=="admin")return;
+
+ const op={
+  name:document.getElementById("operatorName").value.trim(),
+  id:document.getElementById("operatorId").value.trim(),
+  mobile:document.getElementById("operatorMobile").value.trim(),
+  password:document.getElementById("operatorPassword").value,
+  role:"operator"
+ };
+
+ if(!/^[0-9]{10}$/.test(op.mobile)){
+  alert("मोबाइल नंबर 10 अंकों का होना चाहिए।");return;
+ }
+ if(op.id.toLowerCase()==="admin" || getOperators().some(x=>x.id.toLowerCase()===op.id.toLowerCase())){
+  alert("यह Operator ID पहले से मौजूद है या मान्य नहीं है।");return;
+ }
+ const list=getOperators();
+ list.push(op);
+ write(KEYS.operators,list);
+ alert("ऑपरेटर जोड़ दिया गया।");
+ this.reset();
+ renderAll();
+});
+
+function renderOperators(){
+ const list=getOperators();
+ document.getElementById("operatorTable").innerHTML=list.map((o,i)=>`
+  <tr><td>${i+1}</td><td>${esc(o.name)}</td><td>${esc(o.id)}</td>
+  <td>${esc(o.mobile)}</td><td>Operator</td></tr>
+ `).join("");
+ document.getElementById("adminOperators").textContent=list.length;
+}
+
+// पंजीयन दर्ज करना
 document.getElementById("registrationForm").addEventListener("submit",function(e){
-    e.preventDefault();
+ e.preventDefault();
+ if(!currentUser || currentUser.role!=="operator")return;
 
-    const record = {
-        type:document.getElementById("type").value,
-        regNo:document.getElementById("regNo").value.trim(),
-        name:document.getElementById("name").value.trim(),
-        father:document.getElementById("father").value.trim(),
-        grandfather:document.getElementById("grandfather").value.trim(),
-        mobile:document.getElementById("mobile").value.trim(),
-        village:document.getElementById("village").value.trim(),
-        tehsil:document.getElementById("tehsil").value.trim(),
-        district:document.getElementById("district").value.trim(),
-        amount:Number(document.getElementById("amount").value),
-        date:today()
-    };
+ const r={
+  type:document.getElementById("type").value,
+  regNo:document.getElementById("regNo").value.trim(),
+  name:document.getElementById("name").value.trim(),
+  father:document.getElementById("father").value.trim(),
+  grandfather:document.getElementById("grandfather").value.trim(),
+  mobile:document.getElementById("mobile").value.trim(),
+  village:document.getElementById("village").value.trim(),
+  tehsil:document.getElementById("tehsil").value.trim(),
+  district:document.getElementById("district").value.trim(),
+  amount:Number(document.getElementById("amount").value),
+  date:today(),
+  operatorId:currentUser.id,
+  operatorName:currentUser.name
+ };
 
-    if(!/^[0-9]{10}$/.test(record.mobile)){
-        alert("कृपया 10 अंकों का सही मोबाइल नंबर दर्ज करें।");
-        return;
-    }
+ if(!/^[0-9]{10}$/.test(r.mobile)){
+  alert("सही 10 अंकों का मोबाइल नंबर दर्ज करें।");return;
+ }
+ if(!Number.isFinite(r.amount)||r.amount<0){
+  alert("सही पंजीयन राशि दर्ज करें।");return;
+ }
 
-    if(!Number.isFinite(record.amount) || record.amount < 0){
-        alert("कृपया सही पंजीयन राशि दर्ज करें।");
-        return;
-    }
-
-    const records = getRecords();
-
-    const duplicate = records.some(r =>
-        String(r.regNo || "").toLowerCase() === record.regNo.toLowerCase() ||
-        String(r.mobile || "") === record.mobile
-    );
-
-    if(duplicate){
-        alert("यह पंजीयन क्रमांक या मोबाइल नंबर पहले से दर्ज है।");
-        return;
-    }
-
-    records.push(record);
-    writeList(STORAGE_KEY,records);
-    alert("पंजीयन सफलतापूर्वक सुरक्षित हो गया।");
-    this.reset();
-    render();
+ const records=read(KEYS.registrations);
+ if(records.some(x=>
+  String(x.regNo||"").toLowerCase()===r.regNo.toLowerCase() ||
+  String(x.mobile||"")===r.mobile
+ )){
+  alert("यह पंजीयन क्रमांक या मोबाइल नंबर पहले से दर्ज है।");return;
+ }
+ records.push(r);
+ write(KEYS.registrations,records);
+ alert("पंजीयन सफलतापूर्वक सुरक्षित हो गया।");
+ this.reset();
+ renderAll();
+ showOperatorTab("operatorHome");
 });
 
-// दान से आय जोड़ना
-document.getElementById("donationForm").addEventListener("submit",function(e){
-    e.preventDefault();
-
-    const item = {
-        id:Date.now(),
-        name:document.getElementById("donorName").value.trim(),
-        date:document.getElementById("donationDate").value,
-        amount:Number(document.getElementById("donationAmount").value),
-        detail:document.getElementById("donationDetail").value.trim()
-    };
-
-    if(!item.name || !item.date || !Number.isFinite(item.amount) || item.amount <= 0){
-        alert("कृपया दानदाता का नाम, तारीख और सही राशि भरें।");
-        return;
-    }
-
-    const list = readList(DONATION_KEY);
-    list.push(item);
-    writeList(DONATION_KEY,list);
-
-    alert("दान से आय दर्ज हो गई।");
-    this.reset();
-    document.getElementById("donationDate").value = today();
-    render();
+// वित्तीय प्रविष्टियाँ: केवल Admin
+function addFinance(formId,key,fields){
+ document.getElementById(formId).addEventListener("submit",function(e){
+  e.preventDefault();
+  if(!currentUser || currentUser.role!=="admin")return;
+  const item={id:Date.now(),date:document.getElementById(fields.date).value,
+   name:document.getElementById(fields.name).value.trim(),
+   amount:Number(document.getElementById(fields.amount).value),
+   detail:document.getElementById(fields.detail).value.trim()
+  };
+  if(!item.name||!item.date||!Number.isFinite(item.amount)||item.amount<=0){
+   alert("सभी जरूरी जानकारी सही भरें।");return;
+  }
+  const list=read(key);list.push(item);write(key,list);
+  alert("प्रविष्टि सुरक्षित हो गई।");
+  this.reset();
+  document.getElementById(fields.date).value=today();
+  renderAll();
+ });
+}
+addFinance("donationForm",KEYS.donations,{
+ name:"donorName",date:"donationDate",amount:"donationAmount",detail:"donationDetail"
+});
+addFinance("otherIncomeForm",KEYS.other,{
+ name:"otherSource",date:"otherDate",amount:"otherAmount",detail:"otherDetail"
+});
+addFinance("expenseForm",KEYS.expenses,{
+ name:"expenseName",date:"expenseDate",amount:"expenseAmount",detail:"expenseDetail"
 });
 
-// अन्य आय जोड़ना
-document.getElementById("otherIncomeForm").addEventListener("submit",function(e){
-    e.preventDefault();
-
-    const item = {
-        id:Date.now(),
-        name:document.getElementById("otherSource").value.trim(),
-        date:document.getElementById("otherDate").value,
-        amount:Number(document.getElementById("otherAmount").value),
-        detail:document.getElementById("otherDetail").value.trim()
-    };
-
-    if(!item.name || !item.date || !Number.isFinite(item.amount) || item.amount <= 0){
-        alert("कृपया आय का स्रोत, तारीख और सही राशि भरें।");
-        return;
-    }
-
-    const list = readList(OTHER_INCOME_KEY);
-    list.push(item);
-    writeList(OTHER_INCOME_KEY,list);
-
-    alert("अन्य आय दर्ज हो गई।");
-    this.reset();
-    document.getElementById("otherDate").value = today();
-    render();
-});
-
-// व्यय जोड़ना
-document.getElementById("expenseForm").addEventListener("submit",function(e){
-    e.preventDefault();
-
-    const item = {
-        id:Date.now(),
-        name:document.getElementById("expenseName").value.trim(),
-        date:document.getElementById("expenseDate").value,
-        amount:Number(document.getElementById("expenseAmount").value),
-        detail:document.getElementById("expenseDetail").value.trim()
-    };
-
-    if(!item.name || !item.date || !Number.isFinite(item.amount) || item.amount <= 0){
-        alert("कृपया खर्च का नाम, तारीख और सही राशि भरें।");
-        return;
-    }
-
-    const list = readList(EXPENSE_KEY);
-    list.push(item);
-    writeList(EXPENSE_KEY,list);
-
-    alert("व्यय दर्ज हो गया।");
-    this.reset();
-    document.getElementById("expenseDate").value = today();
-    render();
-});
-
-// रिकॉर्ड हटाना
-function deleteItem(key,id){
-    if(!confirm("क्या आप इस प्रविष्टि को हटाना चाहते हैं?")) return;
-
-    const list = readList(key).filter(item => item.id !== id);
-    writeList(key,list);
-    render();
+function deleteFinance(key,id){
+ if(!currentUser || currentUser.role!=="admin")return;
+ if(!confirm("क्या यह प्रविष्टि हटानी है?"))return;
+ write(key,read(key).filter(x=>x.id!==id));
+ renderAll();
 }
 
-// आय-व्यय रिपोर्ट
 function renderFinance(){
-    const registrations = getRecords();
-    const donations = readList(DONATION_KEY);
-    const otherIncome = readList(OTHER_INCOME_KEY);
-    const expenses = readList(EXPENSE_KEY);
+ const regs=read(KEYS.registrations);
+ const donations=read(KEYS.donations);
+ const others=read(KEYS.other);
+ const expenses=read(KEYS.expenses);
+ const regTotal=regs.reduce((s,r)=>s+Number(r.amount||0),0);
+ const donTotal=donations.reduce((s,r)=>s+Number(r.amount||0),0);
+ const otherTotal=others.reduce((s,r)=>s+Number(r.amount||0),0);
+ const expTotal=expenses.reduce((s,r)=>s+Number(r.amount||0),0);
+ document.getElementById("fReg").textContent=money(regTotal);
+ document.getElementById("fDonation").textContent=money(donTotal);
+ document.getElementById("fOther").textContent=money(otherTotal);
+ document.getElementById("fIncome").textContent=money(regTotal+donTotal+otherTotal);
+ document.getElementById("fExpense").textContent=money(expTotal);
+ document.getElementById("fBalance").textContent=money(regTotal+donTotal+otherTotal-expTotal);
 
-    const registrationTotal = registrations.reduce((sum,r)=>sum + Number(r.amount || 0),0);
-    const donationTotal = donations.reduce((sum,r)=>sum + Number(r.amount || 0),0);
-    const otherTotal = otherIncome.reduce((sum,r)=>sum + Number(r.amount || 0),0);
-    const expenseTotal = expenses.reduce((sum,r)=>sum + Number(r.amount || 0),0);
-
-    const totalIncome = registrationTotal + donationTotal + otherTotal;
-    const balance = totalIncome - expenseTotal;
-
-    document.getElementById("dashRegistrationIncome").textContent = money(registrationTotal);
-    document.getElementById("dashDonationIncome").textContent = money(donationTotal);
-    document.getElementById("dashOtherIncome").textContent = money(otherTotal);
-    document.getElementById("dashTotalIncome").textContent = money(totalIncome);
-    document.getElementById("dashTotalExpense").textContent = money(expenseTotal);
-    document.getElementById("dashBalance").textContent = money(balance);
-    document.getElementById("registrationIncome").textContent = money(registrationTotal);
-
-    document.getElementById("donationTable").innerHTML = donations.map((r,i)=>`
-        <tr>
-            <td>${i+1}</td>
-            <td>${escapeHTML(r.name)}</td>
-            <td>${escapeHTML(r.date)}</td>
-            <td>${money(r.amount)}</td>
-            <td>${escapeHTML(r.detail)}</td>
-            <td><button class="red" onclick="deleteItem('${DONATION_KEY}',${r.id})">हटाएँ</button></td>
-        </tr>
-    `).join("");
-
-    document.getElementById("otherIncomeTable").innerHTML = otherIncome.map((r,i)=>`
-        <tr>
-            <td>${i+1}</td>
-            <td>${escapeHTML(r.name)}</td>
-            <td>${escapeHTML(r.date)}</td>
-            <td>${money(r.amount)}</td>
-            <td>${escapeHTML(r.detail)}</td>
-            <td><button class="red" onclick="deleteItem('${OTHER_INCOME_KEY}',${r.id})">हटाएँ</button></td>
-        </tr>
-    `).join("");
-
-    document.getElementById("expenseTable").innerHTML = expenses.map((r,i)=>`
-        <tr>
-            <td>${i+1}</td>
-            <td>${escapeHTML(r.name)}</td>
-            <td>${escapeHTML(r.date)}</td>
-            <td>${money(r.amount)}</td>
-            <td>${escapeHTML(r.detail)}</td>
-            <td><button class="red" onclick="deleteItem('${EXPENSE_KEY}',${r.id})">हटाएँ</button></td>
-        </tr>
-    `).join("");
+ function table(id,list,key){
+  document.getElementById(id).innerHTML=list.map(r=>`
+   <tr><td>${esc(r.name)}</td><td>${esc(r.date)}</td><td>${money(r.amount)}</td>
+   <td>${esc(r.detail)}</td><td><button class="red" onclick="deleteFinance('${key}',${r.id})">हटाएँ</button></td></tr>
+  `).join("");
+ }
+ table("donationTable",donations,KEYS.donations);
+ table("otherIncomeTable",others,KEYS.other);
+ table("expenseTable",expenses,KEYS.expenses);
 }
 
-// पंजीयन सूची
-function render(){
-    const records = getRecords();
-    let groom = 0;
-    let bride = 0;
+function renderRegistrations(){
+ const regs=read(KEYS.registrations);
+ const groom=regs.filter(r=>r.type==="वर").length;
+ const bride=regs.filter(r=>r.type==="वधु").length;
+ document.getElementById("adminTotal").textContent=regs.length;
+ document.getElementById("adminGroom").textContent=groom;
+ document.getElementById("adminBride").textContent=bride;
 
-    records.forEach(r=>{
-        if(r.type === "वर") groom++;
-        if(r.type === "वधु") bride++;
-    });
-
-    document.getElementById("totalCount").textContent = records.length;
-    document.getElementById("groomCount").textContent = groom;
-    document.getElementById("brideCount").textContent = bride;
-
-    const search = document.getElementById("search").value.toLowerCase().trim();
-
-    const filtered = records.filter(r=>
-        [r.type,r.regNo,r.name,r.father,r.grandfather,r.mobile,r.village,r.tehsil,r.district]
-        .some(v=>String(v || "").toLowerCase().includes(search))
-    );
-
-    document.getElementById("registrationTable").innerHTML = filtered.map((r,i)=>`
-        <tr>
-            <td>${i+1}</td>
-            <td>${escapeHTML(r.type || "")}</td>
-            <td>${escapeHTML(r.regNo || "")}</td>
-            <td>${escapeHTML(r.name || "")}</td>
-            <td>${escapeHTML(r.father || "")}</td>
-            <td>${escapeHTML(r.grandfather || "")}</td>
-            <td>${escapeHTML(r.mobile || "")}</td>
-            <td>${escapeHTML(r.village || "")}</td>
-            <td>${escapeHTML(r.tehsil || "")}</td>
-            <td>${escapeHTML(r.district || "")}</td>
-            <td>${money(r.amount)}</td>
-            <td>${escapeHTML(r.date || "")}</td>
-        </tr>
-    `).join("");
-
-    renderFinance();
-    renderPublic();
+ const search=(document.getElementById("adminSearch").value||"").toLowerCase().trim();
+ const filtered=regs.filter(r=>
+  [r.name,r.regNo,r.mobile,r.village,r.operatorName,r.operatorId]
+   .some(v=>String(v||"").toLowerCase().includes(search))
+ );
+ document.getElementById("adminRegistrationTable").innerHTML=filtered.map((r,i)=>`
+  <tr><td>${i+1}</td><td>${esc(r.type||"")}</td><td>${esc(r.regNo||"")}</td>
+  <td>${esc(r.name||"")}</td><td>${esc(r.mobile||"")}</td><td>${esc(r.village||"")}</td>
+  <td>${money(r.amount)}</td><td>${esc(r.operatorName||"पुराना रिकॉर्ड")}</td>
+  <td>${esc(r.date||"")}</td></tr>
+ `).join("");
 }
 
-// पंजीयन CSV डाउनलोड
-function downloadCSV(){
-    const records = getRecords();
-
-    if(records.length === 0){
-        alert("डाउनलोड करने के लिए कोई रिकॉर्ड नहीं है।");
-        return;
-    }
-
-    const headers = [
-        "पंजीयन प्रकार","पंजीयन क्रमांक","नाम","पिता का नाम",
-        "दादाजी का नाम","मोबाइल","गाँव","तहसील","जिला",
-        "पंजीयन राशि","तारीख"
-    ];
-
-    const rows = records.map(r=>[
-        r.type || "",r.regNo || "",r.name || "",r.father || "",
-        r.grandfather || "",r.mobile || "",r.village || "",
-        r.tehsil || "",r.district || "",r.amount ?? "",r.date || ""
-    ]);
-
-    const csv = [headers,...rows].map(row=>
-        row.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(",")
-    ).join("\n");
-
-    const blob = new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8;"});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "Sammelan_Panjiyan_Report.csv";
-    a.click();
-    URL.revokeObjectURL(url);
+function renderOperator(){
+ if(!currentUser || currentUser.role!=="operator")return;
+ const mine=read(KEYS.registrations).filter(r=>r.operatorId===currentUser.id);
+ document.getElementById("myTotal").textContent=mine.length;
+ document.getElementById("myGroom").textContent=mine.filter(r=>r.type==="वर").length;
+ document.getElementById("myBride").textContent=mine.filter(r=>r.type==="वधु").length;
+ document.getElementById("myRegistrationTable").innerHTML=mine.map((r,i)=>`
+  <tr><td>${i+1}</td><td>${esc(r.type||"")}</td><td>${esc(r.regNo||"")}</td>
+  <td>${esc(r.name||"")}</td><td>${esc(r.mobile||"")}</td>
+  <td>${esc(r.village||"")}</td><td>${money(r.amount)}</td><td>${esc(r.date||"")}</td></tr>
+ `).join("");
 }
 
-document.getElementById("search").addEventListener("input",render);
+function renderAll(){
+ renderOperators();
+ renderRegistrations();
+ renderFinance();
+ renderOperator();
+ renderPublic();
+}
 
-// सार्वजनिक रिपोर्ट: यहाँ वित्तीय डेटा नहीं जोड़ा गया है
+function downloadRegistrations(){
+ if(!currentUser || currentUser.role!=="admin")return;
+ const regs=read(KEYS.registrations);
+ const headers=["प्रकार","पंजीयन क्रमांक","नाम","पिता","दादाजी","मोबाइल","गाँव","तहसील","जिला","राशि","ऑपरेटर","ऑपरेटर ID","तारीख"];
+ const rows=regs.map(r=>[
+  r.type,r.regNo,r.name,r.father,r.grandfather,r.mobile,r.village,r.tehsil,r.district,r.amount,r.operatorName,r.operatorId,r.date
+ ]);
+ const csv=[headers,...rows].map(row=>row.map(v=>`"${String(v??"").replace(/"/g,'""')}"`).join(",")).join("\n");
+ const blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8"});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");a.href=url;a.download="Sammelan_Registrations.csv";a.click();
+ URL.revokeObjectURL(url);
+}
+
+// सार्वजनिक डैशबोर्ड में केवल गाँववार गिनती
 function renderPublic(){
-    const records = getRecords();
-    const villages = {};
-
-    records.forEach(r=>{
-        const village = String(r.village || "").trim();
-        if(!village) return;
-
-        const key = village.toLocaleLowerCase("hi");
-
-        if(!villages[key]){
-            villages[key] = {name:village,groom:0,bride:0};
-        }
-
-        if(r.type === "वर") villages[key].groom++;
-        if(r.type === "वधु") villages[key].bride++;
-    });
-
-    const list = Object.values(villages).sort((a,b)=>
-        a.name.localeCompare(b.name,"hi")
-    );
-
-    document.getElementById("publicTotal").textContent = records.length;
-    document.getElementById("publicVillages").textContent = list.length;
-
-    const search = document.getElementById("villageSearch").value.toLocaleLowerCase("hi");
-    const filtered = list.filter(v=>v.name.toLocaleLowerCase("hi").includes(search));
-
-    document.getElementById("villageTable").innerHTML = filtered.map((v,i)=>`
-        <tr>
-            <td>${i+1}</td>
-            <td>${escapeHTML(v.name)}</td>
-            <td>${v.groom}</td>
-            <td>${v.bride}</td>
-            <td>${v.groom+v.bride}</td>
-        </tr>
-    `).join("");
+ const regs=read(KEYS.registrations),villages={};
+ regs.forEach(r=>{
+  const name=String(r.village||"").trim();
+  if(!name)return;
+  const key=name.toLocaleLowerCase("hi");
+  if(!villages[key])villages[key]={name,groom:0,bride:0};
+  if(r.type==="वर")villages[key].groom++;
+  if(r.type==="वधु")villages[key].bride++;
+ });
+ const list=Object.values(villages).sort((a,b)=>a.name.localeCompare(b.name,"hi"));
+ document.getElementById("publicTotal").textContent=regs.length;
+ document.getElementById("publicVillages").textContent=list.length;
+ const q=(document.getElementById("villageSearch").value||"").toLocaleLowerCase("hi");
+ document.getElementById("villageTable").innerHTML=list.filter(v=>v.name.toLocaleLowerCase("hi").includes(q)).map((v,i)=>`
+  <tr><td>${i+1}</td><td>${esc(v.name)}</td><td>${v.groom}</td><td>${v.bride}</td><td>${v.groom+v.bride}</td></tr>
+ `).join("");
 }
 
+document.getElementById("adminSearch").addEventListener("input",renderRegistrations);
 document.getElementById("villageSearch").addEventListener("input",renderPublic);
 
 function changePage(){
-    const isPublic = location.hash === "#public";
-    document.getElementById("mainArea").classList.toggle("hidden",isPublic);
-    document.getElementById("publicDashboard").classList.toggle("hidden",!isPublic);
-    render();
+ if(location.hash==="#public"){
+  showOnly("publicDashboard");
+  renderPublic();
+ }else if(currentUser){
+  if(currentUser.role==="admin")openAdmin();
+  else openOperator();
+ }else{
+  showOnly("loginArea");
+ }
 }
-
 window.addEventListener("hashchange",changePage);
-window.addEventListener("storage",render);
+window.addEventListener("storage",renderAll);
 
-render();
+// पुराने ब्राउज़र रिकॉर्ड और नए डेमो लॉगिन को अलग रखा गया है।
+renderAll();
 changePage();
 </script>
 </body>
