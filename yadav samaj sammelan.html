@@ -20,9 +20,11 @@ body{margin:0;background:#FFF8E1}
 .box h2{text-align:center;color:#4A148C;font-size:20px;margin:5px}
 label{font-weight:bold;display:block;margin-top:14px;font-size:16px}
 input,select{width:100%;padding:12px;margin-top:5px;border:1.5px solid #CE93D8;border-radius:8px;font-size:16px}
-button{width:100%;padding:15px;margin-top:20px;background:#2E7D32;color:#fff;border:none;border-radius:10px;font-size:19px;font-weight:bold}
+button{width:100%;padding:15px;margin-top:15px;background:#2E7D32;color:#fff;border:none;border-radius:10px;font-size:17px;font-weight:bold}
 .admin-btn{background:#4A148C !important}
+.small-btn{padding:8px;font-size:13px;margin-top:8px}
 .logout-btn{background:#B71C1C !important}
+.delete-btn{background:#B71C1C !important;padding:5px 8px;font-size:12px;margin:0}
 .token{display:none;text-align:center;background:#E8F5E9;border:2px dashed #2E7D32;padding:15px;border-radius:10px;margin-top:15px}
 .token b{color:#2E7D32;font-size:22px}
 table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
@@ -31,6 +33,7 @@ th{background:#F3E5F5}
 .info-box{background:#FFF3E0;border:2px solid #FF9800;border-radius:12px;padding:12px;margin-top:12px;text-align:center}
 .admin-box{display:none}
 .login-box{background:#F3E5F5;border:2px solid #8E24AA;border-radius:12px;padding:15px;margin-top:12px}
+.member-box{background:#E8F5E9;border:2px dashed #2E7D32;border-radius:12px;padding:12px;margin-top:15px}
 .footer{text-align:center;background:#4A148C;color:#fff;padding:18px;font-size:16px}
 .footer img{width:100%;max-height:180px;object-fit:cover;border-radius:10px;margin-bottom:10px}
 </style>
@@ -45,7 +48,7 @@ th{background:#F3E5F5}
 <p style="color:#fff;font-size:13px">स्थान: हनुमान मंदिर, निवानिया, ब्यावरा | बैठक: 15 नवंबर 2026, दोपहर 12 बजे</p>
 </div>
 
-<div class="marquee">🙏 जय यादव • जय माधव • जय श्री कृष्ण 🙏 &nbsp;|&nbsp; सभी जोड़ों को आशीर्वाद देने पधारें</div>
+<div class="marquee">🙏 जय यादव • जय माधव • जय श्री कृष्ण 🙏</div>
 
 <div class="gallery">
 <div><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Krishna_and_Radha.jpg/400px-Krishna_and_Radha.jpg"><br>श्री राधा-कृष्ण</div>
@@ -56,12 +59,8 @@ th{background:#F3E5F5}
 </div>
 
 <div class="box">
-<h2>🌺 एंट्री फॉर्म - मैनुअल जांच 🌺</h2>
-<div class="info-box">
-<b>🎉 20 जनवरी 2027 को सामूहिक विवाह होगा</b><br>
-सभी जोड़ों का एक साथ शुभ विवाह, एक ही मंडप में।<br>
-एंट्री करके अपना टोकन जरूर लें।
-</div>
+<h2>🌺 एंट्री फॉर्म 🌺</h2>
+<div class="info-box"><b>🎉 20 जनवरी 2027 को सामूहिक विवाह होगा</b><br>एंट्री करके अपना टोकन जरूर लें।</div>
 <label>1. आपका नाम</label><input id="naam" placeholder="अपना पूरा नाम लिखें">
 <label>2. पिता का नाम</label><input id="pita" placeholder="पिता जी का नाम">
 <label>3. गांव / नगर</label><input id="gaon" placeholder="जैसे - निवानिया, ब्यावरा">
@@ -69,36 +68,48 @@ th{background:#F3E5F5}
 <label>5. आप कौन हैं?</label>
 <select id="type"><option>दूल्हा</option><option>दुल्हन</option><option>मेहमान</option><option>समिति</option></select>
 <button onclick="entryKaro()">🌸 एंट्री करो -> टोकन लो 🌸</button>
-<div class="token" id="tokenBox">
-<b id="tokenNo"></b><br><br>
-<span>आपकी एंट्री हो गई है। समिति से संपर्क करें।</span><br>
-<small>इस टोकन का स्क्रीनशॉट लेकर रख लें।</small>
-</div>
+<div class="token" id="tokenBox"><b id="tokenNo"></b><br><br><span>आपकी एंट्री हो गई है। समिति से संपर्क करें।</span><br><small>इस टोकन का स्क्रीनशॉट लेकर रख लें।</small></div>
 </div>
 
-<!-- ADMIN LOGIN -->
+<!-- LOGIN BOX -->
 <div class="box" id="loginBox">
-<h2>🔐 समिति लॉगिन - Admin Only</h2>
-<p style="text-align:center;font-size:13px;color:#666">लिस्ट देखने के लिए समिति का पासवर्ड डालें।<br>आम लोगों को लिस्ट नहीं दिखेगी।</p>
+<h2>🔐 समिति लॉगिन - Admin / Member</h2>
+<p style="text-align:center;font-size:13px;color:#666">Admin aur Member dono yahin se Login करेंगे।<br>आम लोगों को लिस्ट नहीं दिखेगी।</p>
 <div class="login-box">
-<label>Admin Password</label>
-<input type="password" id="adminPass" placeholder="पासवर्ड डालें">
-<button class="admin-btn" onclick="adminLogin()">लॉगिन करो</button>
-<p style="text-align:center;font-size:12px;color:#999;margin:8px 0 0 0">डेमो पासवर्ड: YADAV2027</p>
+<label>Username (नाम)</label><input id="loginUser" placeholder="जैसे - sunil">
+<label>Password</label><input type="password" id="loginPass" placeholder="पासवर्ड डालें">
+<button class="admin-btn" onclick="doLogin()">लॉगिन करो</button>
+<p style="text-align:center;font-size:12px;color:#999;margin:10px 0 0 0">
+<b>पहला Admin:</b><br>Username: <b>sunil</b> &nbsp; Password: <b>YADAV2027</b><br>
+फिर Admin अंदर से नए Member बना सकता है।
+</p>
 </div>
 </div>
 
-<!-- ADMIN PANEL - SIRF LOGIN KE BAAD -->
+<!-- ADMIN / MEMBER PANEL -->
 <div class="box admin-box" id="adminPanel">
-<h2>📋 एंट्री लिस्ट - समिति के लिए</h2>
-<p style="font-size:13px;color:#666;text-align:center">समिति यहाँ से मैनुअल टिक करें - पैसा / कागज जांच करके।</p>
+<h2>📋 एंट्री लिस्ट - <span id="welcomeUser"></span></h2>
+<p style="text-align:center;font-size:13px">आपका Role: <b id="welcomeRole"></b></p>
 <table>
-<thead><tr><th>टोकन</th><th>नाम</th><th>गांव</th><th>मोबाइल</th><th>प्रकार</th><th>पैसा ✓</th><th>कागज ✓</th><th>❌</th></tr></thead>
+<thead><tr><th>टोकन</th><th>नाम</th><th>गांव</th><th>मोबाइल</th><th>प्रकार</th><th>पैसा ✓</th><th>कागज ✓</th><th id="delHead">❌</th></tr></thead>
 <tbody id="list"></tbody>
 </table>
-<p style="text-align:center;font-size:14px">कुल एंट्री: <b id="total">0</b> &nbsp;|&nbsp; दूल्हा: <b id="dulhaCount">0</b> &nbsp;|&nbsp; दुल्हन: <b id="dulhanCount">0</b></p>
+<p style="text-align:center;font-size:14px">कुल एंट्री: <b id="total">0</b> | दूल्हा: <b id="dulhaCount">0</b> | दुल्हन: <b id="dulhanCount">0</b></p>
 <button onclick="downloadCSV()">📥 लिस्ट डाउनलोड करो (Excel)</button>
-<button class="logout-btn" onclick="adminLogout()">लॉगआउट करो</button>
+
+<!-- SIRF ADMIN KO DIKHEGA - MEMBER BANAO -->
+<div class="member-box" id="createMemberBox" style="display:none">
+<h3 style="text-align:center;color:#2E7D32;margin:5px">➕ नया Member बनाओ (सिर्फ Admin)</h3>
+<label>Member का Username</label><input id="newUser" placeholder="जैसे - ramesh">
+<label>Member का Password</label><input id="newPass" placeholder="जैसे - 1234">
+<label>Role</label>
+<select id="newRole"><option value="member">Member - सिर्फ देख सकता है</option><option value="admin">Admin - सब कर सकता है</option></select>
+<button onclick="createMember()">Member बनाओ</button>
+<p style="font-size:13px;text-align:center">बने हुए Login:</p>
+<div id="userList" style="font-size:13px"></div>
+</div>
+
+<button class="logout-btn" onclick="doLogout()">लॉगआउट करो</button>
 </div>
 
 <div class="footer">
@@ -108,16 +119,25 @@ th{background:#F3E5F5}
 </div>
 
 <script>
-const ADMIN_PASSWORD = "YADAV2027"; // <-- Yahan password badal sakte ho
+// DEFAULT USERS - Pehli baar me ye 1 Admin hoga
+let users = JSON.parse(localStorage.getItem('yadav_users')||'null');
+if(!users){
+  users=[{user:'sunil', pass:'YADAV2027', role:'admin'}];
+  localStorage.setItem('yadav_users', JSON.stringify(users));
+}
 let count = Number(localStorage.getItem('yadav_count')||0);
 let data = JSON.parse(localStorage.getItem('yadav_data')||'[]');
-let isAdmin = sessionStorage.getItem('yadav_admin')==='yes';
+let currentUser = JSON.parse(sessionStorage.getItem('yadav_current')||'null');
 
+function saveUsers(){ localStorage.setItem('yadav_users', JSON.stringify(users)); }
 function render(){
-  document.getElementById('list').innerHTML = data.map((d,i)=>`<tr><td>${d.token}</td><td>${d.naam}</td><td>${d.gaon}</td><td>${d.mobile}</td><td>${d.type}</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><button style="padding:4px 8px;font-size:12px;background:#B71C1C;margin:0" onclick="deleteEntry(${i})">X</button></td></tr>`).join('');
+  let isAdmin = currentUser && currentUser.role==='admin';
+  document.getElementById('delHead').style.display = isAdmin ? '' : 'none';
+  document.getElementById('list').innerHTML = data.map((d,i)=>`<tr><td>${d.token}</td><td>${d.naam}</td><td>${d.gaon}</td><td>${d.mobile}</td><td>${d.type}</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td style="display:${isAdmin?'':'none'}"><button class="delete-btn" onclick="deleteEntry(${i})">X</button></td></tr>`).join('');
   document.getElementById('total').innerText = data.length;
   document.getElementById('dulhaCount').innerText = data.filter(x=>x.type==='दूल्हा').length;
   document.getElementById('dulhanCount').innerText = data.filter(x=>x.type==='दुल्हन').length;
+  document.getElementById('userList').innerHTML = users.map((u,i)=>`• ${u.user} - ${u.role} ${u.user!=='sunil'?`<button class="delete-btn" onclick="deleteUser(${i})">हटाओ</button>`:''}`).join('<br>');
 }
 function entryKaro(){
   let naam=document.getElementById('naam').value.trim();
@@ -132,35 +152,44 @@ function entryKaro(){
   localStorage.setItem('yadav_data',JSON.stringify(data));
   document.getElementById('tokenNo').innerText='आपका टोकन: '+token;
   document.getElementById('tokenBox').style.display='block';
-  render();
-  window.scrollTo({top:0,behavior:'smooth'});
+  render(); window.scrollTo({top:0,behavior:'smooth'});
 }
-function adminLogin(){
-  let p=document.getElementById('adminPass').value;
-  if(p===ADMIN_PASSWORD){
-    sessionStorage.setItem('yadav_admin','yes');
-    showAdmin();
-    alert('नमस्ते समिति जी! लॉगिन हो गया।');
-  }else{ alert('गलत पासवर्ड है! समिति से पूछें।'); }
+function doLogin(){
+  let u=document.getElementById('loginUser').value.trim().toLowerCase();
+  let p=document.getElementById('loginPass').value;
+  let found=users.find(x=>x.user.toLowerCase()===u && x.pass===p);
+  if(found){
+    currentUser=found; sessionStorage.setItem('yadav_current', JSON.stringify(found));
+    showPanel(); alert('नमस्ते '+found.user+' जी! Login हो गया - Role: '+found.role);
+  }else{ alert('गलत Username / Password है!'); }
 }
-function adminLogout(){
-  sessionStorage.removeItem('yadav_admin');
-  document.getElementById('adminPanel').style.display='none';
-  document.getElementById('loginBox').style.display='block';
-}
-function showAdmin(){
+function showPanel(){
   document.getElementById('loginBox').style.display='none';
   document.getElementById('adminPanel').style.display='block';
+  document.getElementById('welcomeUser').innerText=currentUser.user;
+  document.getElementById('welcomeRole').innerText=currentUser.role==='admin'?'ADMIN (सब कर सकते हो)':'MEMBER (सिर्फ देख सकते हो)';
+  document.getElementById('createMemberBox').style.display = currentUser.role==='admin' ? 'block' : 'none';
   render();
 }
-function deleteEntry(i){
-  if(confirm('क्या इस एंट्री को हटाना है?')){ data.splice(i,1); localStorage.setItem('yadav_data',JSON.stringify(data)); render(); }
+function doLogout(){ sessionStorage.removeItem('yadav_current'); currentUser=null; document.getElementById('adminPanel').style.display='none'; document.getElementById('loginBox').style.display='block'; }
+function createMember(){
+  if(!currentUser || currentUser.role!=='admin'){ alert('सिर्फ Admin Member बना सकता है'); return; }
+  let u=document.getElementById('newUser').value.trim().toLowerCase();
+  let p=document.getElementById('newPass').value;
+  let r=document.getElementById('newRole').value;
+  if(!u||!p){ alert('Username aur Password dono भरो'); return; }
+  if(users.find(x=>x.user.toLowerCase()===u)){ alert('ये Username पहले से है, दूसरा रखो'); return; }
+  users.push({user:u, pass:p, role:r}); saveUsers(); render();
+  alert('हो गया! Member बन गया - Username: '+u+' Password: '+p);
+  document.getElementById('newUser').value=''; document.getElementById('newPass').value='';
 }
+function deleteUser(i){ if(confirm('इस Member को हटाना है?')){ users.splice(i,1); saveUsers(); render(); } }
+function deleteEntry(i){ if(currentUser.role!=='admin'){ alert('सिर्फ Admin हटा सकता है'); return; } if(confirm('क्या इस एंट्री को हटाना है?')){ data.splice(i,1); localStorage.setItem('yadav_data',JSON.stringify(data)); render(); } }
 function downloadCSV(){
   let csv="Token,Naam,Gaon,Mobile,Type\n"+data.map(d=>`${d.token},${d.naam},${d.gaon},${d.mobile},${d.type}`).join("\n");
-  let a=document.createElement('a'); a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv); a.download='yadav-sammelan-list.csv'; a.click();
+  let a=document.createElement('a'); a.href='data:text/csv;charset=utf-8,[STRIPPED] a.download='yadav-sammelan-list.csv'; a.click();
 }
-if(isAdmin) showAdmin();
+if(currentUser) showPanel();
 render();
 </script>
 </body>
