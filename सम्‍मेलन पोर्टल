@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yadav Samaj Samuhik Vivah Sammelan - Entry Portal</title>
+<style>
+*{box-sizing:border-box;font-family:Arial,sans-serif}
+body{margin:0;background:#FFF8E1}
+.header{background:#8E24AA;color:#fff;text-align:center;padding:20px 10px}
+.header h1{margin:0;font-size:22px}
+.header p{color:#FFEB3B;margin:5px 0}
+.info{background:#fff;text-align:center;padding:10px;font-size:14px;border-bottom:2px solid #E1BEE7}
+.box{max-width:600px;margin:15px auto;background:#fff;padding:18px;border-radius:12px;box-shadow:0 2px 10px #0002}
+.box h2{text-align:center;color:#4A148C;font-size:18px}
+label{font-weight:bold;display:block;margin-top:12px}
+input,select{width:100%;padding:12px;margin-top:5px;border:1.5px solid #CE93D8;border-radius:8px;font-size:15px}
+button{width:100%;padding:14px;margin-top:18px;background:#2E7D32;color:#fff;border:none;border-radius:8px;font-size:17px;font-weight:bold}
+.token{display:none;text-align:center;background:#E8F5E9;border:2px dashed #2E7D32;padding:15px;border-radius:10px;margin-top:15px}
+.token b{color:#2E7D32;font-size:20px}
+table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
+th,td{border:1px solid #ddd;padding:8px;text-align:left}
+th{background:#F3E5F5}
+.footer{text-align:center;color:#8E24AA;font-weight:bold;padding:15px}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>🌸 YADAV SAMAJ SAMUHIK VIVAH SAMMELAN 🌸</h1>
+<p>Jila Rajgarh (Byavra) | 20 January 2027</p>
+<p style="color:#fff;font-size:13px">Hanuman Mandir, Nivaniya, Byavra | Baithak: 15 Nov 2026, 12 Baje</p>
+</div>
+<div class="info">🙏 Jay Yadav • Jay Madhav 🙏 - Entry Manual Verification se hogi</div>
+
+<div class="box">
+<h2>ENTRY FORM - MANUAL VERIFICATION</h2>
+<label>1. Aapka Naam</label><input id="naam" placeholder="Apna pura naam likhein">
+<label>2. Pita ka Naam</label><input id="pita" placeholder="Pita ji ka naam">
+<label>3. Gaon / Nagar</label><input id="gaon" placeholder="Jaise - Nivaniya, Byavra">
+<label>4. Mobile Number</label><input id="mobile" type="tel" maxlength="10" placeholder="10 ank ka mobile number">
+<label>5. Aap Kaun Hain?</label>
+<select id="type"><option>Dulha</option><option>Dulhan</option><option>Mehman</option><option>Samiti</option></select>
+<button onclick="entryKaro()">ENTRY KARO -> TOKEN LO</button>
+<div class="token" id="tokenBox">
+<b id="tokenNo"></b><br><br>
+<span>Aapki Entry ho gayi. Samiti se sampark karein.</span><br>
+<small>Is Token ko screenshot karke rakh lein.</small>
+</div>
+</div>
+
+<div class="box">
+<h2>📋 ENTRY LIST - Samiti ke liye (Manual Tick)</h2>
+<p style="font-size:13px;color:#666">Samiti yahan se MANUAL tick karein - Paisa / Kagaz check karke.</p>
+<table>
+<thead><tr><th>Token</th><th>Naam</th><th>Gaon</th><th>Mobile</th><th>Type</th><th>Paisa ✓</th><th>Kagaz ✓</th></tr></thead>
+<tbody id="list"></tbody>
+</table>
+<p style="text-align:center;font-size:13px">Total Entry: <b id="total">0</b></p>
+</div>
+<div class="footer">Jay Yadav • Jay Madhav</div>
+
+<script>
+let count = Number(localStorage.getItem('yadav_count')||0);
+let data = JSON.parse(localStorage.getItem('yadav_data')||'[]');
+function render(){
+  document.getElementById('list').innerHTML = data.map((d,i)=>`<tr><td>${d.token}</td><td>${d.naam}</td><td>${d.gaon}</td><td>${d.mobile}</td><td>${d.type}</td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>`).join('');
+  document.getElementById('total').innerText = data.length;
+}
+function entryKaro(){
+  let naam=document.getElementById('naam').value.trim();
+  let pita=document.getElementById('pita').value.trim();
+  let gaon=document.getElementById('gaon').value.trim();
+  let mobile=document.getElementById('mobile').value.trim();
+  let type=document.getElementById('type').value;
+  if(!naam||!pita||!gaon||mobile.length!=10){alert('Kripya sahi Naam, Pita, Gaon aur 10 ank ka Mobile bharein');return;}
+  count++; let token='YADAV-'+String(count).padStart(3,'0');
+  data.push({token,naam,pita,gaon,mobile,type});
+  localStorage.setItem('yadav_count',count);
+  localStorage.setItem('yadav_data',JSON.stringify(data));
+  document.getElementById('tokenNo').innerText='Aapka Token: '+token;
+  document.getElementById('tokenBox').style.display='block';
+  render();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+render();
+</script>
+</body>
+</html>
