@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>सम्मेलन वर-वधु पंजीयन फॉर्म</title>
+<title>सम्मेलन वर-वधु पंजीयन</title>
 
 <style>
 body {
@@ -13,7 +13,7 @@ body {
     padding: 15px;
 }
 .container {
-    max-width: 850px;
+    max-width: 950px;
     margin: auto;
     background: white;
     padding: 20px;
@@ -37,7 +37,8 @@ input, select {
     border: 1px solid #bbb;
     border-radius: 5px;
 }
-button {
+button, .nav-button {
+    display: inline-block;
     padding: 12px;
     margin-top: 15px;
     background: #1769aa;
@@ -45,15 +46,15 @@ button {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    text-decoration: none;
+    text-align: center;
 }
-.submit {
+.submit, .download {
     width: 100%;
-    font-size: 17px;
+    font-size: 16px;
 }
 .download {
     background: #168447;
-    width: 100%;
-    font-size: 16px;
 }
 #message {
     text-align: center;
@@ -66,11 +67,11 @@ button {
 table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 900px;
+    min-width: 600px;
 }
 th, td {
     border: 1px solid #ddd;
-    padding: 9px;
+    padding: 10px;
     text-align: left;
 }
 th {
@@ -84,6 +85,58 @@ th {
     font-weight: bold;
     margin: 15px;
 }
+.cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin: 20px 0;
+}
+.stat-card {
+    background: #eaf3fc;
+    padding: 18px;
+    border-radius: 9px;
+    text-align: center;
+}
+.stat-card h3 {
+    font-size: 28px;
+    color: #1769aa;
+    margin: 5px;
+}
+.stat-card p {
+    margin: 5px;
+    color: #444;
+}
+.public-header {
+    background: #174b80;
+    color: white;
+    padding: 18px;
+    border-radius: 8px;
+    text-align: center;
+}
+.public-header h2 {
+    color: white;
+    margin: 5px;
+}
+.public-header p {
+    margin: 5px;
+}
+.search {
+    margin: 15px 0;
+}
+#publicDashboard {
+    display: none;
+}
+#adminArea {
+    display: block;
+}
+@media(max-width:500px) {
+    .cards {
+        grid-template-columns: 1fr 1fr;
+    }
+    .container {
+        padding: 12px;
+    }
+}
 </style>
 </head>
 
@@ -91,19 +144,86 @@ th {
 
 <div class="container">
 
+<!-- PUBLIC DASHBOARD -->
+
+<div id="publicDashboard">
+
+    <div class="public-header">
+        <h2>सम्मेलन पंजीयन डैशबोर्ड</h2>
+        <p>गाँववार पंजीयन की सार्वजनिक जानकारी</p>
+    </div>
+
+    <div class="cards">
+
+        <div class="stat-card">
+            <h3 id="publicTotal">0</h3>
+            <p>कुल पंजीयन</p>
+        </div>
+
+        <div class="stat-card">
+            <h3 id="publicVillages">0</h3>
+            <p>कुल गाँव</p>
+        </div>
+
+    </div>
+
+    <h2>गाँववार पंजीयन संख्या</h2>
+
+    <input
+        type="text"
+        id="villageSearch"
+        class="search"
+        placeholder="गाँव का नाम खोजें..."
+    >
+
+    <div class="table-box">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>क्रमांक</th>
+                    <th>गाँव का नाम</th>
+                    <th>कुल पंजीयन</th>
+                </tr>
+            </thead>
+
+            <tbody id="villageList"></tbody>
+
+        </table>
+
+    </div>
+
+    <p id="noVillageData"
+       style="text-align:center;color:#777;display:none;">
+       अभी कोई पंजीयन उपलब्ध नहीं है।
+    </p>
+
+</div>
+
+
+<!-- ADMIN / REGISTRATION AREA -->
+
+<div id="adminArea">
+
 <h2>सम्मेलन वर-वधु पंजीयन फॉर्म</h2>
 
 <div class="count">
 कुल पंजीयन: <span id="total">0</span>
 </div>
 
+<p style="text-align:center;">
+    <a href="#public" class="nav-button" target="_blank">
+        Public Dashboard देखें
+    </a>
+</p>
+
 <form id="registrationForm">
 
 <label>पंजीयन प्रकार</label>
 <select id="type" required>
-<option value="">चुनें</option>
-<option value="वर">वर</option>
-<option value="वधु">वधु</option>
+    <option value="">चुनें</option>
+    <option value="वर">वर</option>
+    <option value="वधु">वधु</option>
 </select>
 
 <label>पंजीयन क्रमांक</label>
@@ -148,6 +268,7 @@ Excel डाउनलोड करें
 </button>
 
 <div class="table-box">
+
 <table>
 <thead>
 <tr>
@@ -163,11 +284,16 @@ Excel डाउनलोड करें
 <th>जिला</th>
 </tr>
 </thead>
+
 <tbody id="registrationList"></tbody>
 </table>
+
 </div>
 
 </div>
+
+</div>
+
 
 <script>
 
@@ -176,6 +302,7 @@ const STORAGE_KEY = "sammelan_registrations";
 let registrations = [];
 
 try {
+
     registrations = JSON.parse(
         localStorage.getItem(STORAGE_KEY) || "[]"
     );
@@ -183,23 +310,33 @@ try {
     if (!Array.isArray(registrations)) {
         registrations = [];
     }
-} catch (error) {
+
+} catch(error) {
     registrations = [];
 }
 
 const form = document.getElementById("registrationForm");
 const message = document.getElementById("message");
 
+
+// DATA SAVE
+
 function saveData() {
+
     localStorage.setItem(
         STORAGE_KEY,
         JSON.stringify(registrations)
     );
+
 }
+
+
+// REGISTRATION LIST
 
 function showData() {
 
     const list = document.getElementById("registrationList");
+
     list.replaceChildren();
 
     registrations.forEach((item, index) => {
@@ -217,79 +354,267 @@ function showData() {
             item.village,
             item.tehsil,
             item.district
+
         ].forEach(value => {
 
             const cell = document.createElement("td");
+
             cell.textContent = value ?? "";
+
             row.appendChild(cell);
 
         });
 
         list.appendChild(row);
+
     });
 
     document.getElementById("total").textContent =
         registrations.length;
+
 }
+
+
+// VILLAGE DASHBOARD
+
+function showPublicDashboard() {
+
+    const villageCounts = new Map();
+
+    registrations.forEach(item => {
+
+        const village = String(item.village || "").trim();
+
+        if (!village) return;
+
+        const key = village.toLocaleLowerCase("hi");
+
+        if (villageCounts.has(key)) {
+
+            villageCounts.get(key).count++;
+
+        } else {
+
+            villageCounts.set(key, {
+                name: village,
+                count: 1
+            });
+
+        }
+
+    });
+
+    const villages = Array.from(villageCounts.values());
+
+    // गाँव के नाम के अनुसार क्रम
+
+    villages.sort((a, b) =>
+        a.name.localeCompare(b.name, "hi")
+    );
+
+    document.getElementById("publicTotal").textContent =
+        registrations.length;
+
+    document.getElementById("publicVillages").textContent =
+        villages.length;
+
+    renderVillageList(villages);
+
+    document.getElementById("villageSearch").value = "";
+
+}
+
+
+// VILLAGE TABLE
+
+function renderVillageList(villages) {
+
+    const list = document.getElementById("villageList");
+
+    list.replaceChildren();
+
+    villages.forEach((item, index) => {
+
+        const row = document.createElement("tr");
+
+        [
+            index + 1,
+            item.name,
+            item.count
+
+        ].forEach(value => {
+
+            const cell = document.createElement("td");
+
+            cell.textContent = value;
+
+            row.appendChild(cell);
+
+        });
+
+        list.appendChild(row);
+
+    });
+
+    document.getElementById("noVillageData").style.display =
+        villages.length === 0 ? "block" : "none";
+
+}
+
+
+// VILLAGE SEARCH
+
+document.getElementById("villageSearch")
+.addEventListener("input", function() {
+
+    const search = this.value.trim().toLocaleLowerCase("hi");
+
+    const counts = new Map();
+
+    registrations.forEach(item => {
+
+        const name = String(item.village || "").trim();
+
+        if (!name) return;
+
+        const key = name.toLocaleLowerCase("hi");
+
+        if (counts.has(key)) {
+            counts.get(key).count++;
+        } else {
+            counts.set(key, {
+                name: name,
+                count: 1
+            });
+        }
+
+    });
+
+    const filtered = Array.from(counts.values())
+        .filter(item =>
+            item.name.toLocaleLowerCase("hi").includes(search)
+        )
+        .sort((a, b) => a.name.localeCompare(b.name, "hi"));
+
+    renderVillageList(filtered);
+
+});
+
+
+// PAGE VIEW
+
+function changePage() {
+
+    const isPublic = location.hash === "#public";
+
+    document.getElementById("adminArea").style.display =
+        isPublic ? "none" : "block";
+
+    document.getElementById("publicDashboard").style.display =
+        isPublic ? "block" : "none";
+
+    if (isPublic) {
+        showPublicDashboard();
+    }
+
+}
+
+window.addEventListener("hashchange", changePage);
+
+
+// REGISTRATION SUBMIT
 
 form.addEventListener("submit", function(e) {
 
     e.preventDefault();
 
     const data = {
+
         type: document.getElementById("type").value,
+
         regNo: document.getElementById("regNo").value.trim(),
+
         name: document.getElementById("name").value.trim(),
+
         father: document.getElementById("father").value.trim(),
+
         grandfather: document.getElementById("grandfather").value.trim(),
+
         mobile: document.getElementById("mobile").value.trim(),
+
         village: document.getElementById("village").value.trim(),
+
         tehsil: document.getElementById("tehsil").value.trim(),
+
         district: document.getElementById("district").value.trim()
+
     };
 
     const duplicate = registrations.some(item =>
-        String(item.regNo || "").toLowerCase() === data.regNo.toLowerCase() ||
+
+        String(item.regNo || "").toLowerCase() ===
+        data.regNo.toLowerCase() ||
+
         String(item.mobile || "") === data.mobile
+
     );
 
     if (duplicate) {
+
         message.style.color = "red";
+
         message.textContent =
             "यह पंजीयन क्रमांक या मोबाइल नंबर पहले से मौजूद है!";
+
         return;
+
     }
 
     registrations.push(data);
 
     try {
+
         saveData();
-    } catch (error) {
+
+    } catch(error) {
+
         registrations.pop();
+
         message.style.color = "red";
+
         message.textContent =
             "डेटा सेव नहीं हुआ। ब्राउज़र स्टोरेज जाँचें।";
+
         return;
+
     }
 
     showData();
 
     message.style.color = "green";
-    message.textContent = "पंजीयन सफलतापूर्वक सेव हो गया!";
+
+    message.textContent =
+        "पंजीयन सफलतापूर्वक सेव हो गया!";
 
     form.reset();
+
 });
 
-// Excel / CSV डाउनलोड
+
+// CSV DOWNLOAD
 
 function downloadExcel() {
 
     if (registrations.length === 0) {
+
         alert("डाउनलोड करने के लिए कोई पंजीयन उपलब्ध नहीं है।");
+
         return;
+
     }
 
     const headers = [
+
         "क्रमांक",
         "प्रकार",
         "पंजीयन नंबर",
@@ -300,9 +625,11 @@ function downloadExcel() {
         "गाँव",
         "तहसील",
         "जिला"
+
     ];
 
     const rows = registrations.map((item, index) => [
+
         index + 1,
         item.type || "पुराना रिकॉर्ड",
         item.regNo,
@@ -313,9 +640,11 @@ function downloadExcel() {
         item.village,
         item.tehsil,
         item.district
+
     ]);
 
     function escapeCSV(value) {
+
         let text = String(value ?? "");
 
         if (/^[\s]*[=+\-@]/.test(text)) {
@@ -323,31 +652,47 @@ function downloadExcel() {
         }
 
         return '"' + text.replace(/"/g, '""') + '"';
+
     }
 
     const csv = [headers, ...rows]
+
         .map(row => row.map(escapeCSV).join(","))
+
         .join("\r\n");
 
     const blob = new Blob(
+
         ["\uFEFF" + csv],
+
         { type: "text/csv;charset=utf-8;" }
+
     );
 
     const url = URL.createObjectURL(blob);
+
     const link = document.createElement("a");
 
     link.href = url;
+
     link.download = "सम्मेलन_वर-वधु_पंजीयन.csv";
 
     document.body.appendChild(link);
+
     link.click();
+
     link.remove();
 
     setTimeout(() => URL.revokeObjectURL(url), 1000);
+
 }
 
+
+// START
+
 showData();
+
+changePage();
 
 </script>
 
