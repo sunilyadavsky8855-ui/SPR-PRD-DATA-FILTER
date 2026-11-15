@@ -66,7 +66,7 @@ button {
 table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 700px;
+    min-width: 900px;
 }
 th, td {
     border: 1px solid #ddd;
@@ -112,6 +112,12 @@ th {
 <label>व्यक्ति का नाम</label>
 <input type="text" id="name" required>
 
+<label>पिता का नाम</label>
+<input type="text" id="father" required>
+
+<label>दादाजी का नाम</label>
+<input type="text" id="grandfather" required>
+
 <label>मोबाइल नंबर</label>
 <input type="tel" id="mobile"
 pattern="[0-9]{10}" maxlength="10" required>
@@ -149,6 +155,8 @@ Excel डाउनलोड करें
 <th>प्रकार</th>
 <th>पंजीयन नंबर</th>
 <th>नाम</th>
+<th>पिता का नाम</th>
+<th>दादाजी का नाम</th>
 <th>मोबाइल</th>
 <th>गाँव</th>
 <th>तहसील</th>
@@ -203,6 +211,8 @@ function showData() {
             item.type || "पुराना रिकॉर्ड",
             item.regNo,
             item.name,
+            item.father || "",
+            item.grandfather || "",
             item.mobile,
             item.village,
             item.tehsil,
@@ -230,6 +240,8 @@ form.addEventListener("submit", function(e) {
         type: document.getElementById("type").value,
         regNo: document.getElementById("regNo").value.trim(),
         name: document.getElementById("name").value.trim(),
+        father: document.getElementById("father").value.trim(),
+        grandfather: document.getElementById("grandfather").value.trim(),
         mobile: document.getElementById("mobile").value.trim(),
         village: document.getElementById("village").value.trim(),
         tehsil: document.getElementById("tehsil").value.trim(),
@@ -237,8 +249,8 @@ form.addEventListener("submit", function(e) {
     };
 
     const duplicate = registrations.some(item =>
-        item.regNo.toLowerCase() === data.regNo.toLowerCase() ||
-        item.mobile === data.mobile
+        String(item.regNo || "").toLowerCase() === data.regNo.toLowerCase() ||
+        String(item.mobile || "") === data.mobile
     );
 
     if (duplicate) {
@@ -268,7 +280,7 @@ form.addEventListener("submit", function(e) {
     form.reset();
 });
 
-// Excel डाउनलोड
+// Excel / CSV डाउनलोड
 
 function downloadExcel() {
 
@@ -282,6 +294,8 @@ function downloadExcel() {
         "प्रकार",
         "पंजीयन नंबर",
         "नाम",
+        "पिता का नाम",
+        "दादाजी का नाम",
         "मोबाइल",
         "गाँव",
         "तहसील",
@@ -293,6 +307,8 @@ function downloadExcel() {
         item.type || "पुराना रिकॉर्ड",
         item.regNo,
         item.name,
+        item.father || "",
+        item.grandfather || "",
         item.mobile,
         item.village,
         item.tehsil,
@@ -328,7 +344,7 @@ function downloadExcel() {
     link.click();
     link.remove();
 
-    URL.revokeObjectURL(url);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
 showData();
