@@ -8,13 +8,14 @@
 <style>
 *{box-sizing:border-box}
 body{font-family:Arial,sans-serif;background:#f3f5f9;margin:0;padding:15px;color:#222}
-.container{max-width:1100px;margin:auto}
+.container{max-width:1150px;margin:auto}
 h1{text-align:center;color:#174b83}
 h2{color:#174b83}
 .card{background:white;padding:18px;margin:15px 0;border-radius:10px;box-shadow:0 2px 8px #0001}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
 label{font-weight:bold;display:block;margin-bottom:5px}
-input,select{width:100%;padding:11px;border:1px solid #bbb;border-radius:6px;font-size:16px}
+input,select,textarea{width:100%;padding:11px;border:1px solid #bbb;border-radius:6px;font-size:16px}
+textarea{min-height:75px}
 button,.btn{border:0;padding:11px 17px;border-radius:6px;background:#1769aa;color:white;font-size:15px;cursor:pointer;margin:5px 3px}
 button:hover,.btn:hover{opacity:.88}
 .green{background:#168044}
@@ -22,28 +23,34 @@ button:hover,.btn:hover{opacity:.88}
 .red{background:#c62828}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
 .stat{background:#eaf3ff;padding:15px;border-radius:8px;text-align:center}
-.stat strong{display:block;font-size:25px;color:#174b83;margin-top:5px}
+.stat strong{display:block;font-size:24px;color:#174b83;margin-top:7px}
+.income{background:#e8f5e9}
+.expense{background:#ffebee}
+.balance{background:#e3f2fd}
+.donation{background:#fff4e5}
+.other{background:#f3e5f5}
 .table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;min-width:850px}
+table{width:100%;border-collapse:collapse;min-width:800px}
 th,td{border:1px solid #ddd;padding:9px;text-align:center}
 th{background:#174b83;color:white}
 tr:nth-child(even){background:#f7f9fc}
 .hidden{display:none}
 .note{color:#666;font-size:13px}
+.section-title{border-bottom:2px solid #e4eaf2;padding-bottom:8px}
 .public-table{min-width:400px}
 </style>
 </head>
 <body>
 <div class="container">
 
+<!-- अंदरूनी पंजीयन पेज -->
 <div id="mainArea">
-<h1>सम्मेलन वर-वधु पंजीयन फॉर्म</h1>
+<h1>सम्मेलन वर-वधु पंजीयन</h1>
 
 <div class="card">
 <h2>नया पंजीयन</h2>
 <form id="registrationForm">
 <div class="grid">
-
 <div>
 <label>पंजीयन प्रकार *</label>
 <select id="type" required>
@@ -52,52 +59,42 @@ tr:nth-child(even){background:#f7f9fc}
 <option value="वधु">वधु</option>
 </select>
 </div>
-
 <div>
 <label>पंजीयन क्रमांक *</label>
 <input id="regNo" required placeholder="पंजीयन क्रमांक">
 </div>
-
 <div>
 <label>व्यक्ति का नाम *</label>
 <input id="name" required placeholder="पूरा नाम">
 </div>
-
 <div>
 <label>पिता का नाम</label>
 <input id="father" placeholder="पिता का नाम">
 </div>
-
 <div>
 <label>दादाजी का नाम</label>
 <input id="grandfather" placeholder="दादाजी का नाम">
 </div>
-
 <div>
 <label>मोबाइल नंबर *</label>
 <input id="mobile" type="tel" maxlength="10" pattern="[0-9]{10}" required placeholder="10 अंकों का मोबाइल नंबर">
 </div>
-
 <div>
 <label>गाँव का नाम *</label>
 <input id="village" required placeholder="गाँव का नाम">
 </div>
-
 <div>
 <label>तहसील *</label>
 <input id="tehsil" required placeholder="तहसील">
 </div>
-
 <div>
 <label>जिला *</label>
 <input id="district" required placeholder="जिला">
 </div>
-
 <div>
 <label>पंजीयन राशि (₹) *</label>
 <input id="amount" type="number" min="0" step="0.01" required placeholder="राशि दर्ज करें">
 </div>
-
 </div>
 <br>
 <button type="submit" class="green">पंजीयन सुरक्षित करें</button>
@@ -106,37 +103,188 @@ tr:nth-child(even){background:#f7f9fc}
 <p class="note">* वाले सभी कॉलम भरना अनिवार्य है।</p>
 </div>
 
+<!-- पंजीयन रिपोर्ट -->
 <div class="card">
 <h2>पंजीयन रिपोर्ट</h2>
 <div class="stats">
 <div class="stat">कुल पंजीयन<strong id="totalCount">0</strong></div>
 <div class="stat">वर पंजीयन<strong id="groomCount">0</strong></div>
 <div class="stat">वधु पंजीयन<strong id="brideCount">0</strong></div>
-<div class="stat">कुल जमा राशि<strong id="totalAmount">₹0</strong></div>
+<div class="stat">पंजीयन से आय<strong id="registrationIncome">₹0</strong></div>
 </div>
 </div>
 
+<!-- आय व्यय डैशबोर्ड -->
+<div class="card" id="financeDashboard">
+<h2 class="section-title">आय एवं व्यय डैशबोर्ड</h2>
+
+<div class="stats">
+<div class="stat income">
+पंजीयन से आय
+<strong id="dashRegistrationIncome">₹0</strong>
+</div>
+<div class="stat donation">
+दान से आय
+<strong id="dashDonationIncome">₹0</strong>
+</div>
+<div class="stat other">
+अन्य आय
+<strong id="dashOtherIncome">₹0</strong>
+</div>
+<div class="stat income">
+कुल आय
+<strong id="dashTotalIncome">₹0</strong>
+</div>
+<div class="stat expense">
+कुल व्यय
+<strong id="dashTotalExpense">₹0</strong>
+</div>
+<div class="stat balance">
+शेष राशि
+<strong id="dashBalance">₹0</strong>
+</div>
+</div>
+
+<p class="note">पंजीयन आय पंजीयन फॉर्म की राशि से अपने-आप जुड़ती है। दान, अन्य आय और व्यय नीचे अलग से दर्ज करें।</p>
+</div>
+
+<!-- दान से आय -->
 <div class="card">
-<h2>पंजीयन सूची</h2>
-<input id="search" placeholder="नाम, मोबाइल, गाँव या पंजीयन क्रमांक से खोजें">
-<br><br>
-<button onclick="downloadCSV()">Excel में डाउनलोड करें</button>
+<h2>दान से आय दर्ज करें</h2>
+<form id="donationForm">
+<div class="grid">
+<div>
+<label>दानदाता का नाम *</label>
+<input id="donorName" required placeholder="दानदाता का नाम">
+</div>
+<div>
+<label>दान की तारीख *</label>
+<input id="donationDate" type="date" required>
+</div>
+<div>
+<label>दान राशि (₹) *</label>
+<input id="donationAmount" type="number" min="0.01" step="0.01" required placeholder="दान राशि">
+</div>
+<div>
+<label>विवरण</label>
+<input id="donationDetail" placeholder="दान का विवरण">
+</div>
+</div>
+<br>
+<button type="submit" class="green">दान की आय जोड़ें</button>
+</form>
+</div>
+
+<!-- अन्य आय -->
+<div class="card">
+<h2>अन्य आय दर्ज करें</h2>
+<form id="otherIncomeForm">
+<div class="grid">
+<div>
+<label>आय का स्रोत / नाम *</label>
+<input id="otherSource" required placeholder="आय का स्रोत">
+</div>
+<div>
+<label>तारीख *</label>
+<input id="otherDate" type="date" required>
+</div>
+<div>
+<label>राशि (₹) *</label>
+<input id="otherAmount" type="number" min="0.01" step="0.01" required placeholder="अन्य आय">
+</div>
+<div>
+<label>विवरण</label>
+<input id="otherDetail" placeholder="आय का विवरण">
+</div>
+</div>
+<br>
+<button type="submit" class="green">अन्य आय जोड़ें</button>
+</form>
+</div>
+
+<!-- व्यय -->
+<div class="card">
+<h2>व्यय दर्ज करें</h2>
+<form id="expenseForm">
+<div class="grid">
+<div>
+<label>खर्च का नाम *</label>
+<input id="expenseName" required placeholder="जैसे भोजन, टेंट, सजावट">
+</div>
+<div>
+<label>खर्च की तारीख *</label>
+<input id="expenseDate" type="date" required>
+</div>
+<div>
+<label>खर्च राशि (₹) *</label>
+<input id="expenseAmount" type="number" min="0.01" step="0.01" required placeholder="खर्च राशि">
+</div>
+<div>
+<label>विवरण</label>
+<input id="expenseDetail" placeholder="खर्च का विवरण">
+</div>
+</div>
+<br>
+<button type="submit" class="red">व्यय जोड़ें</button>
+</form>
+</div>
+
+<!-- आय की सूची -->
+<div class="card">
+<h2>दान से आय की सूची</h2>
 <div class="table-wrap">
 <table>
 <thead>
 <tr>
-<th>क्रमांक</th>
-<th>प्रकार</th>
-<th>पंजीयन क्रमांक</th>
-<th>नाम</th>
-<th>पिता का नाम</th>
-<th>दादाजी का नाम</th>
-<th>मोबाइल</th>
-<th>गाँव</th>
-<th>तहसील</th>
-<th>जिला</th>
-<th>राशि (₹)</th>
-<th>तारीख</th>
+<th>क्रमांक</th><th>दानदाता</th><th>तारीख</th><th>राशि</th><th>विवरण</th><th>कार्रवाई</th>
+</tr>
+</thead>
+<tbody id="donationTable"></tbody>
+</table>
+</div>
+</div>
+
+<div class="card">
+<h2>अन्य आय की सूची</h2>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>क्रमांक</th><th>आय का स्रोत</th><th>तारीख</th><th>राशि</th><th>विवरण</th><th>कार्रवाई</th>
+</tr>
+</thead>
+<tbody id="otherIncomeTable"></tbody>
+</table>
+</div>
+</div>
+
+<div class="card">
+<h2>व्यय की सूची</h2>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>क्रमांक</th><th>खर्च का नाम</th><th>तारीख</th><th>राशि</th><th>विवरण</th><th>कार्रवाई</th>
+</tr>
+</thead>
+<tbody id="expenseTable"></tbody>
+</table>
+</div>
+</div>
+
+<!-- पंजीयन सूची -->
+<div class="card">
+<h2>पंजीयन सूची</h2>
+<input id="search" placeholder="नाम, मोबाइल, गाँव या पंजीयन क्रमांक से खोजें">
+<br><br>
+<button onclick="downloadCSV()">पंजीयन सूची Excel में डाउनलोड करें</button>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>क्रमांक</th><th>प्रकार</th><th>पंजीयन क्रमांक</th><th>नाम</th>
+<th>पिता का नाम</th><th>दादाजी का नाम</th><th>मोबाइल</th>
+<th>गाँव</th><th>तहसील</th><th>जिला</th><th>राशि</th><th>तारीख</th>
 </tr>
 </thead>
 <tbody id="registrationTable"></tbody>
@@ -149,7 +297,7 @@ tr:nth-child(even){background:#f7f9fc}
 </div>
 </div>
 
-<!-- सार्वजनिक डैशबोर्ड -->
+<!-- सार्वजनिक डैशबोर्ड: केवल गाँववार पंजीयन -->
 <div id="publicDashboard" class="hidden">
 <h1>सम्मेलन पंजीयन - सार्वजनिक रिपोर्ट</h1>
 <div class="card">
@@ -165,11 +313,7 @@ tr:nth-child(even){background:#f7f9fc}
 <table class="public-table">
 <thead>
 <tr>
-<th>क्रमांक</th>
-<th>गाँव का नाम</th>
-<th>वर पंजीयन</th>
-<th>वधु पंजीयन</th>
-<th>कुल</th>
+<th>क्रमांक</th><th>गाँव का नाम</th><th>वर पंजीयन</th><th>वधु पंजीयन</th><th>कुल</th>
 </tr>
 </thead>
 <tbody id="villageTable"></tbody>
@@ -185,102 +329,70 @@ tr:nth-child(even){background:#f7f9fc}
 
 <script>
 const STORAGE_KEY = "sammelan_registrations";
+const DONATION_KEY = "sammelan_donations";
+const OTHER_INCOME_KEY = "sammelan_other_income";
+const EXPENSE_KEY = "sammelan_expenses";
 
-function getRecords(){
-    try {
-        const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+function readList(key){
+    try{
+        const data = JSON.parse(localStorage.getItem(key) || "[]");
         return Array.isArray(data) ? data : [];
-    } catch(e) {
+    }catch(e){
         return [];
     }
 }
 
-function saveRecords(records){
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+function writeList(key, data){
+    localStorage.setItem(key, JSON.stringify(data));
+}
+
+function getRecords(){
+    return readList(STORAGE_KEY);
 }
 
 function money(value){
     return "₹" + Number(value || 0).toLocaleString("en-IN", {
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 2
+        minimumFractionDigits:0,
+        maximumFractionDigits:2
     });
 }
 
 function escapeHTML(value){
     return String(value ?? "").replace(/[&<>"']/g, function(ch){
         return {
-            "&":"&amp;",
-            "<":"&lt;",
-            ">":"&gt;",
-            '"':"&quot;",
-            "'":"&#039;"
+            "&":"&amp;","<":"&lt;",">":"&gt;",
+            '"':"&quot;","'":"&#039;"
         }[ch];
     });
 }
 
-function render(){
-    const records = getRecords();
-    const tbody = document.getElementById("registrationTable");
-
-    let groom = 0;
-    let bride = 0;
-    let totalAmount = 0;
-
-    records.forEach(r => {
-        if(r.type === "वर") groom++;
-        if(r.type === "वधु") bride++;
-        totalAmount += Number(r.amount || 0);
-    });
-
-    document.getElementById("totalCount").textContent = records.length;
-    document.getElementById("groomCount").textContent = groom;
-    document.getElementById("brideCount").textContent = bride;
-    document.getElementById("totalAmount").textContent = money(totalAmount);
-
-    const search = document.getElementById("search").value.toLowerCase().trim();
-
-    const filtered = records.filter(r =>
-        [
-            r.type, r.regNo, r.name, r.father, r.grandfather,
-            r.mobile, r.village, r.tehsil, r.district
-        ].some(v => String(v || "").toLowerCase().includes(search))
-    );
-
-    tbody.innerHTML = filtered.map((r, index) => `
-        <tr>
-            <td>${index + 1}</td>
-            <td>${escapeHTML(r.type || "")}</td>
-            <td>${escapeHTML(r.regNo || "")}</td>
-            <td>${escapeHTML(r.name || "")}</td>
-            <td>${escapeHTML(r.father || "")}</td>
-            <td>${escapeHTML(r.grandfather || "")}</td>
-            <td>${escapeHTML(r.mobile || "")}</td>
-            <td>${escapeHTML(r.village || "")}</td>
-            <td>${escapeHTML(r.tehsil || "")}</td>
-            <td>${escapeHTML(r.district || "")}</td>
-            <td>${money(r.amount)}</td>
-            <td>${escapeHTML(r.date || "")}</td>
-        </tr>
-    `).join("");
-
-    renderPublic();
+function today(){
+    const d = new Date();
+    const offset = d.getTimezoneOffset();
+    return new Date(d.getTime() - offset * 60000).toISOString().slice(0,10);
 }
 
-document.getElementById("registrationForm").addEventListener("submit", function(e){
+// तारीख के कॉलम में आज की तारीख
+["donationDate","otherDate","expenseDate"].forEach(id=>{
+    document.getElementById(id).value = today();
+});
+
+// पंजीयन जोड़ना
+document.getElementById("registrationForm").addEventListener("submit",function(e){
     e.preventDefault();
 
     const record = {
-        type: document.getElementById("type").value,
-        regNo: document.getElementById("regNo").value.trim(),
-        name: document.getElementById("name").value.trim(),
-        father: document.getElementById("father").value.trim(),
-        grandfather: document.getElementById("grandfather").value.trim(),
-        mobile: document.getElementById("mobile").value.trim(),
-        village: document.getElementById("village").value.trim(),
-        tehsil: document.getElementById("tehsil").value.trim(),
-        district: document.getElementById("district").value.trim(),
-        amount: Number(document.getElementById("amount").value),
-        date: new Date().toLocaleDateString("en-IN")
+        type:document.getElementById("type").value,
+        regNo:document.getElementById("regNo").value.trim(),
+        name:document.getElementById("name").value.trim(),
+        father:document.getElementById("father").value.trim(),
+        grandfather:document.getElementById("grandfather").value.trim(),
+        mobile:document.getElementById("mobile").value.trim(),
+        village:document.getElementById("village").value.trim(),
+        tehsil:document.getElementById("tehsil").value.trim(),
+        district:document.getElementById("district").value.trim(),
+        amount:Number(document.getElementById("amount").value),
+        date:today()
     };
 
     if(!/^[0-9]{10}$/.test(record.mobile)){
@@ -306,15 +418,203 @@ document.getElementById("registrationForm").addEventListener("submit", function(
     }
 
     records.push(record);
-    saveRecords(records);
-
+    writeList(STORAGE_KEY,records);
     alert("पंजीयन सफलतापूर्वक सुरक्षित हो गया।");
     this.reset();
     render();
 });
 
-document.getElementById("search").addEventListener("input", render);
+// दान से आय जोड़ना
+document.getElementById("donationForm").addEventListener("submit",function(e){
+    e.preventDefault();
 
+    const item = {
+        id:Date.now(),
+        name:document.getElementById("donorName").value.trim(),
+        date:document.getElementById("donationDate").value,
+        amount:Number(document.getElementById("donationAmount").value),
+        detail:document.getElementById("donationDetail").value.trim()
+    };
+
+    if(!item.name || !item.date || !Number.isFinite(item.amount) || item.amount <= 0){
+        alert("कृपया दानदाता का नाम, तारीख और सही राशि भरें।");
+        return;
+    }
+
+    const list = readList(DONATION_KEY);
+    list.push(item);
+    writeList(DONATION_KEY,list);
+
+    alert("दान से आय दर्ज हो गई।");
+    this.reset();
+    document.getElementById("donationDate").value = today();
+    render();
+});
+
+// अन्य आय जोड़ना
+document.getElementById("otherIncomeForm").addEventListener("submit",function(e){
+    e.preventDefault();
+
+    const item = {
+        id:Date.now(),
+        name:document.getElementById("otherSource").value.trim(),
+        date:document.getElementById("otherDate").value,
+        amount:Number(document.getElementById("otherAmount").value),
+        detail:document.getElementById("otherDetail").value.trim()
+    };
+
+    if(!item.name || !item.date || !Number.isFinite(item.amount) || item.amount <= 0){
+        alert("कृपया आय का स्रोत, तारीख और सही राशि भरें।");
+        return;
+    }
+
+    const list = readList(OTHER_INCOME_KEY);
+    list.push(item);
+    writeList(OTHER_INCOME_KEY,list);
+
+    alert("अन्य आय दर्ज हो गई।");
+    this.reset();
+    document.getElementById("otherDate").value = today();
+    render();
+});
+
+// व्यय जोड़ना
+document.getElementById("expenseForm").addEventListener("submit",function(e){
+    e.preventDefault();
+
+    const item = {
+        id:Date.now(),
+        name:document.getElementById("expenseName").value.trim(),
+        date:document.getElementById("expenseDate").value,
+        amount:Number(document.getElementById("expenseAmount").value),
+        detail:document.getElementById("expenseDetail").value.trim()
+    };
+
+    if(!item.name || !item.date || !Number.isFinite(item.amount) || item.amount <= 0){
+        alert("कृपया खर्च का नाम, तारीख और सही राशि भरें।");
+        return;
+    }
+
+    const list = readList(EXPENSE_KEY);
+    list.push(item);
+    writeList(EXPENSE_KEY,list);
+
+    alert("व्यय दर्ज हो गया।");
+    this.reset();
+    document.getElementById("expenseDate").value = today();
+    render();
+});
+
+// रिकॉर्ड हटाना
+function deleteItem(key,id){
+    if(!confirm("क्या आप इस प्रविष्टि को हटाना चाहते हैं?")) return;
+
+    const list = readList(key).filter(item => item.id !== id);
+    writeList(key,list);
+    render();
+}
+
+// आय-व्यय रिपोर्ट
+function renderFinance(){
+    const registrations = getRecords();
+    const donations = readList(DONATION_KEY);
+    const otherIncome = readList(OTHER_INCOME_KEY);
+    const expenses = readList(EXPENSE_KEY);
+
+    const registrationTotal = registrations.reduce((sum,r)=>sum + Number(r.amount || 0),0);
+    const donationTotal = donations.reduce((sum,r)=>sum + Number(r.amount || 0),0);
+    const otherTotal = otherIncome.reduce((sum,r)=>sum + Number(r.amount || 0),0);
+    const expenseTotal = expenses.reduce((sum,r)=>sum + Number(r.amount || 0),0);
+
+    const totalIncome = registrationTotal + donationTotal + otherTotal;
+    const balance = totalIncome - expenseTotal;
+
+    document.getElementById("dashRegistrationIncome").textContent = money(registrationTotal);
+    document.getElementById("dashDonationIncome").textContent = money(donationTotal);
+    document.getElementById("dashOtherIncome").textContent = money(otherTotal);
+    document.getElementById("dashTotalIncome").textContent = money(totalIncome);
+    document.getElementById("dashTotalExpense").textContent = money(expenseTotal);
+    document.getElementById("dashBalance").textContent = money(balance);
+    document.getElementById("registrationIncome").textContent = money(registrationTotal);
+
+    document.getElementById("donationTable").innerHTML = donations.map((r,i)=>`
+        <tr>
+            <td>${i+1}</td>
+            <td>${escapeHTML(r.name)}</td>
+            <td>${escapeHTML(r.date)}</td>
+            <td>${money(r.amount)}</td>
+            <td>${escapeHTML(r.detail)}</td>
+            <td><button class="red" onclick="deleteItem('${DONATION_KEY}',${r.id})">हटाएँ</button></td>
+        </tr>
+    `).join("");
+
+    document.getElementById("otherIncomeTable").innerHTML = otherIncome.map((r,i)=>`
+        <tr>
+            <td>${i+1}</td>
+            <td>${escapeHTML(r.name)}</td>
+            <td>${escapeHTML(r.date)}</td>
+            <td>${money(r.amount)}</td>
+            <td>${escapeHTML(r.detail)}</td>
+            <td><button class="red" onclick="deleteItem('${OTHER_INCOME_KEY}',${r.id})">हटाएँ</button></td>
+        </tr>
+    `).join("");
+
+    document.getElementById("expenseTable").innerHTML = expenses.map((r,i)=>`
+        <tr>
+            <td>${i+1}</td>
+            <td>${escapeHTML(r.name)}</td>
+            <td>${escapeHTML(r.date)}</td>
+            <td>${money(r.amount)}</td>
+            <td>${escapeHTML(r.detail)}</td>
+            <td><button class="red" onclick="deleteItem('${EXPENSE_KEY}',${r.id})">हटाएँ</button></td>
+        </tr>
+    `).join("");
+}
+
+// पंजीयन सूची
+function render(){
+    const records = getRecords();
+    let groom = 0;
+    let bride = 0;
+
+    records.forEach(r=>{
+        if(r.type === "वर") groom++;
+        if(r.type === "वधु") bride++;
+    });
+
+    document.getElementById("totalCount").textContent = records.length;
+    document.getElementById("groomCount").textContent = groom;
+    document.getElementById("brideCount").textContent = bride;
+
+    const search = document.getElementById("search").value.toLowerCase().trim();
+
+    const filtered = records.filter(r=>
+        [r.type,r.regNo,r.name,r.father,r.grandfather,r.mobile,r.village,r.tehsil,r.district]
+        .some(v=>String(v || "").toLowerCase().includes(search))
+    );
+
+    document.getElementById("registrationTable").innerHTML = filtered.map((r,i)=>`
+        <tr>
+            <td>${i+1}</td>
+            <td>${escapeHTML(r.type || "")}</td>
+            <td>${escapeHTML(r.regNo || "")}</td>
+            <td>${escapeHTML(r.name || "")}</td>
+            <td>${escapeHTML(r.father || "")}</td>
+            <td>${escapeHTML(r.grandfather || "")}</td>
+            <td>${escapeHTML(r.mobile || "")}</td>
+            <td>${escapeHTML(r.village || "")}</td>
+            <td>${escapeHTML(r.tehsil || "")}</td>
+            <td>${escapeHTML(r.district || "")}</td>
+            <td>${money(r.amount)}</td>
+            <td>${escapeHTML(r.date || "")}</td>
+        </tr>
+    `).join("");
+
+    renderFinance();
+    renderPublic();
+}
+
+// पंजीयन CSV डाउनलोड
 function downloadCSV(){
     const records = getRecords();
 
@@ -329,28 +629,17 @@ function downloadCSV(){
         "पंजीयन राशि","तारीख"
     ];
 
-    const rows = records.map(r => [
-        r.type || "",
-        r.regNo || "",
-        r.name || "",
-        r.father || "",
-        r.grandfather || "",
-        r.mobile || "",
-        r.village || "",
-        r.tehsil || "",
-        r.district || "",
-        r.amount ?? "",
-        r.date || ""
+    const rows = records.map(r=>[
+        r.type || "",r.regNo || "",r.name || "",r.father || "",
+        r.grandfather || "",r.mobile || "",r.village || "",
+        r.tehsil || "",r.district || "",r.amount ?? "",r.date || ""
     ]);
 
-    const csv = [headers, ...rows].map(row =>
-        row.map(value => `"${String(value).replace(/"/g, '""')}"`).join(",")
+    const csv = [headers,...rows].map(row=>
+        row.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(",")
     ).join("\n");
 
-    const blob = new Blob(["\uFEFF" + csv], {
-        type:"text/csv;charset=utf-8;"
-    });
-
+    const blob = new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8;"});
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -359,65 +648,59 @@ function downloadCSV(){
     URL.revokeObjectURL(url);
 }
 
+document.getElementById("search").addEventListener("input",render);
+
+// सार्वजनिक रिपोर्ट: यहाँ वित्तीय डेटा नहीं जोड़ा गया है
 function renderPublic(){
     const records = getRecords();
     const villages = {};
 
-    records.forEach(r => {
+    records.forEach(r=>{
         const village = String(r.village || "").trim();
         if(!village) return;
 
         const key = village.toLocaleLowerCase("hi");
 
         if(!villages[key]){
-            villages[key] = {
-                name: village,
-                groom: 0,
-                bride: 0
-            };
+            villages[key] = {name:village,groom:0,bride:0};
         }
 
         if(r.type === "वर") villages[key].groom++;
         if(r.type === "वधु") villages[key].bride++;
     });
 
-    const list = Object.values(villages).sort((a,b) =>
-        a.name.localeCompare(b.name, "hi")
+    const list = Object.values(villages).sort((a,b)=>
+        a.name.localeCompare(b.name,"hi")
     );
 
     document.getElementById("publicTotal").textContent = records.length;
     document.getElementById("publicVillages").textContent = list.length;
 
-    const search = (
-        document.getElementById("villageSearch")?.value || ""
-    ).toLocaleLowerCase("hi");
+    const search = document.getElementById("villageSearch").value.toLocaleLowerCase("hi");
+    const filtered = list.filter(v=>v.name.toLocaleLowerCase("hi").includes(search));
 
-    const filtered = list.filter(v =>
-        v.name.toLocaleLowerCase("hi").includes(search)
-    );
-
-    document.getElementById("villageTable").innerHTML = filtered.map((v,i) => `
+    document.getElementById("villageTable").innerHTML = filtered.map((v,i)=>`
         <tr>
             <td>${i+1}</td>
             <td>${escapeHTML(v.name)}</td>
             <td>${v.groom}</td>
             <td>${v.bride}</td>
-            <td>${v.groom + v.bride}</td>
+            <td>${v.groom+v.bride}</td>
         </tr>
     `).join("");
 }
 
-document.getElementById("villageSearch").addEventListener("input", renderPublic);
+document.getElementById("villageSearch").addEventListener("input",renderPublic);
 
 function changePage(){
     const isPublic = location.hash === "#public";
-    document.getElementById("mainArea").classList.toggle("hidden", isPublic);
-    document.getElementById("publicDashboard").classList.toggle("hidden", !isPublic);
+    document.getElementById("mainArea").classList.toggle("hidden",isPublic);
+    document.getElementById("publicDashboard").classList.toggle("hidden",!isPublic);
     render();
 }
 
-window.addEventListener("hashchange", changePage);
-window.addEventListener("storage", render);
+window.addEventListener("hashchange",changePage);
+window.addEventListener("storage",render);
 
 render();
 changePage();
