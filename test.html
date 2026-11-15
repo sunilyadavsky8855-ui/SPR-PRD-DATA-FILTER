@@ -4,638 +4,535 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>सम्मेलन वर-वधु पंजीयन पोर्टल</title>
+<title>Panchayat Sahayak DESK</title>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <style>
-*{box-sizing:border-box}
-body{font-family:Arial,sans-serif;background:#f3f5f9;margin:0;padding:15px;color:#222}
-.container{max-width:1150px;margin:auto}
-h1{text-align:center;color:#174b83}
-h2{color:#174b83}
-.card{background:white;padding:18px;margin:15px 0;border-radius:10px;box-shadow:0 2px 8px #0001}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
-label{font-weight:bold;display:block;margin-bottom:5px}
-input,select{width:100%;padding:11px;border:1px solid #bbb;border-radius:6px;font-size:16px}
-button,.btn{border:0;padding:11px 17px;border-radius:6px;background:#1769aa;color:white;font-size:15px;cursor:pointer;margin:5px 3px}
-button:hover,.btn:hover{opacity:.88}
-.green{background:#168044}
-.orange{background:#d87913}
-.red{background:#c62828}
-.gray{background:#555}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
-.stat{background:#eaf3ff;padding:15px;border-radius:8px;text-align:center}
-.stat strong{display:block;font-size:23px;color:#174b83;margin-top:7px}
-.income{background:#e8f5e9}
-.expense{background:#ffebee}
-.balance{background:#e3f2fd}
-.table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;min-width:750px}
-th,td{border:1px solid #ddd;padding:9px;text-align:center}
-th{background:#174b83;color:white}
-tr:nth-child(even){background:#f7f9fc}
-.hidden{display:none!important}
-.note{color:#666;font-size:13px}
-.nav{display:flex;flex-wrap:wrap;gap:5px;margin:10px 0}
-.nav button{margin:2px}
-.public-table{min-width:400px}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+body{background:#f0f4ff;padding-bottom:90px}
+.header{background:linear-gradient(135deg,#1e3a8a,#3b82f6);color:#fff;padding:20px 15px;text-align:center;border-radius:0 0 25px 25px}
+.tabs{display:flex;overflow-x:auto;gap:8px;padding:12px 10px;background:#fff;position:sticky;top:0;z-index:10}
+.tab-btn{white-space:nowrap;padding:8px 18px;border-radius:20px;border:1px solid #3b82f6;background:#fff;color:#1e3a8a;font-weight:600;cursor:pointer}
+.tab-btn.active{background:#1e3a8a;color:#fff}
+.container{padding:15px}
+.card{background:#fff;border-radius:15px;padding:15px;margin-bottom:15px;display:none}
+.card.active{display:block}
+.btn{width:100%;padding:12px;background:#2563eb;color:#fff;border-radius:10px;text-align:center;font-weight:600;border:none;cursor:pointer;margin:8px 0}
+.btn-green{background:#16a34a}
+input[type=file]{padding:10px;border:2px dashed #0d6efd;border-radius:8px;width:95%;margin:8px 0;background:#f8f9ff}
+table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}
+th,td{border:1px solid #ccc;padding:6px}
+th{background:#0d6efd;color:#fff}
+.footer{position:fixed;bottom:0;left:0;right:0;text-align:center;font-weight:bold;color:#fff;background:#1e3a8a;padding:12px;z-index:9999}
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.kpi{background:#f8faff;padding:10px;border-radius:10px;text-align:center;border-left:4px solid #0F5C3D}
+.kpi.green{background:#dcfce7}
+.chart-wrap{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+@media(max-width:600px){.chart-wrap{grid-template-columns:1fr}}
+.j-input{width:100%;padding:11px;border:1px solid #ccc;border-radius:8px}
 </style>
 </head>
 <body>
+
+<div class="header">
+<h1>🌾 पंचायत सहायक</h1>
+<p>SUNIL KUMAR YADAV | GP NIWANIYA | 9755194687</p>
+</div>
+
+<div class="tabs">
+<button class="tab-btn" onclick="openTab('mgnrega',this)">मनरेगा MR</button>
+<button class="tab-btn active" onclick="openTab('byawara',this)" style="background:#16a34a;color:#fff">📊 ब्यावरा डैशबोर्ड पंचायत दर्पण टेक्स रिपोर्ट</button>
+<button class="tab-btn" onclick="openTab('jankari',this)" style="background:#f59e0b;color:#000">📝 जानकारी दर्ज</button>
+</div>
+
 <div class="container">
 
-<!-- LOGIN -->
-<div id="loginArea" class="card">
-<h1>सम्मेलन पंजीयन पोर्टल</h1>
-<h2>लॉगिन करें</h2>
-<form id="loginForm">
-<div class="grid">
-<div>
-<label>यूजर ID</label>
-<input id="loginId" required placeholder="अपना यूजर ID">
-</div>
-<div>
-<label>पासवर्ड</label>
-<input id="loginPassword" type="password" required placeholder="पासवर्ड">
-</div>
-</div>
-<br>
-<button class="green" type="submit">लॉगिन करें</button>
-</form>
-<p class="note">डेमो Admin ID: admin | Password: admin123</p>
-<a href="#public" class="btn">सार्वजनिक डैशबोर्ड देखें</a>
+<div id="mgnrega" class="card">
+<h2>MGNREGA</h2>
+<a class="btn" style="background:#166534" href="https://mnregaweb4.nic.in/netnrega/dynamic_muster.aspx" target="_blank">MR Report</a>
 </div>
 
-<!-- ADMIN AREA -->
-<div id="adminArea" class="hidden">
-<h1>Admin Dashboard</h1>
-<div class="card">
-<div class="nav">
-<button onclick="showAdminTab('adminHome')">डैशबोर्ड</button>
-<button onclick="showAdminTab('operatorManage')">ऑपरेटर प्रबंधन</button>
-<button onclick="showAdminTab('adminRegistrations')">सभी पंजीयन</button>
-<button onclick="showAdminTab('adminFinance')">आय-व्यय</button>
-<button class="red" onclick="logout()">लॉगआउट</button>
-</div>
-<p id="adminWelcome"></p>
-</div>
+<div id="byawara" class="card active">
+<h2 style="color:#16a34a;border-left:4px solid #16a34a;padding-left:10px">📊 जनपद पंचायत ब्यावरा – 2 दिवसीय प्रगति समीक्षा</h2>
+<p style="font-size:12px;color:#555;margin:7px 0 12px">पंचायत दर्पण पोर्टल से डाउनलोड की गई एक्सेल शीट यहाँ डालें</p>
 
-<div id="adminHome" class="adminTab">
-<div class="card">
-<h2>मुख्य रिपोर्ट</h2>
-<div class="stats">
-<div class="stat">कुल पंजीयन<strong id="adminTotal">0</strong></div>
-<div class="stat">वर<strong id="adminGroom">0</strong></div>
-<div class="stat">वधु<strong id="adminBride">0</strong></div>
-<div class="stat">कुल ऑपरेटर<strong id="adminOperators">0</strong></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+<div style="border:2px dashed #16a34a;padding:10px;border-radius:10px;background:#f0fdf4">
+<b style="font-size:12px">STEP 1 – पुरानी</b>
+<input type="file" id="fileOld" accept=".xlsx,.xls,.csv" style="width:100%;margin-top:8px">
+<div id="oldStatus" style="font-size:11px;color:#166534"></div>
 </div>
+<div style="border:2px dashed #2563eb;padding:10px;border-radius:10px;background:#eff6ff">
+<b style="font-size:12px">STEP 2 – नई</b>
+<input type="file" id="fileNew" accept=".xlsx,.xls,.csv" style="width:100%;margin-top:8px">
+<div id="newStatus" style="font-size:11px;color:#1d4ed8"></div>
 </div>
 </div>
 
-<div id="operatorManage" class="adminTab hidden">
-<div class="card">
-<h2>नया ऑपरेटर बनाएँ</h2>
-<form id="operatorForm">
-<div class="grid">
-<div>
-<label>ऑपरेटर का नाम *</label>
-<input id="operatorName" required>
-</div>
-<div>
-<label>ऑपरेटर ID *</label>
-<input id="operatorId" required>
-</div>
-<div>
-<label>मोबाइल नंबर *</label>
-<input id="operatorMobile" maxlength="10" pattern="[0-9]{10}" required>
-</div>
-<div>
-<label>पासवर्ड *</label>
-<input id="operatorPassword" required>
-</div>
-</div>
-<br>
-<button type="submit" class="green">ऑपरेटर जोड़ें</button>
-</form>
+<div style="display:flex;gap:8px;margin:10px 0;flex-wrap:wrap">
+<button class="btn" style="flex:1;background:#16a34a;min-width:120px" onclick="processByawara()">🔄 तुलना करें</button>
+<button class="btn" id="dlBtnByawara" style="flex:1;background:#1e3a8a;display:none;min-width:120px" onclick="downloadByawaraExcel()">⬇️ Excel</button>
+<button class="btn" id="pdfBtnByawara" style="flex:1;background:#be123c;display:none;min-width:120px" onclick="downloadByawaraPDF()">📄 PDF</button>
 </div>
 
-<div class="card">
-<h2>ऑपरेटर सूची</h2>
-<div class="table-wrap">
+<div id="byawaraError" style="display:none;background:#fee2e2;color:#991b1b;padding:10px;border-radius:8px;font-size:13px;margin-bottom:10px"></div>
+
+<div id="byawaraDashboard" style="display:none">
+<div class="kpi-grid">
+<div class="kpi"><h2 id="kpiTotal">0</h2><p>कुल पंचायत</p></div>
+<div class="kpi"><h2 id="kpiOld">0</h2><p id="kpiOldR">पुरानी बिल</p></div>
+<div class="kpi"><h2 id="kpiNew">0</h2><p id="kpiNewR">नई बिल</p></div>
+<div class="kpi green"><h2 id="kpiGrowth">0</h2><p id="kpiGrowthP">वृद्धि</p></div>
+</div>
+
+<div id="top3Box" style="background:#fefce8;border:2px solid #facc15;border-radius:10px;padding:10px;font-size:12px;margin-bottom:10px"></div>
+<div id="reviewBox" style="background:#eff6ff;border:1px solid #93c5fd;border-radius:10px;padding:10px;font-size:12px;margin-bottom:10px"></div>
+
+<div class="chart-wrap">
+<div style="background:#fff;border-radius:10px;padding:8px;border:1px solid #ccc"><canvas id="billChart"></canvas></div>
+<div style="background:#fff;border-radius:10px;padding:8px;border:1px solid #ccc"><canvas id="pieChart"></canvas></div>
+</div>
+
+<div class="chart-wrap">
+<div style="background:#fff;border-radius:10px;padding:8px;border:1px solid #ccc"><canvas id="rashiChart"></canvas></div>
+<div style="background:#fff;border-radius:10px;padding:10px;border:1px solid #ccc">
+<h4>सारांश समीक्षा</h4>
+<div id="summaryBox" style="font-size:12px;line-height:1.7"></div>
+</div>
+</div>
+
+<input type="text" id="searchByawara" placeholder="🔍 LGD / पंचायत खोजें..." style="width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;margin:10px 0" oninput="filterByawara()">
+
+<div style="max-height:500px;overflow:auto;border:1px solid #ccc;border-radius:10px">
 <table>
-<thead><tr>
-<th>क्रमांक</th><th>नाम</th><th>ऑपरेटर ID</th><th>मोबाइल</th><th>भूमिका</th>
-</tr></thead>
-<tbody id="operatorTable"></tbody>
+<thead>
+<tr>
+<th>क्र.</th><th>LGD</th><th>पंचायत</th><th>विगत बिल</th><th>वर्तमान बिल</th><th>प्रगति</th><th>विगत राशि</th><th>वर्तमान राशि</th><th>वृद्धि</th>
+</tr>
+</thead>
+<tbody id="tbodyByawara"></tbody>
 </table>
 </div>
 </div>
 </div>
 
-<div id="adminRegistrations" class="adminTab hidden">
-<div class="card">
-<h2>सभी पंजीयन</h2>
-<input id="adminSearch" placeholder="नाम, गाँव, मोबाइल या ऑपरेटर खोजें">
-<br><br>
-<button onclick="downloadRegistrations()">पंजीयन CSV डाउनलोड</button>
-<div class="table-wrap">
+<div id="jankari" class="card">
+<h2>📝 जानकारी दर्ज</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px">
+<div style="grid-column:1/3">
+<select id="panchayat" class="j-input">
+<option value="">चुनें</option>
+<option>AGAR</option>
+<option>NIWANIYA</option>
+<option value="OTHER">अन्य</option>
+</select>
+</div>
+<div id="otherPanchDiv" style="display:none;grid-column:1/3">
+<input id="otherPanch" class="j-input" placeholder="पंचायत नाम">
+</div>
+<div><input id="pensioners" type="number" placeholder="Pensioners" class="j-input"></div>
+<div><input id="ekyDone" type="number" placeholder="EKY Done" class="j-input"></div>
+<div><input id="ekyPending" type="number" placeholder="Pending" class="j-input"></div>
+<div><input id="remark" placeholder="Remark" class="j-input"></div>
+</div>
+
+<button class="btn btn-green" onclick="addJankari()">Entry जोड़ो</button>
+<div style="display:flex;gap:8px">
+<button class="btn" style="background:#f59e0b;color:#000;flex:1" onclick="exportJankariExcel()">Excel Download</button>
+<button class="btn" style="background:#ef4444;flex:1" onclick="clearJankari()">Clear</button>
+</div>
+<div>Total: <b id="totalCount">0</b></div>
+<div style="max-height:380px;overflow:auto;margin-top:10px;border:1px solid #ccc;border-radius:10px">
 <table>
-<thead><tr>
-<th>क्रमांक</th><th>प्रकार</th><th>पंजीयन नं.</th><th>नाम</th>
-<th>मोबाइल</th><th>गाँव</th><th>राशि</th><th>ऑपरेटर</th><th>तारीख</th>
-</tr></thead>
-<tbody id="adminRegistrationTable"></tbody>
+<thead><tr><th>#</th><th>Panchayat</th><th>Pensioners</th><th>Done</th><th>Pending</th><th>Remark</th><th>X</th></tr></thead>
+<tbody id="tbody"></tbody>
 </table>
 </div>
 </div>
-</div>
-
-<div id="adminFinance" class="adminTab hidden">
-<div class="card">
-<h2>आय एवं व्यय डैशबोर्ड</h2>
-<div class="stats">
-<div class="stat income">पंजीयन आय<strong id="fReg">₹0</strong></div>
-<div class="stat income">दान आय<strong id="fDonation">₹0</strong></div>
-<div class="stat income">अन्य आय<strong id="fOther">₹0</strong></div>
-<div class="stat income">कुल आय<strong id="fIncome">₹0</strong></div>
-<div class="stat expense">कुल व्यय<strong id="fExpense">₹0</strong></div>
-<div class="stat balance">शेष राशि<strong id="fBalance">₹0</strong></div>
-</div>
-</div>
-
-<div class="card">
-<h2>दान से आय</h2>
-<form id="donationForm">
-<div class="grid">
-<div><label>दानदाता का नाम</label><input id="donorName" required></div>
-<div><label>तारीख</label><input id="donationDate" type="date" required></div>
-<div><label>राशि (₹)</label><input id="donationAmount" type="number" min="0.01" step="0.01" required></div>
-<div><label>विवरण</label><input id="donationDetail"></div>
-</div>
-<button class="green">दान आय जोड़ें</button>
-</form>
-</div>
-
-<div class="card">
-<h2>अन्य आय</h2>
-<form id="otherIncomeForm">
-<div class="grid">
-<div><label>आय का स्रोत</label><input id="otherSource" required></div>
-<div><label>तारीख</label><input id="otherDate" type="date" required></div>
-<div><label>राशि (₹)</label><input id="otherAmount" type="number" min="0.01" step="0.01" required></div>
-<div><label>विवरण</label><input id="otherDetail"></div>
-</div>
-<button class="green">अन्य आय जोड़ें</button>
-</form>
-</div>
-
-<div class="card">
-<h2>व्यय दर्ज करें</h2>
-<form id="expenseForm">
-<div class="grid">
-<div><label>खर्च का नाम</label><input id="expenseName" required></div>
-<div><label>तारीख</label><input id="expenseDate" type="date" required></div>
-<div><label>राशि (₹)</label><input id="expenseAmount" type="number" min="0.01" step="0.01" required></div>
-<div><label>विवरण</label><input id="expenseDetail"></div>
-</div>
-<button class="red">व्यय जोड़ें</button>
-</form>
-</div>
-
-<div class="card">
-<h2>दान आय सूची</h2>
-<div class="table-wrap"><table>
-<thead><tr><th>नाम</th><th>तारीख</th><th>राशि</th><th>विवरण</th><th>हटाएँ</th></tr></thead>
-<tbody id="donationTable"></tbody>
-</table></div>
-</div>
-
-<div class="card">
-<h2>अन्य आय सूची</h2>
-<div class="table-wrap"><table>
-<thead><tr><th>स्रोत</th><th>तारीख</th><th>राशि</th><th>विवरण</th><th>हटाएँ</th></tr></thead>
-<tbody id="otherIncomeTable"></tbody>
-</table></div>
-</div>
-
-<div class="card">
-<h2>व्यय सूची</h2>
-<div class="table-wrap"><table>
-<thead><tr><th>खर्च</th><th>तारीख</th><th>राशि</th><th>विवरण</th><th>हटाएँ</th></tr></thead>
-<tbody id="expenseTable"></tbody>
-</table></div>
-</div>
-</div>
-</div>
-
-<!-- OPERATOR AREA -->
-<div id="operatorArea" class="hidden">
-<h1>Operator Dashboard</h1>
-<div class="card">
-<p id="operatorWelcome"></p>
-<div class="nav">
-<button onclick="showOperatorTab('operatorHome')">डैशबोर्ड</button>
-<button onclick="showOperatorTab('operatorEntry')">नया पंजीयन</button>
-<button onclick="showOperatorTab('operatorList')">मेरे पंजीयन</button>
-<button class="red" onclick="logout()">लॉगआउट</button>
-</div>
-</div>
-
-<div id="operatorHome" class="operatorTab">
-<div class="card">
-<h2>मेरी रिपोर्ट</h2>
-<div class="stats">
-<div class="stat">मेरे कुल पंजीयन<strong id="myTotal">0</strong></div>
-<div class="stat">वर<strong id="myGroom">0</strong></div>
-<div class="stat">वधु<strong id="myBride">0</strong></div>
-</div>
-</div>
-</div>
-
-<div id="operatorEntry" class="operatorTab hidden">
-<div class="card">
-<h2>नया पंजीयन दर्ज करें</h2>
-<form id="registrationForm">
-<div class="grid">
-<div><label>पंजीयन प्रकार *</label>
-<select id="type" required><option value="">चुनें</option><option>वर</option><option>वधु</option></select></div>
-<div><label>पंजीयन क्रमांक *</label><input id="regNo" required></div>
-<div><label>व्यक्ति का नाम *</label><input id="name" required></div>
-<div><label>पिता का नाम</label><input id="father"></div>
-<div><label>दादाजी का नाम</label><input id="grandfather"></div>
-<div><label>मोबाइल नंबर *</label><input id="mobile" type="tel" maxlength="10" pattern="[0-9]{10}" required></div>
-<div><label>गाँव का नाम *</label><input id="village" required></div>
-<div><label>तहसील *</label><input id="tehsil" required></div>
-<div><label>जिला *</label><input id="district" required></div>
-<div><label>पंजीयन राशि (₹) *</label><input id="amount" type="number" min="0" step="0.01" required></div>
-</div>
-<br>
-<button type="submit" class="green">पंजीयन सुरक्षित करें</button>
-<button type="reset" class="orange">फॉर्म साफ करें</button>
-</form>
-</div>
-</div>
-
-<div id="operatorList" class="operatorTab hidden">
-<div class="card">
-<h2>मेरे पंजीयन</h2>
-<div class="table-wrap"><table>
-<thead><tr><th>क्रमांक</th><th>प्रकार</th><th>पंजीयन नं.</th><th>नाम</th><th>मोबाइल</th><th>गाँव</th><th>राशि</th><th>तारीख</th></tr></thead>
-<tbody id="myRegistrationTable"></tbody>
-</table></div>
-</div>
-</div>
-</div>
-
-<!-- PUBLIC PORTAL -->
-<div id="publicDashboard" class="hidden">
-<h1>सम्मेलन पंजीयन - सार्वजनिक रिपोर्ट</h1>
-<div class="card">
-<h2>ग्रामवार पंजीयन जानकारी</h2>
-<div class="stats">
-<div class="stat">कुल पंजीयन<strong id="publicTotal">0</strong></div>
-<div class="stat">कुल गाँव<strong id="publicVillages">0</strong></div>
-</div>
-<br>
-<input id="villageSearch" placeholder="गाँव का नाम खोजें">
-<br><br>
-<div class="table-wrap"><table class="public-table">
-<thead><tr><th>क्रमांक</th><th>गाँव</th><th>वर</th><th>वधु</th><th>कुल</th></tr></thead>
-<tbody id="villageTable"></tbody>
-</table></div>
-<br>
-<a href="#" class="btn">लॉगिन पेज पर वापस जाएँ</a>
-</div>
-<p class="note">यह रिपोर्ट केवल सामूहिक पंजीयन संख्या दिखाती है।</p>
-</div>
 
 </div>
+
+<div style="text-align:center;background:#1e3a8a;color:#fff;padding:8px;font-weight:bold">
+👁️ इस साइट को देखा गया :
+<img src="https://hits.sh/sunilyadavsky8855-ui.github.io/SPR-PRD-DATA-FILTER.svg?style=flat&label=VISIT&color=green" style="vertical-align:middle"> बार
+</div>
+<div class="footer">🌾 सुनील कुमार यादव, GP निवानिया | 9755194687</div>
 
 <script>
-const KEYS={
- registrations:"sammelan_registrations",
- donations:"sammelan_donations",
- other:"sammelan_other_income",
- expenses:"sammelan_expenses",
- operators:"sammelan_operators"
+function openTab(id,el){
+document.querySelectorAll('.card').forEach(c=>c.classList.remove('active'));
+document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+el.classList.add('active');
+if(id==='jankari')renderJankari();
+}
+
+let byawaraOldWb=null, byawaraNewWb=null, byawaraResult=[], byawaraFiltered=[], byawaraSummary=[], byawaraCharts={};
+
+function byawaraReadFile(file){
+return new Promise((resolve,reject)=>{
+const reader=new FileReader();
+reader.onload=e=>{
+try{resolve(XLSX.read(e.target.result,{type:'array',cellDates:true}));}
+catch(err){reject(err);}
+};
+reader.onerror=()=>reject(new Error('फाइल पढ़ने में समस्या'));
+reader.readAsArrayBuffer(file);
+});
+}
+
+document.getElementById('fileOld')?.addEventListener('change',async e=>{
+const f=e.target.files[0];if(!f)return;
+try{
+byawaraOldWb=await byawaraReadFile(f);
+document.getElementById('oldStatus').textContent='✓ '+f.name;
+}catch(err){
+byawaraOldWb=null;
+document.getElementById('oldStatus').textContent='फाइल नहीं पढ़ी गई';
+}
+});
+
+document.getElementById('fileNew')?.addEventListener('change',async e=>{
+const f=e.target.files[0];if(!f)return;
+try{
+byawaraNewWb=await byawaraReadFile(f);
+document.getElementById('newStatus').textContent='✓ '+f.name;
+}catch(err){
+byawaraNewWb=null;
+document.getElementById('newStatus').textContent='फाइल नहीं पढ़ी गई';
+}
+});
+
+function bwNum(v){
+if(typeof v==='number')return Number.isFinite(v)?v:0;
+const s=String(v??'').replace(/,/g,'').replace(/[₹\s]/g,'').replace(/[^\d.-]/g,'');
+const n=parseFloat(s);
+return Number.isFinite(n)?n:0;
+}
+
+function cleanPanchayatName(fullName){
+let s=String(fullName||'').trim();
+s=s.replace(/^\s*GRAM\s+PANCHAYAT\s*,?\s*/i,'');
+s=s.replace(/^\s*GRAM\s+PANCHAYAT\s*/i,'');
+s=s.replace(/^,+\s*/,'');
+s=s.trim();
+if(s.includes(',')){
+let parts=s.split(',');
+s=parts[parts.length-1].trim();
+}
+return s||fullName;
+}
+
+function bwExtract(wb,label){
+if(!wb||!wb.SheetNames.length)throw new Error(label+' Excel खाली है');
+const ws=wb.Sheets[wb.SheetNames[0]];
+const aoa=XLSX.utils.sheet_to_json(ws,{header:1,defval:'',raw:false});
+if(!aoa.length)throw new Error(label+' में डेटा नहीं');
+
+let hr=aoa.findIndex((r,i)=>i<10&&r&&r.some(c=>String(c).toLowerCase().includes('lgd')));
+if(hr<0)hr=aoa.findIndex((r,i)=>i<10&&r&&r.some(c=>String(c).includes('पंचायत')));
+if(hr<0)hr=1;
+
+let lgd=4,name=3,bill=7,amount=12;
+const map=new Map();
+
+for(let i=hr+1;i<aoa.length;i++){
+const r=aoa[i]||[];
+const rawLgd=String(r[lgd]??'').replace('.0','').trim();
+const rawFullName=String(r[name]??'').trim();
+const col2=String(r[2]??'').toLowerCase();
+
+if(!rawLgd||rawLgd.length<3||isNaN(Number(rawLgd))||rawFullName.toLowerCase().includes('total')||col2.includes('total'))continue;
+if(!/^\d+$/.test(rawLgd))continue;
+
+const cleanedName=cleanPanchayatName(rawFullName);
+const rec={lgd:rawLgd,name:cleanedName,bill:bwNum(r[bill]),amount:bwNum(r[amount])};
+
+if(map.has(rawLgd)){
+const old=map.get(rawLgd);
+old.bill+=rec.bill;
+old.amount+=rec.amount;
+}else map.set(rawLgd,rec);
+}
+if(!map.size)throw new Error(label+' में 109 GP नहीं मिले');
+return {map};
+}
+
+function bwMoney(n){
+return '₹'+Number(n||0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+
+function processByawara(){
+const err=document.getElementById('byawaraError');
+if(err){err.style.display='none';err.textContent='';}
+try{
+if(!byawaraOldWb||!byawaraNewWb)throw new Error('कृपया कल और आज – दोनों Excel अपलोड करें।');
+
+const oldData=bwExtract(byawaraOldWb,'पुरानी');
+const newData=bwExtract(byawaraNewWb,'नई');
+const ids=[...new Set([...oldData.map.keys(),...newData.map.keys()])];
+
+byawaraResult=ids.map(id=>{
+const o=oldData.map.get(id)||{lgd:id,name:'',bill:0,amount:0};
+const n=newData.map.get(id)||{lgd:id,name:'',bill:0,amount:0};
+return {
+lgd:id,
+name:n.name||o.name||'नाम नहीं',
+oldBill:o.bill,
+newBill:n.bill,
+growth:n.bill-o.bill,
+oldAmount:o.amount,
+newAmount:n.amount,
+amountGrowth:n.amount-o.amount,
+status:!oldData.map.has(id)?'नई पंचायत':!newData.map.has(id)?'नई शीट में नहीं':'मौजूद'
+};
+}).sort((a,b)=>b.growth-a.growth);
+
+const sum=k=>byawaraResult.reduce((s,r)=>s+r[k],0);
+const positive=byawaraResult.filter(r=>r.growth>0).length;
+const negative=byawaraResult.filter(r=>r.growth<0).length;
+const same=byawaraResult.filter(r=>r.growth===0).length;
+
+byawaraSummary=[
+['कुल पंचायत',ids.length],
+['पुरानी बिल',sum('oldBill')],
+['नई बिल',sum('newBill')],
+['वृद्धि',sum('growth')],
+['पुरानी राशि',sum('oldAmount')],
+['नई राशि',sum('newAmount')],
+['राशि वृद्धि',sum('amountGrowth')]
+];
+
+const setText=(id,val)=>{
+const el=document.getElementById(id);
+if(el)el.textContent=val;
 };
 
-let currentUser=null;
+setText('kpiTotal',ids.length);
+setText('kpiOld',sum('oldBill').toLocaleString('en-IN'));
+setText('kpiNew',sum('newBill').toLocaleString('en-IN'));
+setText('kpiGrowth',(sum('growth')>0?'+':'')+sum('growth').toLocaleString('en-IN'));
+setText('kpiOldR',bwMoney(sum('oldAmount')));
+setText('kpiNewR',bwMoney(sum('newAmount')));
+setText('kpiGrowthP',bwMoney(sum('amountGrowth'))+' वृद्धि');
 
-function read(key){
- try{
-  const x=JSON.parse(localStorage.getItem(key)||"[]");
-  return Array.isArray(x)?x:[];
- }catch(e){return []}
+const top=byawaraResult.filter(r=>r.growth>0).slice(0,3);
+const topBox=document.getElementById('top3Box');
+if(topBox)topBox.innerHTML='<b>★ शीर्ष 3 पंचायत (केवल नाम)</b><br>'+
+(top.length?top.map((r,i)=>`${i+1}. ${r.name} (LGD ${r.lgd}) : <b>+${r.growth}</b> बिल, ${bwMoney(r.amountGrowth)}`).join('<br>'):'कोई वृद्धि नहीं');
+
+const reviewBox=document.getElementById('reviewBox');
+if(reviewBox)reviewBox.innerHTML=`<b>समीक्षा:</b> कुल ${ids.length} में <b style="color:#15803d">${positive} में वृद्धि</b>, <b style="color:#dc2626">${negative} में कमी</b>, <b>${same} में समान</b>`;
+
+const summaryBox=document.getElementById('summaryBox');
+if(summaryBox)summaryBox.innerHTML=`पुरानी बिल: <b>${sum('oldBill')}</b> | नई बिल: <b>${sum('newBill')}</b> | वृद्धि: <b style="color:green">+${sum('growth')}</b><br>पुरानी राशि: <b>${bwMoney(sum('oldAmount'))}</b><br>नई राशि: <b>${bwMoney(sum('newAmount'))}</b><br>राशि वृद्धि: <b style="color:green">${bwMoney(sum('amountGrowth'))}</b>`;
+
+document.getElementById('byawaraDashboard').style.display='block';
+document.getElementById('dlBtnByawara').style.display='block';
+document.getElementById('pdfBtnByawara').style.display='block';
+filterByawara();
+bwDrawCharts();
+
+}catch(e){
+const err=document.getElementById('byawaraError');
+if(err){err.textContent=e.message||'त्रुटि हुई';err.style.display='block';}
 }
-function write(key,data){localStorage.setItem(key,JSON.stringify(data))}
-function money(n){return "₹"+Number(n||0).toLocaleString("en-IN",{maximumFractionDigits:2})}
-function esc(v){
- return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
 }
-function today(){
- const d=new Date(),offset=d.getTimezoneOffset();
- return new Date(d.getTime()-offset*60000).toISOString().slice(0,10);
+
+function filterByawara(){
+const q=(document.getElementById('searchByawara')?.value||'').toLowerCase();
+byawaraFiltered=byawaraResult.filter(r=>r.lgd.toLowerCase().includes(q)||r.name.toLowerCase().includes(q));
+const tbody=document.getElementById('tbodyByawara');
+if(!tbody)return;
+
+tbody.innerHTML=byawaraFiltered.map((r,i)=>{
+const c=r.growth>0?'#15803d':r.growth<0?'#dc2626':'#555';
+return `<tr>
+<td>${i+1}</td><td>${r.lgd}</td><td><b>${r.name}</b></td>
+<td>${r.oldBill}</td><td>${r.newBill}</td>
+<td style="color:${c};font-weight:bold">${r.growth>0?'+':''}${r.growth}</td>
+<td>${r.oldAmount}</td><td>${r.newAmount}</td>
+<td style="color:${c};font-weight:bold">${r.amountGrowth>0?'+':''}${r.amountGrowth}</td>
+</tr>`;
+}).join('');
 }
-["donationDate","otherDate","expenseDate"].forEach(id=>{
- document.getElementById(id).value=today();
+
+function bwDrawCharts(){
+if(typeof Chart==='undefined')return;
+Object.values(byawaraCharts).forEach(c=>c?.destroy());
+byawaraCharts={};
+const top=byawaraResult.slice(0,8);
+
+const make=(id,type,data)=>{
+const el=document.getElementById(id);
+if(!el)return;
+try{
+byawaraCharts[id]=new Chart(el,{type,data,options:{responsive:true,plugins:{legend:{display:type==='pie'}}}});
+}catch(e){console.error(e);}
+};
+
+make('billChart','bar',{
+labels:top.map(r=>r.name),
+datasets:[{label:'बिल वृद्धि',data:top.map(r=>r.growth),backgroundColor:'#16a34a'}]
 });
 
-function showOnly(id){
- ["loginArea","adminArea","operatorArea","publicDashboard"].forEach(x=>
-  document.getElementById(x).classList.add("hidden")
- );
- document.getElementById(id).classList.remove("hidden");
-}
-function showAdminTab(id){
- document.querySelectorAll(".adminTab").forEach(x=>x.classList.add("hidden"));
- document.getElementById(id).classList.remove("hidden");
-}
-function showOperatorTab(id){
- document.querySelectorAll(".operatorTab").forEach(x=>x.classList.add("hidden"));
- document.getElementById(id).classList.remove("hidden");
-}
-function logout(){
- currentUser=null;
- sessionStorage.removeItem("sammelan_demo_user");
- showOnly("loginArea");
- location.hash="";
-}
-function getOperators(){return read(KEYS.operators)}
+const up=byawaraResult.filter(r=>r.growth>0).length;
+const down=byawaraResult.filter(r=>r.growth<0).length;
+const flat=byawaraResult.filter(r=>r.growth===0).length;
 
-document.getElementById("loginForm").addEventListener("submit",function(e){
- e.preventDefault();
- const id=document.getElementById("loginId").value.trim();
- const password=document.getElementById("loginPassword").value;
-
- if(id==="admin" && password==="admin123"){
-  currentUser={role:"admin",id:"admin",name:"Admin"};
-  sessionStorage.setItem("sammelan_demo_user",JSON.stringify(currentUser));
-  openAdmin();
-  return;
- }
-
- const op=getOperators().find(x=>x.id.toLowerCase()===id.toLowerCase() && x.password===password);
- if(!op){
-  alert("यूजर ID या पासवर्ड गलत है।");
-  return;
- }
- currentUser={role:"operator",id:op.id,name:op.name};
- sessionStorage.setItem("sammelan_demo_user",JSON.stringify(currentUser));
- openOperator();
+make('pieChart','pie',{
+labels:['वृद्धि','कमी','समान'],
+datasets:[{data:[up,down,flat],backgroundColor:['#16a34a','#dc2626','#9ca3af']}]
 });
 
-function openAdmin(){
- showOnly("adminArea");
- document.getElementById("adminWelcome").textContent="लॉगिन: Admin";
- showAdminTab("adminHome");
- renderAll();
-}
-function openOperator(){
- showOnly("operatorArea");
- document.getElementById("operatorWelcome").textContent=
-  "ऑपरेटर: "+currentUser.name+" | ID: "+currentUser.id;
- showOperatorTab("operatorHome");
- renderAll();
+make('rashiChart','bar',{
+labels:top.map(r=>r.name),
+datasets:[{label:'राशि वृद्धि',data:top.map(r=>r.amountGrowth),backgroundColor:'#2563eb'}]
+});
 }
 
-// ऑपरेटर बनाना
-document.getElementById("operatorForm").addEventListener("submit",function(e){
- e.preventDefault();
- if(!currentUser || currentUser.role!=="admin")return;
+function downloadByawaraExcel(){
+if(!byawaraResult.length){alert('पहले तुलना करें');return;}
+const rows=byawaraFiltered.length?byawaraFiltered:byawaraResult;
+const sum=k=>byawaraResult.reduce((s,r)=>s+r[k],0);
+const wb=XLSX.utils.book_new();
+const top3=byawaraResult.filter(r=>r.growth>0).slice(0,3);
 
- const op={
-  name:document.getElementById("operatorName").value.trim(),
-  id:document.getElementById("operatorId").value.trim(),
-  mobile:document.getElementById("operatorMobile").value.trim(),
-  password:document.getElementById("operatorPassword").value,
-  role:"operator"
- };
+const dashboard=[
+['कार्यालय जनपद पंचायत ब्‍यावरा (म.प्र.)'],
+['जनपद पंचायत ब्यावरा - 2 दिवसीय ऑनलाइन बिल एवं राजस्व प्रगति समीक्षा प्रतिवेदन'],
+['पंचायत दर्पण पोर्टल (e-Panchayat) |        से          तक'],
+[],
+['DASHBOARD KPIs'],
+['कुल पंचायतें',byawaraResult.length],
+['कुल बिल भुगतान (30/10)',sum('oldBill')],
+['कुल बिल भुगतान (02/11)',sum('newBill')],
+['2 दिवसीय कुल प्रगति',`+${sum('growth')} बिल, +Rs ${sum('amountGrowth')}`],
+[],
+['TOP 3 PANCHAYAT (केवल नाम)'],
+...top3.map((r,i)=>[`${i+1}. ${r.name} (LGD ${r.lgd})`,`+${r.growth} बिल`,`+Rs ${r.amountGrowth}`]),
+[],
+['109 PANCHAYATON KI VISTARIT REPORT (केवल नाम)'],
+['क्र.','LGD Code','पंचायत का नाम (केवल)','बिल 30/10','बिल 02/11','2 दि. बिल प्रगति','राशि 30/10','राशि 02/11','2 दि. राजस्व वृद्धि','स्थिति']
+];
 
- if(!/^[0-9]{10}$/.test(op.mobile)){
-  alert("मोबाइल नंबर 10 अंकों का होना चाहिए।");return;
- }
- if(op.id.toLowerCase()==="admin" || getOperators().some(x=>x.id.toLowerCase()===op.id.toLowerCase())){
-  alert("यह Operator ID पहले से मौजूद है या मान्य नहीं है।");return;
- }
- const list=getOperators();
- list.push(op);
- write(KEYS.operators,list);
- alert("ऑपरेटर जोड़ दिया गया।");
- this.reset();
- renderAll();
+rows.forEach((r,i)=>dashboard.push([i+1,r.lgd,r.name,r.oldBill,r.newBill,r.growth,r.oldAmount,r.newAmount,r.amountGrowth,r.status]));
+dashboard.push([]);
+dashboard.push(['','','महायोग ('+byawaraResult.length+' GP)',sum('oldBill'),sum('newBill'),sum('growth'),sum('oldAmount'),sum('newAmount'),sum('amountGrowth'),'']);
+
+const ws=XLSX.utils.aoa_to_sheet(dashboard);
+ws['!cols']=[{wch:8},{wch:18},{wch:28},{wch:12},{wch:12},{wch:16},{wch:14},{wch:14},{wch:18},{wch:12}];
+XLSX.utils.book_append_sheet(wb,ws,'Byawara_Keval_Naam');
+XLSX.writeFile(wb,'Byawara_KEVAL_NAAM_'+new Date().toISOString().slice(0,10)+'.xlsx');
+}
+
+function downloadByawaraPDF(){
+if(!byawaraResult.length){alert('पहले तुलना करें');return;}
+const {jsPDF}=window.jspdf;
+const doc=new jsPDF('l','mm','a4');
+const rows=byawaraFiltered.length?byawaraFiltered:byawaraResult;
+const sum=k=>byawaraResult.reduce((s,r)=>s+r[k],0);
+
+doc.setFont('helvetica','bold');
+doc.setFontSize(12);
+doc.text('Janpad Panchayat Biaora - Keval Panchayat Naam wali Report',148,10,{align:'center'});
+doc.setFontSize(9);
+doc.setFont('helvetica','normal');
+doc.text(`Kul GP: ${byawaraResult.length} | Bill: ${sum('oldBill')} -> ${sum('newBill')} (+${sum('growth')})`,14,18);
+
+const tableData=rows.map((r,i)=>[i+1,r.lgd,r.name,r.oldBill,r.newBill,r.growth,r.oldAmount,r.newAmount,r.amountGrowth]);
+tableData.push(['','','MAHAYOG ('+byawaraResult.length+' GP)',sum('oldBill'),sum('newBill'),sum('growth'),sum('oldAmount'),sum('newAmount'),sum('amountGrowth')]);
+
+doc.autoTable({
+startY:22,
+head:[['Kr.','LGD','Panchayat (Keval Naam)','Bill 30/10','Bill 02/11','Pragati','Rashi 30/10','Rashi 02/11','Vriddhi']],
+body:tableData,
+theme:'grid',
+styles:{fontSize:7},
+headStyles:{fillColor:[22,101,52]}
+});
+doc.save('Byawara_KEVAL_NAAM_'+new Date().toISOString().slice(0,10)+'.pdf');
+}
+
+const J_KEY="BIAORA_EKY_DATA";
+let jData=JSON.parse(localStorage.getItem(J_KEY)||"[]");
+
+document.getElementById('panchayat')?.addEventListener('change',function(){
+let d=document.getElementById('otherPanchDiv');
+if(d)d.style.display=this.value==="OTHER"?"block":"none";
 });
 
-function renderOperators(){
- const list=getOperators();
- document.getElementById("operatorTable").innerHTML=list.map((o,i)=>`
-  <tr><td>${i+1}</td><td>${esc(o.name)}</td><td>${esc(o.id)}</td>
-  <td>${esc(o.mobile)}</td><td>Operator</td></tr>
- `).join("");
- document.getElementById("adminOperators").textContent=list.length;
-}
+function addJankari(){
+let panch=document.getElementById('panchayat').value;
+if(panch==="OTHER")panch=document.getElementById('otherPanch').value.trim().toUpperCase();
 
-// पंजीयन दर्ज करना
-document.getElementById("registrationForm").addEventListener("submit",function(e){
- e.preventDefault();
- if(!currentUser || currentUser.role!=="operator")return;
+let pensioners=document.getElementById('pensioners').value.trim();
+let done=document.getElementById('ekyDone').value.trim();
+let pending=document.getElementById('ekyPending').value.trim();
+let remark=document.getElementById('remark').value.trim();
 
- const r={
-  type:document.getElementById("type").value,
-  regNo:document.getElementById("regNo").value.trim(),
-  name:document.getElementById("name").value.trim(),
-  father:document.getElementById("father").value.trim(),
-  grandfather:document.getElementById("grandfather").value.trim(),
-  mobile:document.getElementById("mobile").value.trim(),
-  village:document.getElementById("village").value.trim(),
-  tehsil:document.getElementById("tehsil").value.trim(),
-  district:document.getElementById("district").value.trim(),
-  amount:Number(document.getElementById("amount").value),
-  date:today(),
-  operatorId:currentUser.id,
-  operatorName:currentUser.name
- };
+if(!panch||!pensioners||!done||!pending){alert("4 * wale bharo");return;}
 
- if(!/^[0-9]{10}$/.test(r.mobile)){
-  alert("सही 10 अंकों का मोबाइल नंबर दर्ज करें।");return;
- }
- if(!Number.isFinite(r.amount)||r.amount<0){
-  alert("सही पंजीयन राशि दर्ज करें।");return;
- }
-
- const records=read(KEYS.registrations);
- if(records.some(x=>
-  String(x.regNo||"").toLowerCase()===r.regNo.toLowerCase() ||
-  String(x.mobile||"")===r.mobile
- )){
-  alert("यह पंजीयन क्रमांक या मोबाइल नंबर पहले से दर्ज है।");return;
- }
- records.push(r);
- write(KEYS.registrations,records);
- alert("पंजीयन सफलतापूर्वक सुरक्षित हो गया।");
- this.reset();
- renderAll();
- showOperatorTab("operatorHome");
+jData.push({
+id:Date.now(),
+panchayat:panch,
+pensioners,
+ekyDone:done,
+ekyPending:pending,
+remark,
+date:new Date().toLocaleString('hi-IN')
 });
 
-// वित्तीय प्रविष्टियाँ: केवल Admin
-function addFinance(formId,key,fields){
- document.getElementById(formId).addEventListener("submit",function(e){
-  e.preventDefault();
-  if(!currentUser || currentUser.role!=="admin")return;
-  const item={id:Date.now(),date:document.getElementById(fields.date).value,
-   name:document.getElementById(fields.name).value.trim(),
-   amount:Number(document.getElementById(fields.amount).value),
-   detail:document.getElementById(fields.detail).value.trim()
-  };
-  if(!item.name||!item.date||!Number.isFinite(item.amount)||item.amount<=0){
-   alert("सभी जरूरी जानकारी सही भरें।");return;
-  }
-  const list=read(key);list.push(item);write(key,list);
-  alert("प्रविष्टि सुरक्षित हो गई।");
-  this.reset();
-  document.getElementById(fields.date).value=today();
-  renderAll();
- });
+localStorage.setItem(J_KEY,JSON.stringify(jData));
+renderJankari();
 }
-addFinance("donationForm",KEYS.donations,{
- name:"donorName",date:"donationDate",amount:"donationAmount",detail:"donationDetail"
-});
-addFinance("otherIncomeForm",KEYS.other,{
- name:"otherSource",date:"otherDate",amount:"otherAmount",detail:"otherDetail"
-});
-addFinance("expenseForm",KEYS.expenses,{
- name:"expenseName",date:"expenseDate",amount:"expenseAmount",detail:"expenseDetail"
+
+function renderJankari(){
+let tbody=document.getElementById('tbody');
+if(!tbody)return;
+tbody.innerHTML="";
+
+jData.forEach((r,i)=>{
+let tr=document.createElement('tr');
+tr.innerHTML=`<td>${i+1}</td><td><b>${r.panchayat}</b></td><td>${r.pensioners}</td><td>${r.ekyDone}</td><td>${r.ekyPending}</td><td>${r.remark}</td><td><button onclick="delJankari(${r.id})" style="background:red;color:#fff;border:none;padding:3px 8px;border-radius:4px">X</button></td>`;
+tbody.appendChild(tr);
 });
 
-function deleteFinance(key,id){
- if(!currentUser || currentUser.role!=="admin")return;
- if(!confirm("क्या यह प्रविष्टि हटानी है?"))return;
- write(key,read(key).filter(x=>x.id!==id));
- renderAll();
+let c=document.getElementById('totalCount');
+if(c)c.innerText=jData.length;
 }
 
-function renderFinance(){
- const regs=read(KEYS.registrations);
- const donations=read(KEYS.donations);
- const others=read(KEYS.other);
- const expenses=read(KEYS.expenses);
- const regTotal=regs.reduce((s,r)=>s+Number(r.amount||0),0);
- const donTotal=donations.reduce((s,r)=>s+Number(r.amount||0),0);
- const otherTotal=others.reduce((s,r)=>s+Number(r.amount||0),0);
- const expTotal=expenses.reduce((s,r)=>s+Number(r.amount||0),0);
- document.getElementById("fReg").textContent=money(regTotal);
- document.getElementById("fDonation").textContent=money(donTotal);
- document.getElementById("fOther").textContent=money(otherTotal);
- document.getElementById("fIncome").textContent=money(regTotal+donTotal+otherTotal);
- document.getElementById("fExpense").textContent=money(expTotal);
- document.getElementById("fBalance").textContent=money(regTotal+donTotal+otherTotal-expTotal);
-
- function table(id,list,key){
-  document.getElementById(id).innerHTML=list.map(r=>`
-   <tr><td>${esc(r.name)}</td><td>${esc(r.date)}</td><td>${money(r.amount)}</td>
-   <td>${esc(r.detail)}</td><td><button class="red" onclick="deleteFinance('${key}',${r.id})">हटाएँ</button></td></tr>
-  `).join("");
- }
- table("donationTable",donations,KEYS.donations);
- table("otherIncomeTable",others,KEYS.other);
- table("expenseTable",expenses,KEYS.expenses);
+function delJankari(id){
+jData=jData.filter(x=>x.id!==id);
+localStorage.setItem(J_KEY,JSON.stringify(jData));
+renderJankari();
 }
 
-function renderRegistrations(){
- const regs=read(KEYS.registrations);
- const groom=regs.filter(r=>r.type==="वर").length;
- const bride=regs.filter(r=>r.type==="वधु").length;
- document.getElementById("adminTotal").textContent=regs.length;
- document.getElementById("adminGroom").textContent=groom;
- document.getElementById("adminBride").textContent=bride;
-
- const search=(document.getElementById("adminSearch").value||"").toLowerCase().trim();
- const filtered=regs.filter(r=>
-  [r.name,r.regNo,r.mobile,r.village,r.operatorName,r.operatorId]
-   .some(v=>String(v||"").toLowerCase().includes(search))
- );
- document.getElementById("adminRegistrationTable").innerHTML=filtered.map((r,i)=>`
-  <tr><td>${i+1}</td><td>${esc(r.type||"")}</td><td>${esc(r.regNo||"")}</td>
-  <td>${esc(r.name||"")}</td><td>${esc(r.mobile||"")}</td><td>${esc(r.village||"")}</td>
-  <td>${money(r.amount)}</td><td>${esc(r.operatorName||"पुराना रिकॉर्ड")}</td>
-  <td>${esc(r.date||"")}</td></tr>
- `).join("");
+function clearJankari(){
+if(confirm("Sab clear?")){
+jData=[];
+localStorage.setItem(J_KEY,JSON.stringify(jData));
+renderJankari();
+}
 }
 
-function renderOperator(){
- if(!currentUser || currentUser.role!=="operator")return;
- const mine=read(KEYS.registrations).filter(r=>r.operatorId===currentUser.id);
- document.getElementById("myTotal").textContent=mine.length;
- document.getElementById("myGroom").textContent=mine.filter(r=>r.type==="वर").length;
- document.getElementById("myBride").textContent=mine.filter(r=>r.type==="वधु").length;
- document.getElementById("myRegistrationTable").innerHTML=mine.map((r,i)=>`
-  <tr><td>${i+1}</td><td>${esc(r.type||"")}</td><td>${esc(r.regNo||"")}</td>
-  <td>${esc(r.name||"")}</td><td>${esc(r.mobile||"")}</td>
-  <td>${esc(r.village||"")}</td><td>${money(r.amount)}</td><td>${esc(r.date||"")}</td></tr>
- `).join("");
+function exportJankariExcel(){
+if(jData.length===0){alert("Koi entry nahi");return;}
+
+let ws_data=[["Kramank","Panchayat","Pensioners","EKY Done","EKY Pending","Remark","Date"]];
+jData.forEach((r,i)=>{
+ws_data.push([i+1,r.panchayat,r.pensioners,r.ekyDone,r.ekyPending,r.remark,r.date]);
+});
+
+let ws=XLSX.utils.aoa_to_sheet(ws_data);
+let wb=XLSX.utils.book_new();
+XLSX.utils.book_append_sheet(wb,ws,"EKY_Data");
+XLSX.writeFile(wb,`BIAORA_EKY_${jData.length}_${new Date().toISOString().slice(0,10)}.xlsx`);
 }
 
-function renderAll(){
- renderOperators();
- renderRegistrations();
- renderFinance();
- renderOperator();
- renderPublic();
-}
-
-function downloadRegistrations(){
- if(!currentUser || currentUser.role!=="admin")return;
- const regs=read(KEYS.registrations);
- const headers=["प्रकार","पंजीयन क्रमांक","नाम","पिता","दादाजी","मोबाइल","गाँव","तहसील","जिला","राशि","ऑपरेटर","ऑपरेटर ID","तारीख"];
- const rows=regs.map(r=>[
-  r.type,r.regNo,r.name,r.father,r.grandfather,r.mobile,r.village,r.tehsil,r.district,r.amount,r.operatorName,r.operatorId,r.date
- ]);
- const csv=[headers,...rows].map(row=>row.map(v=>`"${String(v??"").replace(/"/g,'""')}"`).join(",")).join("\n");
- const blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8"});
- const url=URL.createObjectURL(blob);
- const a=document.createElement("a");a.href=url;a.download="Sammelan_Registrations.csv";a.click();
- URL.revokeObjectURL(url);
-}
-
-// सार्वजनिक डैशबोर्ड में केवल गाँववार गिनती
-function renderPublic(){
- const regs=read(KEYS.registrations),villages={};
- regs.forEach(r=>{
-  const name=String(r.village||"").trim();
-  if(!name)return;
-  const key=name.toLocaleLowerCase("hi");
-  if(!villages[key])villages[key]={name,groom:0,bride:0};
-  if(r.type==="वर")villages[key].groom++;
-  if(r.type==="वधु")villages[key].bride++;
- });
- const list=Object.values(villages).sort((a,b)=>a.name.localeCompare(b.name,"hi"));
- document.getElementById("publicTotal").textContent=regs.length;
- document.getElementById("publicVillages").textContent=list.length;
- const q=(document.getElementById("villageSearch").value||"").toLocaleLowerCase("hi");
- document.getElementById("villageTable").innerHTML=list.filter(v=>v.name.toLocaleLowerCase("hi").includes(q)).map((v,i)=>`
-  <tr><td>${i+1}</td><td>${esc(v.name)}</td><td>${v.groom}</td><td>${v.bride}</td><td>${v.groom+v.bride}</td></tr>
- `).join("");
-}
-
-document.getElementById("adminSearch").addEventListener("input",renderRegistrations);
-document.getElementById("villageSearch").addEventListener("input",renderPublic);
-
-function changePage(){
- if(location.hash==="#public"){
-  showOnly("publicDashboard");
-  renderPublic();
- }else if(currentUser){
-  if(currentUser.role==="admin")openAdmin();
-  else openOperator();
- }else{
-  showOnly("loginArea");
- }
-}
-window.addEventListener("hashchange",changePage);
-window.addEventListener("storage",renderAll);
-
-// पुराने ब्राउज़र रिकॉर्ड और नए डेमो लॉगिन को अलग रखा गया है।
-renderAll();
-changePage();
+setTimeout(()=>{renderJankari();},500);
 </script>
 </body>
 </html>
