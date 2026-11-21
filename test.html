@@ -19,18 +19,14 @@ button.sec{background:#fff;color:#ea580c;border:1px solid #ea580c}
 </style></head>
 <body>
 <div class="top"><h1>🏵️ SPR Sammelan</h1><p>Registration • Donation • Expense • Operator</p></div>
-
-<!-- LOGIN -->
 <div id="loginBox" class="card">
 <h2>Login</h2>
 <label>Username</label><input id="u" placeholder="admin">
 <label>Password</label><input id="p" type="password" placeholder="Admin@123">
 <button onclick="doLogin()">Login Karein</button>
 <div id="loginMsg" class="msg"></div>
-<div class="small">Admin: admin / Admin@123<br>Login ke baad Dashboard khulega</div>
+<div class="small">Admin: admin / Admin@123</div>
 </div>
-
-<!-- APP -->
 <div id="appBox" class="card hidden" style="max-width:720px">
 <div style="display:flex;justify-content:space-between;align-items:center"><h2 id="welcome">Namaste</h2><button onclick="logout()" style="width:auto;padding:8px 12px;background:#dc2626">Logout</button></div>
 <div class="grid" style="margin-top:10px">
@@ -46,8 +42,6 @@ button.sec{background:#fff;color:#ea580c;border:1px solid #ea580c}
 <button class="sec" onclick="showTab('op')">+ Operator</button>
 <button class="sec" onclick="loadDash()">🔄 Refresh</button>
 </div>
-
-<!-- REG -->
 <div id="tab-reg" class="hidden">
 <label>Village</label><input id="rVillage" placeholder="Gaon ka naam">
 <label>Groom / Dulha</label><input id="rGroom">
@@ -57,7 +51,6 @@ button.sec{background:#fff;color:#ea580c;border:1px solid #ea580c}
 <label>Amount</label><input id="rAmount" type="number">
 <button onclick="saveReg()">Registration Save Karein</button><div id="regMsg" class="msg"></div>
 </div>
-<!-- DON -->
 <div id="tab-don" class="hidden">
 <label>Village</label><input id="dVillage">
 <label>Name</label><input id="dName">
@@ -66,7 +59,6 @@ button.sec{background:#fff;color:#ea580c;border:1px solid #ea580c}
 <label>Type</label><select id="dType"><option>सामान्य</option><option>गुप्त</option><option>विशेष</option></select>
 <button onclick="saveDon()">Donation Save Karein</button><div id="donMsg" class="msg"></div>
 </div>
-<!-- EXP -->
 <div id="tab-exp" class="hidden">
 <label>Item</label><input id="eItem" placeholder="Kis cheez ka kharcha">
 <label>Description</label><input id="eDesc">
@@ -74,7 +66,6 @@ button.sec{background:#fff;color:#ea580c;border:1px solid #ea580c}
 <label>Amount</label><input id="eAmount" type="number">
 <button onclick="saveExp()">Expense Save Karein</button><div id="expMsg" class="msg"></div>
 </div>
-<!-- OP -->
 <div id="tab-op" class="hidden">
 <label>New Operator Username</label><input id="oUser">
 <label>Password</label><input id="oPass">
@@ -83,7 +74,6 @@ button.sec{background:#fff;color:#ea580c;border:1px solid #ea580c}
 <div class="small">Sirf Admin hi Operator bana sakta hai</div>
 </div>
 </div>
-
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbzqtVUYmdgMwMwxTqGG2bM7eSsFGD_b-h3JXcTrHvXFXzWWKJ9GUs6LIno5jpyIXH-1Ig/exec";
 let TOKEN = localStorage.getItem("spr_token") || "";
