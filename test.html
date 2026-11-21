@@ -75,7 +75,7 @@ button.sec{background:#fff;color:#ea580c;border:1px solid #ea580c}
 </div>
 </div>
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbzqtVUYmdgMwMwxTqGG2bM7eSsFGD_b-h3JXcTrHvXFXzWWKJ9GUs6LIno5jpyIXH-1Ig/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzeclWgmPQdS180kyU6aufd5he2_uWVkF_vnvQ4AfKwOA013TjfLiNGHuRsWN_oMr8fzQ/exec";
 let TOKEN = localStorage.getItem("spr_token") || "";
 async function call(action, data={}){ const r=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action,token:TOKEN,...data})}); return r.json(); }
 async function doLogin(){
