@@ -9,10 +9,10 @@
 body{margin:0;background:#fff8e1}
 header{background:#e65100;color:#fff;padding:14px;text-align:center;font-size:22px;font-weight:bold}
 .card{background:#fff;margin:14px;padding:14px;border-radius:10px;box-shadow:0 2px 8px #ccc}
-input,select,textarea{width:100%;padding:11px;margin:6px 0;border:1px solid #ccc;border-radius:6px;font-size:15px}
+input,select{width:100%;padding:11px;margin:6px 0;border:1px solid #ccc;border-radius:6px;font-size:15px}
 button{width:100%;padding:12px;border:0;border-radius:6px;background:#e65100;color:#fff;font-weight:bold;font-size:16px;margin-top:8px}
 button.green{background:#2e7d32} button.blue{background:#1565c0} button.red{background:#c62828}
-.tabs{display:flex;gap:6px;margin:14px}
+.tabs{display:flex;gap:6px;margin:14px;flex-wrap:wrap}
 .tabs button{background:#ffe0b2;color:#000;padding:10px;font-size:14px}
 .tabs button.active{background:#e65100;color:#fff}
 .stat{display:flex;gap:10px;flex-wrap:wrap}
@@ -20,31 +20,28 @@ button.green{background:#2e7d32} button.blue{background:#1565c0} button.red{back
 .box b{font-size:22px;display:block}
 .hidden{display:none}
 label{font-size:13px;font-weight:bold}
-#msg{text-align:center;color:green;font-weight:bold}
+#msg,#msg2{text-align:center;color:green;font-weight:bold}
 </style>
 </head>
 <body>
 <header>🌸 सम्मेलन मैनेजमेंट सिस्टम 🌸</header>
 
-<!-- LOGIN -->
 <div id="loginBox" class="card">
   <h2 style="text-align:center">🔐 लॉगिन</h2>
   <label>यूजर आईडी</label>
-  <input id="username" placeholder="admin">
+  <input id="username" value="admin">
   <label>पासवर्ड</label>
-  <input id="password" type="password" placeholder="Admin@123">
+  <input id="password" type="password" value="Admin@123">
   <button onclick="doLogin()">लॉगिन करें</button>
   <p style="font-size:12px;text-align:center;color:#777">पहला लॉगिन - admin / Admin@123</p>
   <div id="msg"></div>
 </div>
 
-<!-- MAIN -->
 <div id="mainBox" class="hidden">
   <div class="card" style="display:flex;justify-content:space-between;align-items:center">
     <div><b id="welcome"></b><br><small id="roleShow"></small></div>
     <button style="width:auto;padding:8px 14px" class="red" onclick="logout()">लॉगआउट</button>
   </div>
-
   <div class="tabs">
     <button id="t1" class="active" onclick="showTab('dash')">📊 डैशबोर्ड</button>
     <button id="t2" onclick="showTab('reg')">💍 रजिस्ट्रेशन</button>
@@ -53,7 +50,6 @@ label{font-size:13px;font-weight:bold}
     <button id="t5" onclick="showTab('op')">👤 ऑपरेटर</button>
   </div>
 
-  <!-- DASHBOARD -->
   <div id="tab-dash" class="card">
     <h3>📊 डैशबोर्ड</h3>
     <div class="stat">
@@ -62,12 +58,10 @@ label{font-size:13px;font-weight:bold}
       <div class="box"><b id="dExp">0</b>कुल खर्चा ₹</div>
       <div class="box"><b id="dBal">0</b>बैलेंस ₹</div>
     </div>
-    <h4>🏘️ गाँव अनुसार</h4>
-    <div id="dVill"></div>
+    <h4>🏘️ गाँव अनुसार</h4><div id="dVill"></div>
     <button class="blue" onclick="loadDash()">🔄 रिफ्रेश करें</button>
   </div>
 
-  <!-- REGISTRATION -->
   <div id="tab-reg" class="card hidden">
     <h3>💍 नया रजिस्ट्रेशन</h3>
     <label>गाँव</label><input id="rVillage" placeholder="गाँव का नाम">
@@ -79,7 +73,6 @@ label{font-size:13px;font-weight:bold}
     <button class="green" onclick="saveReg()">✅ रजिस्ट्रेशन सेव करें</button>
   </div>
 
-  <!-- DONATION -->
   <div id="tab-don" class="card hidden">
     <h3>💰 दान / चंदा</h3>
     <label>गाँव</label><input id="dnVillage" placeholder="गाँव का नाम">
@@ -96,7 +89,6 @@ label{font-size:13px;font-weight:bold}
     <button class="green" onclick="saveDon()">✅ दान सेव करें</button>
   </div>
 
-  <!-- EXPENSE -->
   <div id="tab-exp" class="card hidden">
     <h3>🧾 खर्चा</h3>
     <label>आइटम</label><input id="eItem" placeholder="जैसे - टेंट, खाना, लाइट">
@@ -106,7 +98,6 @@ label{font-size:13px;font-weight:bold}
     <button class="green" onclick="saveExp()">✅ खर्चा सेव करें</button>
   </div>
 
-  <!-- OPERATOR -->
   <div id="tab-op" class="card hidden">
     <h3>👤 नया ऑपरेटर बनाएं (सिर्फ Admin)</h3>
     <label>नई यूजर आईडी</label><input id="oUser" placeholder="जैसे ram123">
@@ -114,110 +105,107 @@ label{font-size:13px;font-weight:bold}
     <label>पूरा नाम</label><input id="oName" placeholder="पूरा नाम">
     <button class="blue" onclick="addOp()">➕ ऑपरेटर बनाएं</button>
   </div>
-
   <div id="msg2"></div>
 </div>
 
 <script>
-let token = localStorage.getItem('sammelan_token') || '';
-let myRole = '';
-
-function showMsg(t, id){
-  document.getElementById(id||'msg').innerText = t;
-  setTimeout(()=>{ document.getElementById(id||'msg').innerText=''; }, 4000);
+// GitHub ke liye - Data Browser me hi Save hoga
+function getUsers(){
+  let u = JSON.parse(localStorage.getItem('sammelan_users')||'null');
+  if(!u){ u=[{username:'admin',password:'Admin@123',role:'admin',name:'मुख्य व्यवस्थापक'}]; localStorage.setItem('sammelan_users',JSON.stringify(u)); }
+  return u;
 }
+function getData(k){ return JSON.parse(localStorage.getItem('sammelan_'+k)||'[]'); }
+function setData(k,v){ localStorage.setItem('sammelan_'+k,JSON.stringify(v)); }
+function showMsg(t,id){ let el=document.getElementById(id||'msg'); el.innerText=t; setTimeout(()=>el.innerText='',4000); }
 function showTab(name){
-  ['dash','reg','don','exp','op'].forEach(n=>{
-    document.getElementById('tab-'+n).classList.add('hidden');
-  });
+  ['dash','reg','don','exp','op'].forEach(n=>document.getElementById('tab-'+n).classList.add('hidden'));
   document.getElementById('tab-'+name).classList.remove('hidden');
-  ['t1','t2','t3','t4','t5'].forEach((id,i)=>{
-    document.getElementById(id).classList.remove('active');
-  });
+  ['t1','t2','t3','t4','t5'].forEach(id=>document.getElementById(id).classList.remove('active'));
   let map={dash:'t1',reg:'t2',don:'t3',exp:'t4',op:'t5'};
   document.getElementById(map[name]).classList.add('active');
   if(name==='dash') loadDash();
 }
 function toggleDon(){
-  let isGupt = document.getElementById('dnType').value==='गुप्त';
-  document.getElementById('donNameBox').style.display = isGupt ? 'none':'block';
+  let isGupt=document.getElementById('dnType').value==='गुप्त';
+  document.getElementById('donNameBox').style.display=isGupt?'none':'block';
 }
 function doLogin(){
-  let u = document.getElementById('username').value.trim();
-  let p = document.getElementById('password').value;
-  if(!u || !p){ showMsg('यूजर आईडी और पासवर्ड भरें'); return; }
-  google.script.run.withSuccessHandler(res=>{
-    if(!res.success){ showMsg(res.message); return; }
-    token = res.token; myRole = res.role;
-    localStorage.setItem('sammelan_token', token);
-    document.getElementById('loginBox').classList.add('hidden');
-    document.getElementById('mainBox').classList.remove('hidden');
-    document.getElementById('welcome').innerText = 'नमस्ते, ' + res.name;
-    document.getElementById('roleShow').innerText = 'Role: ' + res.role;
-    loadDash();
-  }).login(u,p);
+  let u=document.getElementById('username').value.trim();
+  let p=document.getElementById('password').value;
+  let found=getUsers().find(x=>x.username===u && x.password===p);
+  if(!found){ showMsg('❌ गलत यूजर आईडी या पासवर्ड'); return; }
+  localStorage.setItem('sammelan_token',JSON.stringify(found));
+  document.getElementById('loginBox').classList.add('hidden');
+  document.getElementById('mainBox').classList.remove('hidden');
+  document.getElementById('welcome').innerText='नमस्ते, '+found.name;
+  document.getElementById('roleShow').innerText='Role: '+found.role;
+  loadDash();
 }
 function logout(){
-  token=''; localStorage.removeItem('sammelan_token');
+  localStorage.removeItem('sammelan_token');
   document.getElementById('mainBox').classList.add('hidden');
   document.getElementById('loginBox').classList.remove('hidden');
 }
 function loadDash(){
-  google.script.run.withSuccessHandler(d=>{
-    document.getElementById('dReg').innerText = d.registrations;
-    document.getElementById('dDon').innerText = d.donation;
-    document.getElementById('dExp').innerText = d.expenses;
-    document.getElementById('dBal').innerText = d.balance;
-    let html='';
-    for(let v in d.villages){ html += v + ' : ' + d.villages[v] + ' जोड़े<br>'; }
-    document.getElementById('dVill').innerHTML = html || 'अभी कोई रजिस्ट्रेशन नहीं';
-  }).withFailureHandler(e=>showMsg(e.message,'msg2')).getDashboard(token);
+  let regs=getData('reg'), dons=getData('don'), exps=getData('exp');
+  let cur=JSON.parse(localStorage.getItem('sammelan_token')||'null');
+  if(cur && cur.role!=='admin'){
+    regs=regs.filter(r=>r.op===cur.username);
+    dons=dons.filter(r=>r.op===cur.username);
+    exps=exps.filter(r=>r.op===cur.username);
+  }
+  let sum=(arr,k)=>arr.reduce((s,r)=>s+Number(r[k]||0),0);
+  document.getElementById('dReg').innerText=regs.length;
+  document.getElementById('dDon').innerText=sum(dons,'amount');
+  document.getElementById('dExp').innerText=sum(exps,'amount');
+  document.getElementById('dBal').innerText=sum(regs,'amount')+sum(dons,'amount')-sum(exps,'amount');
+  let vill={}; regs.forEach(r=>{ let v=r.village||'अन्य'; vill[v]=(vill[v]||0)+1; });
+  let html=''; for(let v in vill) html+=v+' : '+vill[v]+' जोड़े<br>';
+  document.getElementById('dVill').innerHTML=html||'अभी कोई रजिस्ट्रेशन नहीं';
 }
 function saveReg(){
-  let d={ village:document.getElementById('rVillage').value,
-    groom:document.getElementById('rGroom').value,
-    bride:document.getElementById('rBride').value,
-    father:document.getElementById('rFather').value,
-    mobile:document.getElementById('rMobile').value,
-    amount:document.getElementById('rAmount').value };
-  if(!d.groom || !d.bride){ showMsg('दूल्हा-दुल्हन का नाम जरूरी है','msg2'); return; }
-  google.script.run.withSuccessHandler(res=>{
-    showMsg('✅ सेव हो गया! रसीद नं: '+res.receipt,'msg2');
-    ['rVillage','rGroom','rBride','rFather','rMobile','rAmount'].forEach(id=>document.getElementById(id).value='');
-  }).withFailureHandler(e=>showMsg(e.message,'msg2')).saveRegistration(token,d);
+  let cur=JSON.parse(localStorage.getItem('sammelan_token')||'{}');
+  let d={village:document.getElementById('rVillage').value,groom:document.getElementById('rGroom').value,bride:document.getElementById('rBride').value,father:document.getElementById('rFather').value,mobile:document.getElementById('rMobile').value,amount:document.getElementById('rAmount').value,op:cur.username};
+  if(!d.groom||!d.bride){ showMsg('दूल्हा-दुल्हन का नाम जरूरी है','msg2'); return; }
+  let arr=getData('reg'); let receipt='R'+String(arr.length+1).padStart(5,'0');
+  arr.push(d); setData('reg',arr);
+  showMsg('✅ सेव हो गया! रसीद नं: '+receipt,'msg2');
+  ['rVillage','rGroom','rBride','rFather','rMobile','rAmount'].forEach(id=>document.getElementById(id).value='');
 }
 function saveDon(){
-  let d={ village:document.getElementById('dnVillage').value,
-    name:document.getElementById('dnName').value,
-    father:document.getElementById('dnFather').value,
-    amount:document.getElementById('dnAmount').value,
-    type:document.getElementById('dnType').value };
+  let cur=JSON.parse(localStorage.getItem('sammelan_token')||'{}');
+  let type=document.getElementById('dnType').value;
+  let d={village:document.getElementById('dnVillage').value,name:type==='गुप्त'?'गुप्त दान':document.getElementById('dnName').value,father:type==='गुप्त'?'':document.getElementById('dnFather').value,amount:document.getElementById('dnAmount').value,type:type,op:cur.username};
   if(!d.amount){ showMsg('राशि भरें','msg2'); return; }
-  google.script.run.withSuccessHandler(res=>{
-    showMsg('✅ दान सेव! रसीद नं: '+res.receipt,'msg2');
-  }).withFailureHandler(e=>showMsg(e.message,'msg2')).saveDonation(token,d);
+  let arr=getData('don'); let receipt='D'+String(arr.length+1).padStart(5,'0');
+  arr.push(d); setData('don',arr);
+  showMsg('✅ दान सेव! रसीद नं: '+receipt,'msg2');
 }
 function saveExp(){
-  let d={ item:document.getElementById('eItem').value,
-    description:document.getElementById('eDesc').value,
-    paidBy:document.getElementById('ePaid').value,
-    amount:document.getElementById('eAmount').value };
-  google.script.run.withSuccessHandler(res=>{
-    showMsg('✅ खर्चा सेव! रसीद नं: '+res.receipt,'msg2');
-  }).withFailureHandler(e=>showMsg(e.message,'msg2')).saveExpense(token,d);
+  let cur=JSON.parse(localStorage.getItem('sammelan_token')||'{}');
+  let d={item:document.getElementById('eItem').value,description:document.getElementById('eDesc').value,paidBy:document.getElementById('ePaid').value,amount:document.getElementById('eAmount').value,op:cur.username};
+  let arr=getData('exp'); let receipt='E'+String(arr.length+1).padStart(5,'0');
+  arr.push(d); setData('exp',arr);
+  showMsg('✅ खर्चा सेव! रसीद नं: '+receipt,'msg2');
 }
 function addOp(){
-  let u=document.getElementById('oUser').value.trim();
-  let p=document.getElementById('oPass').value;
-  let n=document.getElementById('oName').value;
-  google.script.run.withSuccessHandler(m=>{
-    showMsg('✅ '+m,'msg2');
-  }).withFailureHandler(e=>showMsg(e.message,'msg2')).addOperator(token,u,p,n);
+  let cur=JSON.parse(localStorage.getItem('sammelan_token')||'{}');
+  if(cur.role!=='admin'){ showMsg('केवल Admin यह कर सकता है','msg2'); return; }
+  let users=getUsers();
+  let u=document.getElementById('oUser').value.trim(), p=document.getElementById('oPass').value, n=document.getElementById('oName').value;
+  if(!u||!p){ showMsg('सभी जानकारी भरें','msg2'); return; }
+  if(users.some(x=>x.username===u)){ showMsg('यह यूजर पहले से मौजूद है','msg2'); return; }
+  users.push({username:u,password:p,role:'operator',name:n}); localStorage.setItem('sammelan_users',JSON.stringify(users));
+  showMsg('✅ ऑपरेटर सफलतापूर्वक बनाया गया','msg2');
 }
-// Page khulte hi agar pehle login tha to check karo
-if(token){
+let saved=localStorage.getItem('sammelan_token');
+if(saved){
+  let cur=JSON.parse(saved);
   document.getElementById('loginBox').classList.add('hidden');
   document.getElementById('mainBox').classList.remove('hidden');
+  document.getElementById('welcome').innerText='नमस्ते, '+cur.name;
+  document.getElementById('roleShow').innerText='Role: '+cur.role;
   loadDash();
 }
 </script>
