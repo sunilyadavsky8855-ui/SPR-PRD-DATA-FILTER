@@ -1,7 +1,6 @@
-
 /********************************************************
- SPR SAMMELAN PORTAL - GOOGLE SHEETS API
- पुराने टैब सुरक्षित रहेंगे; नया डेटा अलग टैब में जाएगा।
+ SPR SAMMELAN PORTAL - FIXED CODE.GS
+ Dono Frontend ke saath chalega - test.html + sammelan.html
 *********************************************************/
 
 const SHEETS = {
@@ -17,17 +16,12 @@ function doGet(e) {
     if (!e || !e.parameter || !e.parameter.payload) {
       return ContentService.createTextOutput("SPR Sammelan API चालू है");
     }
-
     const req = JSON.parse(e.parameter.payload);
     const result = handleRequest(req);
     const callback = String(e.parameter.callback || "");
-
     if (callback && /^[a-zA-Z_$][0-9a-zA-Z_$]*$/.test(callback)) {
-      return ContentService.createTextOutput(
-        callback + "(" + JSON.stringify(result) + ");"
-      ).setMimeType(ContentService.MimeType.JAVASCRIPT);
+      return ContentService.createTextOutput(callback + "(" + JSON.stringify(result) + ");").setMimeType(ContentService.MimeType.JAVASCRIPT);
     }
-
     return jsonOutput(result);
   } catch (err) {
     return jsonOutput({success:false, message:String(err.message || err)});
@@ -44,18 +38,14 @@ function doPost(e) {
 }
 
 function jsonOutput(obj) {
-  return ContentService.createTextOutput(JSON.stringify(obj))
-    .setMimeType(ContentService.MimeType.JSON);
+  return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
 }
 
-function getSS() {
-  return SpreadsheetApp.getActiveSpreadsheet();
-}
+function getSS() { return SpreadsheetApp.getActiveSpreadsheet(); }
 
 function getSheet(name, headers) {
   const ss = getSS();
   let sh = ss.getSheetByName(name);
-
   if (!sh) {
     sh = ss.insertSheet(name);
     sh.appendRow(headers);
@@ -65,56 +55,27 @@ function getSheet(name, headers) {
 }
 
 function hashPassword(password) {
-  const bytes = Utilities.computeDigest(
-    Utilities.DigestAlgorithm.SHA_256,
-    String(password),
-    Utilities.Charset.UTF_8
-  );
-  return bytes.map(b => {
-    const v = (b < 0 ? b + 256 : b).toString(16);
-    return v.length === 1 ? "0" + v : v;
-  }).join("");
+  const bytes = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, String(password), Utilities.Charset.UTF_8);
+  return bytes.map(b => { const v = (b < 0 ? b + 256 : b).toString(16); return v.length === 1 ? "0" + v : v; }).join("");
 }
 
-function userSheet() {
-  return getSheet(SHEETS.users,
-    ["Username","PasswordHash","Name","Role","Token","Mobile"]);
-}
-
-function dataSheet(type) {
-  const headers = ["ID","Date","Receipt","Amount","Operator","DataJSON"];
-  return getSheet(SHEETS[type], headers);
-}
+function userSheet() { return getSheet(SHEETS.users, ["Username","PasswordHash","Name","Role","Token","Mobile"]); }
+function dataSheet(type) { const headers = ["ID","Date","Receipt","Amount","Operator","DataJSON"]; return getSheet(SHEETS[type], headers); }
 
 function ensureAdmin() {
   const sh = userSheet();
-
   if (sh.getLastRow() <= 1) {
-    sh.appendRow([
-      "admin",
-      hashPassword("Admin@123"),
-      "Admin",
-      "admin",
-      "",
-      ""
-    ]);
+    sh.appendRow(["admin", hashPassword("Admin@123"), "Admin", "admin", "", ""]);
   }
 }
 
 function findUserByToken(token) {
   if (!token) return null;
-
   const sh = userSheet();
   const rows = sh.getDataRange().getValues();
-
   for (let i = 1; i < rows.length; i++) {
     if (String(rows[i][4]) === String(token)) {
-      return {
-        username: rows[i][0],
-        name: rows[i][2],
-        role: rows[i][3],
-        mobile: rows[i][5]
-      };
+      return { username: rows[i][0], name: rows[i][2], role: rows[i][3], mobile: rows[i][5] };
     }
   }
   return null;
@@ -128,7 +89,6 @@ function requireUser(req) {
 
 function handleRequest(req) {
   ensureAdmin();
-
   switch (req.action) {
     case "login": return login(req);
     case "dashboard": return dashboard(req);
@@ -140,8 +100,7 @@ function handleRequest(req) {
     case "saveExp": return saveRecord(req, "expenses", "E");
     case "deleteFinance": return deleteFinance(req);
     case "public": return publicData();
-    default:
-      return {success:false, message:"गलत Action"};
+    default: return {success:false, message:"गलत Action"};
   }
 }
 
@@ -150,60 +109,34 @@ function login(req) {
   const rows = sh.getDataRange().getValues();
   const username = String(req.username || "").trim().toLowerCase();
   const password = hashPassword(req.password || "");
-
   for (let i = 1; i < rows.length; i++) {
-    if (
-      String(rows[i][0]).trim().toLowerCase() === username &&
-      String(rows[i][1]) === password
-    ) {
+    if (String(rows[i][0]).trim().toLowerCase() === username && String(rows[i][1]) === password) {
       const token = Utilities.getUuid();
       sh.getRange(i + 1, 5).setValue(token);
-
-      return {
-        success:true,
-        token:token,
-        id:String(rows[i][0]),
-        name:String(rows[i][2]),
-        role:String(rows[i][3])
-      };
+      return { success:true, token:token, id:String(rows[i][0]), name:String(rows[i][2]), role:String(rows[i][3]) };
     }
   }
-
   return {success:false, message:"यूजर ID या पासवर्ड गलत है।"};
 }
 
+// FIX 3 - Operator: username / id dono chalega, mobile zaroori nahi
 function addOperator(req) {
   const user = requireUser(req);
-  if (user.role !== "admin") {
-    throw new Error("ऑपरेटर केवल Admin बना सकता है।");
-  }
-
+  if (user.role !== "admin") throw new Error("ऑपरेटर केवल Admin बना सकता है।");
   const d = req.data || {};
-  const id = String(d.id || "").trim();
+  const id = String(d.id || d.username || "").trim();
   const password = String(d.password || "");
   const name = String(d.name || "").trim();
   const mobile = String(d.mobile || "").trim();
-
-  if (!id || !password || !name) {
-    throw new Error("नाम, ID और पासवर्ड भरें।");
-  }
-  if (!/^[0-9]{10}$/.test(mobile)) {
-    throw new Error("मोबाइल नंबर 10 अंकों का होना चाहिए।");
-  }
-
+  if (!id || !password || !name) throw new Error("नाम, ID और पासवर्ड भरें।");
+  // Mobile agar diya hai to hi check karo, nahi diya to chalega
+  if (mobile && !/^[0-9]{10}$/.test(mobile)) throw new Error("मोबाइल नंबर 10 अंकों का होना चाहिए।");
   const sh = userSheet();
   const rows = sh.getDataRange().getValues();
-
   for (let i = 1; i < rows.length; i++) {
-    if (String(rows[i][0]).toLowerCase() === id.toLowerCase()) {
-      throw new Error("यह Operator ID पहले से मौजूद है।");
-    }
+    if (String(rows[i][0]).toLowerCase() === id.toLowerCase()) throw new Error("यह Operator ID पहले से मौजूद है।");
   }
-
-  sh.appendRow([
-    id, hashPassword(password), name, "operator", "", mobile
-  ]);
-
+  sh.appendRow([id, hashPassword(password), name, "operator", "", mobile]);
   return {success:true, message:"ऑपरेटर सफलतापूर्वक जोड़ दिया गया।"};
 }
 
@@ -211,56 +144,44 @@ function makeReceipt(prefix, sh) {
   return prefix + String(Math.max(1, sh.getLastRow())).padStart(5, "0");
 }
 
+// FIX 2 - Registration: test.html wala format bhi chalega
 function saveRecord(req, type, prefix) {
   const user = requireUser(req);
   const d = req.data || {};
 
-  if (type === "registrations" && user.role !== "operator") {
-    throw new Error("पंजीयन केवल Operator दर्ज कर सकता है।");
-  }
-  if (type !== "registrations" && user.role !== "admin") {
-    throw new Error("यह सुविधा केवल Admin के लिए है।");
-  }
-
   if (type === "registrations") {
-    if (!d.type || !d.regNo || !d.name || !d.mobile || !d.village) {
-      throw new Error("पंजीयन की जरूरी जानकारी भरें।");
+    // test.html se aaya hai - groom/bride wala format
+    if (d.groom || d.bride) {
+      // Admin bhi Registration kar sakta hai - test.html me Admin hi karta hai
+      if (!d.village || !d.groom || !d.bride) throw new Error("Village, Groom, Bride bharo");
+      const sh = dataSheet(type);
+      const id = Utilities.getUuid();
+      const receipt = makeReceipt(prefix, sh);
+      const amount = Number(d.amount) || 0;
+      const date = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "yyyy-MM-dd");
+      const record = { id:id, receipt:receipt, date:date, amount:amount, village:d.village, groom:d.groom, bride:d.bride, father:d.father||"", mobile:d.mobile||"", operatorId:user.username, operatorName:user.name, type:"वर-वधु" };
+      sh.appendRow([id, date, receipt, amount, user.username, JSON.stringify(record)]);
+      return {success:true, receipt:receipt, message:"रिकॉर्ड सुरक्षित हो गया।"};
     }
-    if (!/^[0-9]{10}$/.test(String(d.mobile))) {
-      throw new Error("मोबाइल नंबर 10 अंकों का होना चाहिए।");
-    }
+    // sammelan.html se aaya hai - type/regNo wala format
+    if (user.role !== "operator" && user.role !== "admin") throw new Error("पंजीयन केवल Operator दर्ज कर सकता है।");
+    if (!d.type || !d.regNo || !d.name || !d.mobile || !d.village) throw new Error("पंजीयन की जरूरी जानकारी भरें।");
+    if (!/^[0-9]{10}$/.test(String(d.mobile))) throw new Error("मोबाइल नंबर 10 अंकों का होना चाहिए।");
   } else {
-    if (!d.name || !d.date || Number(d.amount) <= 0) {
-      throw new Error("नाम, तारीख और सही राशि भरें।");
-    }
+    if (user.role !== "admin") throw new Error("यह सुविधा केवल Admin के लिए है।");
+    if (!d.name || Number(d.amount) <= 0) throw new Error("नाम और सही राशि भरें।");
+    // Donation me name nahi hai to village se kaam chalao
+    if (type === "donations" && !d.name && d.village) d.name = d.village;
+    if (!d.date) d.date = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "yyyy-MM-dd");
   }
 
   const sh = dataSheet(type);
   const id = Utilities.getUuid();
   const receipt = makeReceipt(prefix, sh);
   const amount = Number(d.amount) || 0;
-  const date = String(d.date || Utilities.formatDate(
-    new Date(), Session.getScriptTimeZone(), "yyyy-MM-dd"
-  ));
-
-  const record = Object.assign({}, d, {
-    id:id,
-    receipt:receipt,
-    date:date,
-    amount:amount,
-    operatorId:user.username,
-    operatorName:user.name
-  });
-
-  sh.appendRow([
-    id,
-    date,
-    receipt,
-    amount,
-    user.username,
-    JSON.stringify(record)
-  ]);
-
+  const date = String(d.date || Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "yyyy-MM-dd"));
+  const record = Object.assign({}, d, { id:id, receipt:receipt, date:date, amount:amount, operatorId:user.username, operatorName:user.name });
+  sh.appendRow([id, date, receipt, amount, user.username, JSON.stringify(record)]);
   return {success:true, receipt:receipt, message:"रिकॉर्ड सुरक्षित हो गया।"};
 }
 
@@ -268,108 +189,80 @@ function readRecords(type) {
   const sh = dataSheet(type);
   const rows = sh.getDataRange().getValues();
   const result = [];
-
-  for (let i = 1; i < rows.length; i++) {
-    try {
-      result.push(JSON.parse(rows[i][5]));
-    } catch (e) {}
-  }
+  for (let i = 1; i < rows.length; i++) { try { result.push(JSON.parse(rows[i][5])); } catch (e) {} }
   return result;
 }
 
 function getAllData(req) {
   const user = requireUser(req);
-
   const registrations = readRecords("registrations");
   const operators = [];
   const users = userSheet().getDataRange().getValues();
-
   if (user.role === "admin") {
     for (let i = 1; i < users.length; i++) {
-      if (String(users[i][3]) === "operator") {
-        operators.push({
-          id:users[i][0],
-          name:users[i][2],
-          mobile:users[i][5],
-          role:"operator"
-        });
-      }
+      if (String(users[i][3]) === "operator") operators.push({ id:users[i][0], name:users[i][2], mobile:users[i][5], role:"operator" });
     }
   }
-
-  return {
-    success:true,
-    registrations: user.role === "admin"
-      ? registrations
-      : registrations.filter(r => r.operatorId === user.username),
-    operators:operators,
-    donations:user.role === "admin" ? readRecords("donations") : [],
-    other:user.role === "admin" ? readRecords("other") : [],
-    expenses:user.role === "admin" ? readRecords("expenses") : []
-  };
+  return { success:true, registrations: user.role === "admin" ? registrations : registrations.filter(r => r.operatorId === user.username), operators:operators, donations: user.role === "admin" ? readRecords("donations") : [], other: user.role === "admin" ? readRecords("other") : [], expenses: user.role === "admin" ? readRecords("expenses") : [] };
 }
 
+// FIX 1 - Dashboard: dono format ka jawab dega
 function dashboard(req) {
   const user = requireUser(req);
   const regs = readRecords("registrations");
-  const mine = user.role === "admin"
-    ? regs
-    : regs.filter(r => r.operatorId === user.username);
-
+  const dons = readRecords("donations");
+  const others = readRecords("other");
+  const exps = readRecords("expenses");
+  const mine = user.role === "admin" ? regs : regs.filter(r => r.operatorId === user.username);
+  let regAmount = 0; mine.forEach(r => regAmount += Number(r.amount) || 0);
+  let donAmount = 0; dons.forEach(r => donAmount += Number(r.amount) || 0);
+  let otherAmount = 0; others.forEach(r => otherAmount += Number(r.amount) || 0);
+  let expAmount = 0; exps.forEach(r => expAmount += Number(r.amount) || 0);
+  const totalDonation = donAmount + regAmount + otherAmount;
   return {
     success:true,
-    total:mine.length,
-    groom:mine.filter(r => r.type === "वर").length,
-    bride:mine.filter(r => r.type === "वधु").length
+    // test.html ke liye
+    registrations: mine.length,
+    donation: totalDonation,
+    expenses: expAmount,
+    balance: totalDonation - expAmount,
+    // sammelan.html ke liye
+    total: mine.length,
+    groom: mine.filter(r => r.type === "वर").length,
+    bride: mine.filter(r => r.type === "वधु").length,
+    regIncome: regAmount,
+    donationIncome: donAmount,
+    otherIncome: otherAmount,
+    totalIncome: totalDonation,
+    totalExpense: expAmount
   };
 }
 
 function deleteFinance(req) {
   const user = requireUser(req);
   if (user.role !== "admin") throw new Error("केवल Admin हटा सकता है।");
-
   const type = String(req.data && req.data.type || "");
   const id = String(req.data && req.data.id || "");
-
-  if (!["donations","other","expenses"].includes(type)) {
-    throw new Error("गलत रिकॉर्ड प्रकार।");
-  }
-
+  if (!["donations","other","expenses"].includes(type)) throw new Error("गलत रिकॉर्ड प्रकार।");
   const sh = dataSheet(type);
   const rows = sh.getDataRange().getValues();
-
   for (let i = rows.length - 1; i >= 1; i--) {
-    if (String(rows[i][0]) === id) {
-      sh.deleteRow(i + 1);
-      return {success:true, message:"रिकॉर्ड हटा दिया गया।"};
-    }
+    if (String(rows[i][0]) === id) { sh.deleteRow(i + 1); return {success:true, message:"रिकॉर्ड हटा दिया गया।"}; }
   }
-
   return {success:false, message:"रिकॉर्ड नहीं मिला।"};
 }
 
 function publicData() {
   const regs = readRecords("registrations");
   const villages = {};
-
   regs.forEach(r => {
     const name = String(r.village || "").trim();
     if (!name) return;
-
     const key = name.toLowerCase();
-    if (!villages[key]) {
-      villages[key] = {name:name, groom:0, bride:0};
-    }
-
+    if (!villages[key]) villages[key] = {name:name, groom:0, bride:0};
     if (r.type === "वर") villages[key].groom++;
     if (r.type === "वधु") villages[key].bride++;
+    if (r.groom && r.bride) { villages[key].groom++; villages[key].bride++; }
   });
-
-  return {
-    success:true,
-    total:regs.length,
-    villages:Object.values(villages).sort((a,b) =>
-      a.name.localeCompare(b.name, "hi")
-    )
-  };
+  return { success:true, total:regs.length, villages:Object.values(villages).sort((a,b) => a.name.localeCompare(b.name, "hi")) };
 }
