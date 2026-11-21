@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="hi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>🏵️ SPR Sammelan - Management System</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui;background:#fff7ed;color:#1c1917}
+.top{background:#ea580c;color:#fff;padding:14px;text-align:center}
+.top h1{margin:0;font-size:22px}.top p{margin:4px 0 0;font-size:13px;opacity:.9}
+.card{max-width:780px;margin:14px auto;background:#fff;border:1px solid #fed7aa;border-radius:14px;padding:16px;box-shadow:0 6px 20px rgba(0,0,0,.06)}
+h2{margin:0 0 10px}label{font-size:13px;font-weight:700;display:block;margin:10px 0 4px}
+input,select,textarea{width:100%;padding:11px;border:1px solid #e7e5e4;border-radius:10px;font-size:15px}
+button{width:100%;padding:12px;border:0;border-radius:10px;background:#ea580c;color:#fff;font-weight:800;font-size:15px;margin-top:12px;cursor:pointer}
+button.sec{background:#fff;color:#ea580c;border:1px solid #ea580c}
+button.green{background:#16a34a}button.red{background:#dc2626}button.blue{background:#2563eb}button.dark{background:#172554}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.stat{background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:11px;text-align:center}
+.stat b{font-size:20px;display:block}.stat span{font-size:12px}
+.tabs{display:flex;gap:7px;flex-wrap:wrap}.tabs button{width:auto;padding:9px 11px;margin:0;font-size:13px}
+.hidden{display:none}.msg{margin-top:10px;font-size:14px;color:#dc2626;text-align:center}.ok{color:#16a34a}
+.small{font-size:12px;color:#78716c;text-align:center;margin-top:8px}
+table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}th,td{border:1px solid #ddd;padding:7px;text-align:center}th{background:#ea580c;color:#fff}
+.flow{background:#f0fdf4;border:1px solid #86efac;padding:12px;border-radius:12px;font-size:13px;line-height:1.9;margin-top:10px}
+@media print{ body *{visibility:hidden} #printArea, #printArea *{visibility:visible} #printArea{position:absolute;left:0;top:0;width:100%} }
+.printBox{border:2px solid #000;padding:18px;text-align:center}
+</style></head>
+<body>
+<div class="top"><h1>🏵️ SPR Sammelan - Management System</h1><p>Registration • Donation • Other Income • Expense • Operator</p></div>
+
+<!-- PUBLIC REPORT - Bina Login -->
+<div id="publicBox" class="card">
+<h2>📢 सार्वजनिक रिपोर्ट - गाँववार आँकड़े (Bina Login)</h2>
+<div class="grid3"><div class="stat"><b id="pTotal">0</b><span>कुल पंजीयन</span></div><div class="stat"><b id="pGroom">0</b><span>कुल वर</span></div><div class="stat"><b id="pBride">0</b><span>कुल वधु</span></div></div>
+<div style="overflow:auto"><table><thead><tr><th>गाँव</th><th>वर</th><th>वधु</th><th>कुल</th></tr></thead><tbody id="pVillages"></tbody></table></div>
+<button class="sec" onclick="loadPublic()">🔄 Public Report Dekho</button>
+</div>
+
+<div id="loginBox" class="card">
+<h2>🔐 Login</h2>
+<label>Username</label><input id="u" placeholder="admin">
+<label>Password</label><input id="p" type="password" placeholder="Admin@123">
+<button onclick="doLogin()">Login Karein</button>
+<div id="loginMsg" class="msg"></div>
+<div class="small">Admin: admin / Admin@123<br>Operator ko Admin banayega</div>
+</div>
+
+<div id="appBox" class="card hidden" style="max-width:780px">
+<div style="display:flex;justify-content:space-between;align-items:center"><h2 id="welcome">Namaste</h2><button onclick="logout()" style="width:auto;padding:8px 12px;background:#dc2626">Logout</button></div>
+<p id="roleTxt" class="small"></p>
+
+<!-- FLOWCHART WALA DASHBOARD -->
+<div class="grid" style="margin-top:10px">
+<div class="stat"><b id="sGroom">0</b><span>कुल वर पंजीयन</span></div>
+<div class="stat"><b id="sBride">0</b><span>कुल वधु पंजीयन</span></div>
+<div class="stat"><b id="sReg">0</b><span>कुल पंजीयन</span></div>
+<div class="stat"><b id="sRegAmt">₹0</b><span>पंजीयन से राशि</span></div>
+<div class="stat"><b id="sDon">₹0</b><span>कुल दान</span></div>
+<div class="stat"><b id="sOther">₹0</b><span>अन्य आय</span></div>
+<div class="stat"><b id="sExp">₹0</b><span>कुल खर्च</span></div>
+<div class="stat"><b id="sBal">₹0</b><span>शेष राशि (आय - खर्च)</span></div>
+</div>
+
+<div class="flow" id="flowBox">Flowchart load ho raha hai...</div>
+
+<div class="tabs" style="margin-top:14px">
+<button class="sec" onclick="showTab('reg')">+ पंजीयन</button>
+<button class="sec" id="btnDon" onclick="showTab('don')">+ दान</button>
+<button class="sec" id="btnOther" onclick="showTab('other')">+ अन्य आय</button>
+<button class="sec" id="btnExp" onclick="showTab('exp')">+ खर्च</button>
+<button class="sec" id="btnOp" onclick="showTab('op')">+ Operator</button>
+<button class="sec" onclick="showTab('list')">📋 रिपोर्ट</button>
+<button class="sec" onclick="loadDash()">🔄 Refresh</button>
+</div>
+
+<!-- REGISTRATION -->
+<div id="tab-reg" class="hidden">
+<label>गाँव *</label><input id="rVillage" placeholder="Gaon ka naam">
+<label>वर / दूल्हा *</label><input id="rGroom">
+<label>वधु / दुल्हन *</label><input id="rBride">
+<label>पिता का नाम</label><input id="rFather">
+<label>मोबाइल (10 अंक)</label><input id="rMobile">
+<label>पंजीयन शुल्क (₹)</label><input id="rAmount" type="number" value="0">
+<button class="green" onclick="saveReg()">पंजीयन Save Karein</button><div id="regMsg" class="msg"></div>
+</div>
+
+<!-- DONATION - SIRF ADMIN -->
+<div id="tab-don" class="hidden">
+<label>गाँव</label><input id="dVillage">
+<label>दाता का नाम *</label><input id="dName">
+<label>पिता का नाम</label><input id="dFather">
+<label>राशि (₹) *</label><input id="dAmount" type="number">
+<label>प्रकार</label><select id="dType"><option>सामान्य</option><option>गुप्त</option><option>विशेष</option></select>
+<button class="green" onclick="saveDon()">दान Save Karein</button><div id="donMsg" class="msg"></div>
+</div>
+
+<!-- OTHER INCOME - NAYA - SIRF ADMIN -->
+<div id="tab-other" class="hidden">
+<label>स्रोत * - जैसे चंदा, स्टॉल, प्रायोजक</label><input id="oSrc" placeholder="Kahan se aayi?">
+<label>देने वाले का नाम *</label><input id="oName2">
+<label>राशि (₹) *</label><input id="oAmt" type="number">
+<label>विवरण</label><input id="oDesc">
+<button class="green" onclick="saveOther()">अन्य आय Save Karein</button><div id="otherMsg" class="msg"></div>
+</div>
+
+<!-- EXPENSE - SIRF ADMIN -->
+<div id="tab-exp" class="hidden">
+<label>Item *</label><input id="eItem" placeholder="Kis cheez ka kharcha">
+<label>विवरण</label><input id="eDesc">
+<label>किसको दिया?</label><input id="ePaid">
+<label>राशि (₹) *</label><input id="eAmount" type="number">
+<button class="red" onclick="saveExp()">खर्च Save Karein</button><div id="expMsg" class="msg"></div>
+</div>
+
+<!-- OPERATOR - SIRF ADMIN -->
+<div id="tab-op" class="hidden">
+<label>Operator Username *</label><input id="oUser">
+<label>Password *</label><input id="oPass">
+<label>Operator ka Naam *</label><input id="oName">
+<label>Mobile</label><input id="oMobile">
+<button class="dark" onclick="addOp()">Operator Banayein</button><div id="opMsg" class="msg"></div>
+<div class="small">नियम: Operator केवल पंजीयन करेगा। दान / खर्च / अन्य आय नहीं करेगा।</div>
+</div>
+
+<!-- REPORTS -->
+<div id="tab-list" class="hidden">
+<h2>📋 गाँववार रिपोर्ट + वित्तीय रिपोर्ट</h2>
+<input id="searchBox" placeholder="🔍 खोजो - गाँव / वर / वधु / रसीद..." onkeyup="filterList()">
+<div style="overflow:auto"><table><thead><tr><th>रसीद</th><th>गाँव</th><th>वर</th><th>वधु</th><th>शुल्क</th><th>ऑपरेटर</th><th>एक्शन</th></tr></thead><tbody id="regList"></tbody></table></div>
+<h2 style="margin-top:14px">💰 वित्तीय रिपोर्ट</h2>
+<div style="overflow:auto"><table><thead><tr><th>प्रकार</th><th>नाम / Item</th><th>राशि</th><th>तारीख</th><th>एक्शन</th></tr></thead><tbody id="finList"></tbody></table></div>
+<button class="blue" onclick="downloadExcel()">⬇️ Excel Download (सभी रिपोर्ट)</button>
+</div>
+</div>
+
+<!-- PRINT AREA -->
+<div id="printArea" class="hidden"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbzeclWgmPQdS180kyU6aufd5he2_uWVkF_vnvQ4AfKwOA013TjfLiNGHuRsWN_oMr8fzQ/exec";
+let TOKEN = localStorage.getItem("spr_token") || "";
+let ROLE = localStorage.getItem("spr_role") || "";
+let ALL_REG = [], ALL_FIN = [];
+
+async function call(action, data={}){ const r=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action,token:TOKEN,...data})}); return r.json(); }
+function v(id){ return document.getElementById(id).value.trim(); }
+function showTab(t){ ["reg","don","other","exp","op","list"].forEach(x=>document.getElementById("tab-"+x).classList.add("hidden")); document.getElementById("tab-"+t).classList.remove("hidden"); }
+
+async function loadPublic(){
+  try{ const res=await call("public",{});
+    if(res.success){
+      document.getElementById("pTotal").textContent=res.total||0;
+      let g=0,b=0; (res.villages||[]).forEach(v=>{g+=v.groom;b+=v.bride;});
+      document.getElementById("pGroom").textContent=g; document.getElementById("pBride").textContent=b;
+      document.getElementById("pVillages").innerHTML=(res.villages||[]).map(v=>`<tr><td>${v.name}</td><td>${v.groom}</td><td>${v.bride}</td><td>${v.groom+v.bride}</td></tr>`).join("")||"<tr><td colspan=4>Abhi koi data nahi</td></tr>";
+    }
+  }catch(e){}
+}
+loadPublic();
+
+async function doLogin(){
+  const username=v("u"), password=v("p");
+  document.getElementById("loginMsg").textContent="Login ho raha hai...";
+  try{ const res=await call("login",{username,password});
+    if(!res.success){ document.getElementById("loginMsg").textContent=res.message; return; }
+    TOKEN=res.token; ROLE=res.role||"operator";
+    localStorage.setItem("spr_token",TOKEN); localStorage.setItem("spr_role",ROLE);
+    document.getElementById("loginBox").classList.add("hidden");
+    document.getElementById("appBox").classList.remove("hidden");
+    document.getElementById("welcome").textContent="Namaste, "+(res.name||res.role);
+    applyRole(); loadDash(); loadAll(); showTab("reg");
+  }catch(e){ document.getElementById("loginMsg").textContent="Network Error: "+e.message; }
+}
+
+// SUDHAR 1 - Role ke hisab se Button chhupao
+function applyRole(){
+  const isAdmin = ROLE==="admin";
+  document.getElementById("roleTxt").textContent = isAdmin ? "👑 Role: ADMIN - Sab kuchh kar sakte ho" : "👤 Role: OPERATOR - Sirf Panjiyan kar sakte ho";
+  ["btnDon","btnOther","btnExp","btnOp"].forEach(id=>{ document.getElementById(id).style.display = isAdmin ? "" : "none"; });
+}
+
+async function loadDash(){
+  try{ const res=await call("dashboard",{}); if(!res.success){ logout(); return; }
+    document.getElementById("sReg").textContent=res.registrations||res.total||0;
+    document.getElementById("sGroom").textContent=res.groom||0;
+    document.getElementById("sBride").textContent=res.bride||0;
+    document.getElementById("sRegAmt").textContent="₹"+Number(res.regIncome||0).toLocaleString("en-IN");
+    document.getElementById("sDon").textContent="₹"+Number(res.donationIncome||res.donation||0).toLocaleString("en-IN");
+    document.getElementById("sOther").textContent="₹"+Number(res.otherIncome||0).toLocaleString("en-IN");
+    document.getElementById("sExp").textContent="₹"+Number(res.expenses||res.totalExpense||0).toLocaleString("en-IN");
+    document.getElementById("sBal").textContent="₹"+Number(res.balance||0).toLocaleString("en-IN");
+    // FLOWCHART
+    document.getElementById("flowBox").innerHTML = `<b>💰 वित्तीय हिसाब - Flowchart</b><br>पंजीयन से: <b>₹${Number(res.regIncome||0).toLocaleString("en-IN")}</b> + दान से: <b>₹${Number(res.donationIncome||0).toLocaleString("en-IN")}</b> + अन्य आय: <b>₹${Number(res.otherIncome||0).toLocaleString("en-IN")}</b> = <b>कुल आय ₹${Number(res.totalIncome||0).toLocaleString("en-IN")}</b><br>कुल खर्च: <b>₹${Number(res.totalExpense||0).toLocaleString("en-IN")}</b><br><b>अंतिम शेष = कुल आय - कुल खर्च = ₹${Number(res.balance||0).toLocaleString("en-IN")}</b>`;
+  }catch(e){}
+}
+
+async function loadAll(){
+  try{ const res=await call("getData",{});
+    if(res.success){ ALL_REG=res.registrations||[]; renderReg(ALL_REG);
+      ALL_FIN=[];
+      (res.donations||[]).forEach(x=>ALL_FIN.push({...x, _type:"donations", _label:"दान"}));
+      (res.other||[]).forEach(x=>ALL_FIN.push({...x, _type:"other", _label:"अन्य आय"}));
+      (res.expenses||[]).forEach(x=>ALL_FIN.push({...x, _type:"expenses", _label:"खर्च"}));
+      document.getElementById("finList").innerHTML = ALL_FIN.map(f=>`<tr><td>${f._label}</td><td>${f.name||f.item||""}</td><td>₹${f.amount}</td><td>${f.date||""}</td><td>${ROLE==="admin"?`<button style="width:auto;padding:5px 8px;background:#dc2626;margin:0" onclick="delFin('${f._type}','${f.id}')">Delete</button>`:"-"}</td></tr>`).join("")||"<tr><td colspan=5>Koi वित्तीय रिकॉर्ड nahi</td></tr>";
+    }
+  }catch(e){}
+}
+
+function renderReg(list){
+  document.getElementById("regList").innerHTML = list.map(r=>`<tr><td>${r.receipt||""}</td><td>${r.village||""}</td><td>${r.groom||r.name||""}</td><td>${r.bride||""}</td><td>₹${r.amount||0}</td><td>${r.operatorName||r.operatorId||""}</td><td><button style="width:auto;padding:5px 8px;background:#2563eb;margin:0" onclick="printReceipt('${r.receipt}')">🖨️ रसीद</button></td></tr>`).join("")||"<tr><td colspan=7>Koi पंजीयन nahi</td></tr>";
+}
+function filterList(){
+  const q=document.getElementById("searchBox").value.toLowerCase();
+  renderReg(ALL_REG.filter(r=>JSON.stringify(r).toLowerCase().includes(q)));
+}
+
+// SUDHAR - Duplicate Warning frontend me bhi
+async function saveReg(){
+  const data={village:v("rVillage"),groom:v("rGroom"),bride:v("rBride"),father:v("rFather"),mobile:v("rMobile"),amount:v("rAmount")||0, date:new Date().toISOString().slice(0,10)};
+  if(!data.village||!data.groom||!data.bride){ document.getElementById("regMsg").textContent="गाँव, वर, वधु bharo"; return; }
+  const dup = ALL_REG.find(r=>r.groom===data.groom && r.bride===data.bride && r.village===data.village);
+  if(dup && !confirm("⚠️ DUPLICATE LAG RAHA HAI! Yehi Var-Vadhu pehle se hai - Receipt "+dup.receipt+" - Phir bhi Save karna hai?")) return;
+  const r=await call("saveReg",{data}); document.getElementById("regMsg").textContent=r.success?"Ho gaya! Receipt: "+r.receipt:r.message;
+  if(r.success){ printReceipt(r.receipt, data); loadDash(); loadAll(); }
+}
+async function saveDon(){ const data={village:v("dVillage"),name:v("dName"),father:v("dFather"),amount:v("dAmount"),type:v("dType"),date:new Date().toISOString().slice(0,10)}; const r=await call("saveDon",{data}); document.getElementById("donMsg").textContent=r.success?"Ho gaya! Receipt: "+r.receipt:r.message; if(r.success) loadDash(); loadAll(); }
+async function saveOther(){ const data={name:v("oName2"),amount:v("oAmt"),description:v("oDesc"),item:v("oSrc"),source:v("oSrc"),date:new Date().toISOString().slice(0,10)}; const r=await call("saveOther",{data}); document.getElementById("otherMsg").textContent=r.success?"Ho gaya! Receipt: "+r.receipt:r.message; if(r.success) loadDash(); loadAll(); }
+async function saveExp(){ const data={item:v("eItem"),name:v("eItem"),description:v("eDesc"),paidBy:v("ePaid"),amount:v("eAmount"),date:new Date().toISOString().slice(0,10)}; const r=await call("saveExp",{data}); document.getElementById("expMsg").textContent=r.success?"Ho gaya! Receipt: "+r.receipt:r.message; if(r.success) loadDash(); loadAll(); }
+async function addOp(){ const data={username:v("oUser"),id:v("oUser"),password:v("oPass"),name:v("oName"),mobile:v("oMobile")}; const r=await call("addOp",{data}); document.getElementById("opMsg").textContent=r.success?r.message:r.message; }
+async function delFin(type,id){ if(!confirm("Delete karna hai?")) return; const r=await call("deleteFinance",{data:{type,id}}); alert(r.message); loadDash(); loadAll(); }
+
+function printReceipt(receipt, data){
+  let r = ALL_REG.find(x=>x.receipt===receipt) || data || {};
+  document.getElementById("printArea").innerHTML = `<div class="printBox"><h2>🏵️ SPR SAMMELAN</h2><p>वर-वधु पंजीयन रसीद / टोकन</p><hr><p><b>रसीद नं:</b> ${receipt}</p><p><b>गाँव:</b> ${r.village||""}</p><p><b>वर:</b> ${r.groom||r.name||""}</p><p><b>वधु:</b> ${r.bride||""}</p><p><b>पिता:</b> ${r.father||""}</p><p><b>शुल्क:</b> ₹${r.amount||0}</p><p><b>दिनांक:</b> ${r.date||new Date().toLocaleDateString("hi-IN")}</p><br><br><p>___________________<br>हस्ताक्षर - संचालक</p></div>`;
+  document.getElementById("printArea").classList.remove("hidden");
+  window.print();
+  setTimeout(()=>document.getElementById("printArea").classList.add("hidden"), 500);
+}
+
+function downloadExcel(){
+  if(!ALL_REG.length){ alert("Pehle data load karo"); return; }
+  const wb=XLSX.utils.book_new();
+  const ws1=XLSX.utils.aoa_to_sheet([["रसीद","गाँव","वर","वधु","पिता","मोबाइल","शुल्क","तारीख","ऑपरेटर"], ...ALL_REG.map(r=>[r.receipt,r.village,r.groom||r.name,r.bride,r.father,r.mobile,r.amount,r.date,r.operatorName||r.operatorId])]);
+  XLSX.utils.book_append_sheet(wb,ws1,"Panjiyan");
+  const ws2=XLSX.utils.aoa_to_sheet([["प्रकार","नाम","राशि","तारीख"], ...ALL_FIN.map(f=>[f._label,f.name||f.item,f.amount,f.date])]);
+  XLSX.utils.book_append_sheet(wb,ws2,"Vittiya Report");
+  XLSX.writeFile(wb,"SPR_Sammelan_Report.xlsx");
+}
+
+function logout(){ localStorage.removeItem("spr_token"); localStorage.removeItem("spr_role"); TOKEN=""; location.reload(); }
+if(TOKEN){ document.getElementById("loginBox").classList.add("hidden"); document.getElementById("appBox").classList.remove("hidden"); applyRole(); loadDash(); loadAll(); showTab("reg"); }
+</script></body></html>
