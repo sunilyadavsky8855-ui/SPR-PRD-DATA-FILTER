@@ -1,104 +1,194 @@
-<!DOCTYPE html>
-<html lang="hi">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>सम्मेलन प्रबंधन</title>
-  <style>
-    * { box-sizing: border-box; }
-    body { margin: 0; font-family: Arial, sans-serif; background: #f3f5f8; color: #202938; }
-    header { background: #173b67; color: white; padding: 18px 14px; text-align: center; }
-    header h1 { margin: 0 0 6px; font-size: 24px; }
-    header p { margin: 0; opacity: .9; }
-    .top-actions { display: flex; justify-content: flex-end; gap: 8px; padding: 12px; background: white; flex-wrap: wrap; }
-    button { border: 0; border-radius: 7px; padding: 10px 14px; cursor: pointer; background: #245b91; color: white; font-size: 14px; }
-    main { max-width: 1100px; margin: 18px auto; padding: 0 12px; }
-    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
-    .card { background: white; padding: 16px; border-radius: 10px; box-shadow: 0 2px 8px #0000000d; }
-    .card small { color: #657184; display: block; margin-bottom: 8px; }
-    .number { font-size: 24px; font-weight: bold; }
-    .table-wrap { overflow-x: auto; background: white; border-radius: 10px; margin-top: 14px; }
-    table { width: 100%; border-collapse: collapse; min-width: 620px; }
-    th, td { padding: 11px; border-bottom: 1px solid #e5e9ef; text-align: left; }
-    th { background: #eaf0f7; }
-    #status { padding: 12px; color: #5b6573; }
-    footer { text-align: center; padding: 20px; color: #6b7280; }
-  </style>
-</head>
-<body>
-  <header>
-    <h1>सम्मेलन प्रबंधन</h1>
-    <p>सार्वजनिक डैशबोर्ड</p>
-  </header>
-  <nav class="top-actions">
-    <button onclick="showLogin('operator')">Operator Login</button>
-    <button onclick="showLogin('admin')">Admin Login</button>
-  </nav>
-  <main>
-    <h2>सम्मेलन की कुल स्थिति</h2>
-    <section class="cards">
-      <div class="card"><small>कुल पंजीयन</small><div class="number" id="registrations">—</div></div>
-      <div class="card"><small>नियमित दान</small><div class="number" id="regular">—</div></div>
-      <div class="card"><small>गुप्त दान</small><div class="number" id="secret">—</div></div>
-      <div class="card"><small>कुल प्राप्त दान</small><div class="number" id="donations">—</div></div>
-      <div class="card"><small>कुल खर्च</small><div class="number" id="expenses">—</div></div>
-      <div class="card"><small>शेष राशि</small><div class="number" id="balance">—</div></div>
-    </section>
-    <h2>गाँववार सार्वजनिक विवरण</h2>
-    <p>इस तालिका में किसी व्यक्ति का नाम या मोबाइल नंबर नहीं दिखाया जाता।</p>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>गाँव</th><th>पंजीयन संख्या</th><th>नियमित दान</th><th>गुप्त दान</th><th>कुल दान</th></tr></thead>
-        <tbody id="villageTable"><tr><td colspan="5">डेटा लोड हो रहा है...</td></tr></tbody>
-      </table>
-    </div>
-    <div id="status"></div>
-  </main>
-  <footer>सम्मेलन प्रबंधन प्रणाली</footer>
-  <script>
-    // YAHAN APNA APPS SCRIPT WEB APP URL DALO
-    const API_URL = "PASTE_YOUR_APPS_SCRIPT_URL_HERE";
+const SHEETS = {
+  Registration: ["Date","Receipt","Village","Groom","Bride","Father","Mobile","Amount","Operator"],
+  Donations: ["Date","Receipt","Village","Name","Father","Amount","Type","Operator"],
+  Expenses: ["Date","Receipt","Item","Description","PaidBy","Amount","Operator"],
+  Users: ["Username","PasswordHash","Role","Name"]
+};
 
-    function money(value) {
-      return '₹' + Number(value || 0).toLocaleString('en-IN');
+function doGet() {
+  setupSheets();
+  return HtmlService.createHtmlOutputFromFile("Index")
+    .setTitle("सम्मेलन मैनेजमेंट सिस्टम")
+    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+}
+
+function setupSheets() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  Object.keys(SHEETS).forEach(name => {
+    let sh = ss.getSheetByName(name);
+    if (!sh) sh = ss.insertSheet(name);
+    if (sh.getLastRow() === 0) {
+      sh.appendRow(SHEETS[name]);
     }
-    function loadDashboard() {
-      document.getElementById('status').textContent = 'डैशबोर्ड लोड हो रहा है...';
-      fetch(API_URL)
-        .then(res => res.json())
-        .then(data => {
-          document.getElementById('registrations').textContent = data.registrationCount;
-          document.getElementById('regular').textContent = money(data.regularTotal);
-          document.getElementById('secret').textContent = money(data.secretTotal);
-          document.getElementById('donations').textContent = money(data.donationTotal);
-          document.getElementById('expenses').textContent = money(data.expenseTotal);
-          document.getElementById('balance').textContent = money(data.balance);
-          const tbody = document.getElementById('villageTable');
-          tbody.innerHTML = '';
-          if (!data.villageRows.length) {
-            tbody.innerHTML = '<tr><td colspan="5">अभी कोई रिकॉर्ड उपलब्ध नहीं है।</td></tr>';
-          } else {
-            data.villageRows.forEach(row => {
-              const tr = document.createElement('tr');
-              [row.village, row.registrations, money(row.regular), money(row.secret), money(row.total)].forEach(value => {
-                const td = document.createElement('td');
-                td.textContent = value;
-                tr.appendChild(td);
-              });
-              tbody.appendChild(tr);
-            });
-          }
-          document.getElementById('status').textContent = 'डैशबोर्ड अपडेट हो गया।';
-        })
-        .catch(error => {
-          document.getElementById('status').textContent = 'डेटा लोड नहीं हुआ: ' + error;
-        });
-    }
-    function showLogin(role) {
-      const label = role === 'admin' ? 'Admin Login' : 'Operator Login';
-      alert(label + ' की सुविधा अगले चरण में जोड़ी जाएगी।');
-    }
-    window.addEventListener('load', loadDashboard);
-  </script>
-</body>
-</html>
+  });
+
+  const users = ss.getSheetByName("Users");
+  if (users.getLastRow() < 2) {
+    users.appendRow([
+      "admin",
+      hashPassword("Admin@123"),
+      "admin",
+      "मुख्य व्यवस्थापक"
+    ]);
+  }
+}
+
+function hashPassword(password) {
+  const bytes = Utilities.computeDigest(
+    Utilities.DigestAlgorithm.SHA_256,
+    password,
+    Utilities.Charset.UTF_8
+  );
+  return bytes.map(b => ("0" + ((b + 256) % 256).toString(16)).slice(-2)).join("");
+}
+
+function login(username, password) {
+  const sh = SpreadsheetApp.getActive().getSheetByName("Users");
+  const data = sh.getDataRange().getValues();
+  const user = data.slice(1).find(r =>
+    String(r[0]) === String(username) &&
+    String(r[1]) === hashPassword(password)
+  );
+
+  if (!user) return {success:false, message:"गलत यूजर आईडी या पासवर्ड"};
+
+  const token = Utilities.getUuid();
+  CacheService.getScriptCache().put(
+    "session_" + token,
+    JSON.stringify({
+      username:user[0],
+      role:user[2],
+      name:user[3]
+    }),
+    21600
+  );
+
+  return {
+    success:true,
+    token,
+    role:user[2],
+    name:user[3]
+  };
+}
+
+function getUser(token) {
+  const value = CacheService.getScriptCache()
+    .get("session_" + token);
+  if (!value) throw new Error("Session समाप्त। दोबारा लॉगिन करें।");
+  return JSON.parse(value);
+}
+
+function nextReceipt(sheetName) {
+  const sh = SpreadsheetApp.getActive().getSheetByName(sheetName);
+  return sheetName.substring(0,1).toUpperCase() +
+    Utilities.formatString("%05d", sh.getLastRow());
+}
+
+function saveRegistration(token, d) {
+  const u = getUser(token);
+  const lock = LockService.getScriptLock();
+  lock.waitLock(10000);
+  try {
+    const sh = SpreadsheetApp.getActive().getSheetByName("Registration");
+    const receipt = nextReceipt("Registration");
+    sh.appendRow([
+      new Date(), receipt, d.village, d.groom,
+      d.bride, d.father, d.mobile,
+      Number(d.amount || 0), u.username
+    ]);
+    return {success:true, receipt};
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function saveDonation(token, d) {
+  const u = getUser(token);
+  const lock = LockService.getScriptLock();
+  lock.waitLock(10000);
+  try {
+    const sh = SpreadsheetApp.getActive().getSheetByName("Donations");
+    const receipt = nextReceipt("Donations");
+    sh.appendRow([
+      new Date(), receipt, d.village,
+      d.type === "गुप्त" ? "गुप्त दान" : d.name,
+      d.type === "गुप्त" ? "" : d.father,
+      Number(d.amount), d.type, u.username
+    ]);
+    return {success:true, receipt};
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function saveExpense(token, d) {
+  const u = getUser(token);
+  const lock = LockService.getScriptLock();
+  lock.waitLock(10000);
+  try {
+    const sh = SpreadsheetApp.getActive().getSheetByName("Expenses");
+    const receipt = nextReceipt("Expenses");
+    sh.appendRow([
+      new Date(), receipt, d.item, d.description,
+      d.paidBy, Number(d.amount), u.username
+    ]);
+    return {success:true, receipt};
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function getDashboard(token) {
+  const u = getUser(token);
+  const ss = SpreadsheetApp.getActive();
+  const read = name => ss.getSheetByName(name)
+    .getDataRange().getValues().slice(1);
+
+  let registrations = read("Registration");
+  let donations = read("Donations");
+  let expenses = read("Expenses");
+
+  if (u.role !== "admin") {
+    registrations = registrations.filter(r => r[8] === u.username);
+    donations = donations.filter(r => r[7] === u.username);
+    expenses = expenses.filter(r => r[6] === u.username);
+  }
+
+  const total = (rows, index) =>
+    rows.reduce((s,r) => s + Number(r[index] || 0), 0);
+
+  const villages = {};
+  registrations.forEach(r => {
+    const v = r[2] || "अन्य";
+    villages[v] = (villages[v] || 0) + 1;
+  });
+
+  return {
+    role:u.role,
+    registrations:registrations.length,
+    donation:total(donations,5),
+    expenses:total(expenses,5),
+    villages,
+    balance:total(registrations,7) +
+      total(donations,5) - total(expenses,5)
+  };
+}
+
+function addOperator(token, username, password, name) {
+  const u = getUser(token);
+  if (u.role !== "admin") throw new Error("केवल Admin यह कर सकता है");
+
+  if (!username || !password) throw new Error("सभी जानकारी भरें");
+
+  const sh = SpreadsheetApp.getActive().getSheetByName("Users");
+  const data = sh.getDataRange().getValues();
+
+  if (data.slice(1).some(r => r[0] === username)) {
+    throw new Error("यह यूजर पहले से मौजूद है");
+  }
+
+  sh.appendRow([
+    username, hashPassword(password), "operator", name
+  ]);
+  return "ऑपरेटर सफलतापूर्वक बनाया गया";
+}
