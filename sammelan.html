@@ -55,7 +55,6 @@ input,select{width:100%;padding:11px;border:1px solid #d6d3d1;border-radius:9px;
 <p>सामाजिक एकता • सहयोग • समर्पण</p>
 </header>
 
-<!-- HOME PAGE -->
 <main id="homePage">
 
 <div class="hero">
@@ -68,22 +67,10 @@ input,select{width:100%;padding:11px;border:1px solid #d6d3d1;border-radius:9px;
 <div class="card">
 <h2 style="text-align:center">📊 सम्मेलन का मुख्य डैशबोर्ड</h2>
 <div class="stats">
-<div class="stat">
-<b id="publicReg">0</b>
-<span>कुल पंजीयन</span>
-</div>
-<div class="stat">
-<b id="publicDon">₹0</b>
-<span>कुल प्राप्त दान</span>
-</div>
-<div class="stat">
-<b id="publicExp">₹0</b>
-<span>कुल खर्च</span>
-</div>
-<div class="stat">
-<b id="publicBal">₹0</b>
-<span>शेष राशि</span>
-</div>
+<div class="stat"><b id="publicReg">0</b><span>कुल पंजीयन</span></div>
+<div class="stat"><b id="publicDon">₹0</b><span>कुल प्राप्त दान</span></div>
+<div class="stat"><b id="publicExp">₹0</b><span>कुल खर्च</span></div>
+<div class="stat"><b id="publicBal">₹0</b><span>शेष राशि</span></div>
 </div>
 <div class="small" id="publicStatus">डैशबोर्ड लोड हो रहा है...</div>
 </div>
@@ -117,7 +104,6 @@ input,select{width:100%;padding:11px;border:1px solid #d6d3d1;border-radius:9px;
 </div>
 </main>
 
-<!-- LOGIN APP -->
 <main id="appPage" class="hidden">
 <div class="container">
 
@@ -133,7 +119,6 @@ input,select{width:100%;padding:11px;border:1px solid #d6d3d1;border-radius:9px;
 <div class="stat"><b id="sExp">₹0</b><span>खर्च</span></div>
 <div class="stat"><b id="sBal">₹0</b><span>शेष राशि</span></div>
 </div>
-
 <p class="small" id="roleInfo"></p>
 </div>
 
@@ -146,7 +131,6 @@ input,select{width:100%;padding:11px;border:1px solid #d6d3d1;border-radius:9px;
 <button class="secondary" onclick="refreshDashboard()">डैशबोर्ड अपडेट</button>
 </div>
 
-<!-- REGISTRATION -->
 <div id="tab-reg" class="hidden">
 <h3>📝 विवाह पंजीयन</h3>
 <label>गांव का नाम</label>
@@ -165,7 +149,6 @@ input,select{width:100%;padding:11px;border:1px solid #d6d3d1;border-radius:9px;
 <div id="regMsg" class="message"></div>
 </div>
 
-<!-- DONATION -->
 <div id="tab-don" class="hidden">
 <h3>🙏 दान राशि प्राप्ति</h3>
 <label>गांव का नाम</label>
@@ -186,7 +169,6 @@ input,select{width:100%;padding:11px;border:1px solid #d6d3d1;border-radius:9px;
 <div id="donMsg" class="message"></div>
 </div>
 
-<!-- EXPENSE -->
 <div id="tab-exp" class="hidden">
 <h3>📒 खर्च / व्यय विवरण</h3>
 <label>खर्च की मद</label>
@@ -201,7 +183,6 @@ input,select{width:100%;padding:11px;border:1px solid #d6d3d1;border-radius:9px;
 <div id="expMsg" class="message"></div>
 </div>
 
-<!-- OPERATOR -->
 <div id="tab-op" class="hidden">
 <h3>👥 नया ऑपरेटर बनाएं</h3>
 <label>यूजरनेम</label>
@@ -225,8 +206,8 @@ input,select{width:100%;padding:11px;border:1px solid #d6d3d1;border-radius:9px;
 
 <script>
 
-// GOOGLE APPS SCRIPT API
-const API_URL = "https://script.google.com/macros/library/d/1FaqCgU0Qr24Y66x-Da4SgyOealDyP_IyW6zj_xhvheEi0NeAHycK_W14/3";
+// आपका नया GOOGLE APPS SCRIPT WEB APP URL
+const API_URL = "https://script.google.com/macros/s/AKfycbzeclWgmPQdS180kyU6aufd5he2_uWVkF_vnvQ4AfKwOA013TjfLiNGHuRsWN_oMr8fzQ/exec";
 
 let TOKEN = "";
 let ROLE = "";
@@ -251,29 +232,28 @@ function money(n){
 
 // PUBLIC DASHBOARD
 async function loadPublicDashboard(){
+ const status=document.getElementById("publicStatus");
+ status.textContent="डैशबोर्ड लोड हो रहा है...";
  try{
   const r=await call("publicDashboard");
+  if(!r.success) throw new Error(r.message||"डेटा प्राप्त नहीं हुआ");
 
-  if(!r.success) throw new Error("लोड नहीं हुआ");
-
-  document.getElementById("publicReg").textContent=r.registrations;
+  document.getElementById("publicReg").textContent=r.registrations??0;
   document.getElementById("publicDon").textContent=money(r.donation);
   document.getElementById("publicExp").textContent=money(r.expenses);
   document.getElementById("publicBal").textContent=money(r.balance);
-  document.getElementById("publicStatus").textContent="डैशबोर्ड अपडेट हो गया";
-
+  status.textContent="डैशबोर्ड अपडेट हो गया";
  }catch(e){
-  document.getElementById("publicStatus").textContent="डैशबोर्ड उपलब्ध नहीं है";
+  status.textContent="डेटा लोड नहीं हुआ: "+e.message;
+  console.error(e);
  }
 }
 
 // SEPARATE LOGIN
 async function login(role){
-
  const isAdmin=role==="admin";
  const user=document.getElementById(isAdmin?"adminUser":"operatorUser").value.trim();
  const pass=document.getElementById(isAdmin?"adminPass":"operatorPass").value;
-
  const msg=document.getElementById(isAdmin?"adminMsg":"operatorMsg");
 
  if(!user||!pass){
@@ -304,7 +284,6 @@ async function login(role){
   sessionStorage.setItem("spr_username",USERNAME);
 
   openApp(r.name);
-
  }catch(e){
   msg.textContent="नेटवर्क समस्या: "+e.message;
  }
@@ -312,14 +291,12 @@ async function login(role){
 
 // OPEN DASHBOARD
 function openApp(name){
-
  document.getElementById("homePage").classList.add("hidden");
  document.getElementById("appPage").classList.remove("hidden");
 
  document.getElementById("welcome").textContent="नमस्कार, "+name;
-
  document.getElementById("roleInfo").textContent=
- ROLE==="admin"?"👑 मुख्य व्यवस्थापक":"👤 ऑपरेटर";
+  ROLE==="admin"?"👑 मुख्य व्यवस्थापक":"👤 ऑपरेटर";
 
  document.querySelectorAll(".adminOnly").forEach(el=>{
   el.classList.toggle("hidden",ROLE!=="admin");
@@ -331,10 +308,8 @@ function openApp(name){
 
 // PRIVATE DASHBOARD
 async function refreshDashboard(){
-
  try{
   const r=await call("dashboard");
-
   if(!r.success){
    logout();
    return;
@@ -344,21 +319,18 @@ async function refreshDashboard(){
   document.getElementById("sDon").textContent=money(r.donation);
   document.getElementById("sExp").textContent=money(r.expenses);
   document.getElementById("sBal").textContent=money(r.balance);
-
  }catch(e){
-  alert("डैशबोर्ड अपडेट नहीं हुआ");
+  alert("डैशबोर्ड अपडेट नहीं हुआ: "+e.message);
  }
 }
 
 // TAB
 function showTab(t){
-
  if(t==="op" && ROLE!=="admin") return;
 
  ["reg","don","exp","op"].forEach(x=>{
   document.getElementById("tab-"+x).classList.add("hidden");
  });
-
  document.getElementById("tab-"+t).classList.remove("hidden");
 }
 
@@ -369,13 +341,12 @@ function v(id){
 
 function setMsg(id,message,success){
  const el=document.getElementById(id);
- el.textContent=message;
+ el.textContent=message||"";
  el.className="message "+(success?"success":"");
 }
 
 // REGISTRATION
 async function saveReg(){
-
  if(!v("rVillage")||!v("rGroom")||!v("rBride")){
   return setMsg("regMsg","गांव, वर और वधू का नाम भरें",false);
  }
@@ -404,7 +375,6 @@ async function saveReg(){
    refreshDashboard();
    loadPublicDashboard();
   }
-
  }catch(e){
   setMsg("regMsg","नेटवर्क समस्या: "+e.message,false);
  }
@@ -412,13 +382,11 @@ async function saveReg(){
 
 // DONATION
 async function saveDon(){
-
  if(!v("dAmount")||Number(v("dAmount"))<=0){
   return setMsg("donMsg","दान राशि सही भरें",false);
  }
 
  const type=v("dType");
-
  if(type!=="गुप्त" && !v("dName")){
   return setMsg("donMsg","दानदाता का नाम भरें",false);
  }
@@ -441,7 +409,6 @@ async function saveDon(){
    refreshDashboard();
    loadPublicDashboard();
   }
-
  }catch(e){
   setMsg("donMsg","नेटवर्क समस्या: "+e.message,false);
  }
@@ -449,7 +416,6 @@ async function saveDon(){
 
 // EXPENSE
 async function saveExp(){
-
  if(!v("eItem")||!v("eAmount")||Number(v("eAmount"))<=0){
   return setMsg("expMsg","खर्च की मद और सही राशि भरें",false);
  }
@@ -475,7 +441,6 @@ async function saveExp(){
    refreshDashboard();
    loadPublicDashboard();
   }
-
  }catch(e){
   setMsg("expMsg","नेटवर्क समस्या: "+e.message,false);
  }
@@ -483,7 +448,6 @@ async function saveExp(){
 
 // ADD OPERATOR
 async function addOp(){
-
  if(ROLE!=="admin") return;
 
  if(!v("oUser")||!v("oPass")||!v("oName")){
@@ -504,19 +468,16 @@ async function addOp(){
   if(r.success){
    ["oUser","oPass","oName"].forEach(id=>document.getElementById(id).value="");
   }
-
  }catch(e){
-  setMsg("opMsg","नेटवर्क समस्या",false);
+  setMsg("opMsg","नेटवर्क समस्या: "+e.message,false);
  }
 }
 
 // LOGOUT
 function logout(){
-
  TOKEN="";
  ROLE="";
  USERNAME="";
-
  sessionStorage.clear();
 
  document.getElementById("appPage").classList.add("hidden");
