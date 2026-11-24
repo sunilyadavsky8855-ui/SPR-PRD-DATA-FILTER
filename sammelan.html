@@ -4,638 +4,546 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>सम्मेलन वर-वधु पंजीयन पोर्टल</title>
+<title>यादव समाज सामूहिक सम्मेलन</title>
+
 <style>
 *{box-sizing:border-box}
-body{font-family:Arial,sans-serif;background:#f3f5f9;margin:0;padding:15px;color:#222}
-.container{max-width:1150px;margin:auto}
-h1{text-align:center;color:#174b83}
-h2{color:#174b83}
-.card{background:white;padding:18px;margin:15px 0;border-radius:10px;box-shadow:0 2px 8px #0001}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
-label{font-weight:bold;display:block;margin-bottom:5px}
-input,select{width:100%;padding:11px;border:1px solid #bbb;border-radius:6px;font-size:16px}
-button,.btn{border:0;padding:11px 17px;border-radius:6px;background:#1769aa;color:white;font-size:15px;cursor:pointer;margin:5px 3px}
-button:hover,.btn:hover{opacity:.88}
-.green{background:#168044}
-.orange{background:#d87913}
-.red{background:#c62828}
-.gray{background:#555}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
-.stat{background:#eaf3ff;padding:15px;border-radius:8px;text-align:center}
-.stat strong{display:block;font-size:23px;color:#174b83;margin-top:7px}
-.income{background:#e8f5e9}
-.expense{background:#ffebee}
-.balance{background:#e3f2fd}
-.table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;min-width:750px}
-th,td{border:1px solid #ddd;padding:9px;text-align:center}
-th{background:#174b83;color:white}
-tr:nth-child(even){background:#f7f9fc}
-.hidden{display:none!important}
-.note{color:#666;font-size:13px}
-.nav{display:flex;flex-wrap:wrap;gap:5px;margin:10px 0}
-.nav button{margin:2px}
-.public-table{min-width:400px}
+body{
+ margin:0;
+ font-family:system-ui,"Noto Sans Devanagari",sans-serif;
+ background:#fff7ed;
+ color:#1c1917;
+}
+.top{
+ background:#ea580c;
+ color:white;
+ padding:18px 10px;
+ text-align:center;
+}
+.top h1{margin:0;font-size:23px}
+.top p{margin:5px 0 0;font-size:13px}
+.card{
+ max-width:480px;
+ margin:18px auto;
+ background:white;
+ border:1px solid #fed7aa;
+ border-radius:14px;
+ padding:18px;
+ box-shadow:0 6px 20px rgba(0,0,0,.06);
+}
+h2{margin:0 0 12px}
+label{
+ font-size:14px;
+ font-weight:700;
+ display:block;
+ margin:12px 0 5px;
+}
+input,select,textarea{
+ width:100%;
+ padding:11px;
+ border:1px solid #e7e5e4;
+ border-radius:10px;
+ font-size:15px;
+ background:white;
+}
+button{
+ width:100%;
+ padding:12px;
+ border:0;
+ border-radius:10px;
+ background:#ea580c;
+ color:white;
+ font-weight:800;
+ font-size:15px;
+ margin-top:14px;
+ cursor:pointer;
+}
+button.sec{
+ background:white;
+ color:#ea580c;
+ border:1px solid #ea580c;
+}
+.grid{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:12px;
+}
+.stat{
+ background:#fff7ed;
+ border:1px solid #fed7aa;
+ border-radius:12px;
+ padding:12px;
+ text-align:center;
+}
+.stat b{font-size:22px;display:block}
+.stat span{font-size:12px}
+.tabs{
+ display:flex;
+ gap:8px;
+ flex-wrap:wrap;
+}
+.tabs button{
+ width:auto;
+ flex:1 1 42%;
+ padding:10px 8px;
+ margin:0;
+}
+.hidden{display:none}
+.msg{
+ margin-top:10px;
+ font-size:14px;
+ color:#dc2626;
+ text-align:center;
+}
+.ok{color:#16a34a}
+.small{
+ font-size:12px;
+ color:#78716c;
+ text-align:center;
+ margin-top:10px;
+}
+.logout{
+ width:auto;
+ padding:8px 12px;
+ background:#dc2626;
+ margin:0;
+}
+.footer{
+ text-align:center;
+ color:#78716c;
+ font-size:12px;
+ padding:15px;
+}
 </style>
 </head>
+
 <body>
-<div class="container">
+
+<div class="top">
+ <h1>🏵️ यादव समाज सामूहिक सम्मेलन</h1>
+ <p>पंजीयन • दान राशि • व्यय विवरण • सम्मेलन प्रबंधन</p>
+</div>
 
 <!-- LOGIN -->
-<div id="loginArea" class="card">
-<h1>सम्मेलन पंजीयन पोर्टल</h1>
-<h2>लॉगिन करें</h2>
-<form id="loginForm">
-<div class="grid">
-<div>
-<label>यूजर ID</label>
-<input id="loginId" required placeholder="अपना यूजर ID">
-</div>
-<div>
+<div id="loginBox" class="card">
+
+<h2>🔐 लॉगिन करें</h2>
+
+<label>यूजरनेम</label>
+<input id="u" placeholder="यूजरनेम दर्ज करें">
+
 <label>पासवर्ड</label>
-<input id="loginPassword" type="password" required placeholder="पासवर्ड">
-</div>
-</div>
-<br>
-<button class="green" type="submit">लॉगिन करें</button>
-</form>
-<p class="note">डेमो Admin ID: admin | Password: admin123</p>
-<a href="#public" class="btn">सार्वजनिक डैशबोर्ड देखें</a>
+<input id="p" type="password" placeholder="पासवर्ड दर्ज करें">
+
+<button onclick="doLogin()">लॉगिन करें</button>
+
+<div id="loginMsg" class="msg"></div>
+
+<div class="small">
+प्रारंभिक एडमिन: admin / Admin@123
 </div>
 
-<!-- ADMIN AREA -->
-<div id="adminArea" class="hidden">
-<h1>Admin Dashboard</h1>
-<div class="card">
-<div class="nav">
-<button onclick="showAdminTab('adminHome')">डैशबोर्ड</button>
-<button onclick="showAdminTab('operatorManage')">ऑपरेटर प्रबंधन</button>
-<button onclick="showAdminTab('adminRegistrations')">सभी पंजीयन</button>
-<button onclick="showAdminTab('adminFinance')">आय-व्यय</button>
-<button class="red" onclick="logout()">लॉगआउट</button>
-</div>
-<p id="adminWelcome"></p>
 </div>
 
-<div id="adminHome" class="adminTab">
-<div class="card">
-<h2>मुख्य रिपोर्ट</h2>
-<div class="stats">
-<div class="stat">कुल पंजीयन<strong id="adminTotal">0</strong></div>
-<div class="stat">वर<strong id="adminGroom">0</strong></div>
-<div class="stat">वधु<strong id="adminBride">0</strong></div>
-<div class="stat">कुल ऑपरेटर<strong id="adminOperators">0</strong></div>
-</div>
-</div>
+<!-- MAIN APP -->
+<div id="appBox" class="card hidden" style="max-width:720px">
+
+<div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+ <h2 id="welcome">नमस्कार</h2>
+ <button class="logout" onclick="logout()">लॉगआउट</button>
 </div>
 
-<div id="operatorManage" class="adminTab hidden">
-<div class="card">
-<h2>नया ऑपरेटर बनाएँ</h2>
-<form id="operatorForm">
+<!-- DASHBOARD -->
+<h3>📊 मुख्य डैशबोर्ड</h3>
+
 <div class="grid">
-<div>
-<label>ऑपरेटर का नाम *</label>
-<input id="operatorName" required>
+
+ <div class="stat">
+  <b id="sReg">0</b>
+  <span>कुल पंजीयन</span>
+ </div>
+
+ <div class="stat">
+  <b id="sDon">₹0</b>
+  <span>कुल प्राप्त दान</span>
+ </div>
+
+ <div class="stat">
+  <b id="sExp">₹0</b>
+  <span>कुल खर्च</span>
+ </div>
+
+ <div class="stat">
+  <b id="sBal">₹0</b>
+  <span>शेष राशि</span>
+ </div>
+
 </div>
-<div>
-<label>ऑपरेटर ID *</label>
-<input id="operatorId" required>
+
+<!-- MENU -->
+<div class="tabs" style="margin-top:16px">
+
+ <button class="sec" onclick="showTab('reg')">
+ + नया पंजीयन
+ </button>
+
+ <button class="sec" onclick="showTab('don')">
+ + दान राशि
+ </button>
+
+ <button class="sec" onclick="showTab('exp')">
+ + व्यय विवरण
+ </button>
+
+ <button class="sec" onclick="showTab('op')">
+ + ऑपरेटर बनाएं
+ </button>
+
+ <button class="sec" onclick="loadDash()">
+ 🔄 डैशबोर्ड अपडेट
+ </button>
+
 </div>
-<div>
-<label>मोबाइल नंबर *</label>
-<input id="operatorMobile" maxlength="10" pattern="[0-9]{10}" required>
+
+<!-- REGISTRATION -->
+<div id="tab-reg" class="hidden">
+
+<h3>📝 सम्मेलन पंजीयन</h3>
+
+<label>गांव का नाम</label>
+<input id="rVillage" placeholder="गांव का नाम लिखें">
+
+<label>वर / दूल्हे का नाम</label>
+<input id="rGroom" placeholder="वर का नाम">
+
+<label>वधू / दुल्हन का नाम</label>
+<input id="rBride" placeholder="वधू का नाम">
+
+<label>पिता का नाम</label>
+<input id="rFather" placeholder="पिता का नाम">
+
+<label>मोबाइल नंबर</label>
+<input id="rMobile" type="tel" maxlength="10" placeholder="10 अंकों का मोबाइल नंबर">
+
+<label>पंजीयन राशि (₹)</label>
+<input id="rAmount" type="number" min="0" placeholder="राशि दर्ज करें">
+
+<button onclick="saveReg()">पंजीयन सुरक्षित करें</button>
+
+<div id="regMsg" class="msg"></div>
+
 </div>
-<div>
-<label>पासवर्ड *</label>
-<input id="operatorPassword" required>
+
+<!-- DONATION -->
+<div id="tab-don" class="hidden">
+
+<h3>🙏 दान राशि प्राप्ति</h3>
+
+<label>गांव का नाम</label>
+<input id="dVillage" placeholder="गांव का नाम">
+
+<label>दानदाता का नाम</label>
+<input id="dName" placeholder="नाम लिखें">
+
+<label>पिता का नाम</label>
+<input id="dFather" placeholder="पिता का नाम">
+
+<label>दान राशि (₹)</label>
+<input id="dAmount" type="number" min="0" placeholder="राशि लिखें">
+
+<label>दान का प्रकार</label>
+<select id="dType">
+ <option>सामान्य दान</option>
+ <option>गुप्त दान</option>
+ <option>विशेष दान</option>
+</select>
+
+<button onclick="saveDon()">दान राशि सुरक्षित करें</button>
+
+<div id="donMsg" class="msg"></div>
+
 </div>
+
+<!-- EXPENSE -->
+<div id="tab-exp" class="hidden">
+
+<h3>📒 खर्च / व्यय विवरण</h3>
+
+<label>खर्च की सामग्री / मद</label>
+<input id="eItem" placeholder="जैसे भोजन, टेंट, साउंड आदि">
+
+<label>विवरण</label>
+<input id="eDesc" placeholder="खर्च का विवरण">
+
+<label>भुगतान करने वाले का नाम</label>
+<input id="ePaid" placeholder="नाम लिखें">
+
+<label>खर्च की राशि (₹)</label>
+<input id="eAmount" type="number" min="0" placeholder="राशि लिखें">
+
+<button onclick="saveExp()">खर्च सुरक्षित करें</button>
+
+<div id="expMsg" class="msg"></div>
+
 </div>
+
+<!-- OPERATOR -->
+<div id="tab-op" class="hidden">
+
+<h3>👤 नया ऑपरेटर बनाएं</h3>
+
+<label>नया यूजरनेम</label>
+<input id="oUser" placeholder="यूजरनेम बनाएं">
+
+<label>पासवर्ड</label>
+<input id="oPass" type="password" placeholder="पासवर्ड बनाएं">
+
+<label>ऑपरेटर का नाम</label>
+<input id="oName" placeholder="पूरा नाम लिखें">
+
+<button onclick="addOp()">ऑपरेटर सुरक्षित करें</button>
+
+<div id="opMsg" class="msg"></div>
+
+<div class="small">
+केवल एडमिन ही नया ऑपरेटर बना सकता है।
+</div>
+
+</div>
+
+</div>
+
+<div class="footer">
+🏵️ यादव समाज सामूहिक सम्मेलन
 <br>
-<button type="submit" class="green">ऑपरेटर जोड़ें</button>
-</form>
-</div>
-
-<div class="card">
-<h2>ऑपरेटर सूची</h2>
-<div class="table-wrap">
-<table>
-<thead><tr>
-<th>क्रमांक</th><th>नाम</th><th>ऑपरेटर ID</th><th>मोबाइल</th><th>भूमिका</th>
-</tr></thead>
-<tbody id="operatorTable"></tbody>
-</table>
-</div>
-</div>
-</div>
-
-<div id="adminRegistrations" class="adminTab hidden">
-<div class="card">
-<h2>सभी पंजीयन</h2>
-<input id="adminSearch" placeholder="नाम, गाँव, मोबाइल या ऑपरेटर खोजें">
-<br><br>
-<button onclick="downloadRegistrations()">पंजीयन CSV डाउनलोड</button>
-<div class="table-wrap">
-<table>
-<thead><tr>
-<th>क्रमांक</th><th>प्रकार</th><th>पंजीयन नं.</th><th>नाम</th>
-<th>मोबाइल</th><th>गाँव</th><th>राशि</th><th>ऑपरेटर</th><th>तारीख</th>
-</tr></thead>
-<tbody id="adminRegistrationTable"></tbody>
-</table>
-</div>
-</div>
-</div>
-
-<div id="adminFinance" class="adminTab hidden">
-<div class="card">
-<h2>आय एवं व्यय डैशबोर्ड</h2>
-<div class="stats">
-<div class="stat income">पंजीयन आय<strong id="fReg">₹0</strong></div>
-<div class="stat income">दान आय<strong id="fDonation">₹0</strong></div>
-<div class="stat income">अन्य आय<strong id="fOther">₹0</strong></div>
-<div class="stat income">कुल आय<strong id="fIncome">₹0</strong></div>
-<div class="stat expense">कुल व्यय<strong id="fExpense">₹0</strong></div>
-<div class="stat balance">शेष राशि<strong id="fBalance">₹0</strong></div>
-</div>
-</div>
-
-<div class="card">
-<h2>दान से आय</h2>
-<form id="donationForm">
-<div class="grid">
-<div><label>दानदाता का नाम</label><input id="donorName" required></div>
-<div><label>तारीख</label><input id="donationDate" type="date" required></div>
-<div><label>राशि (₹)</label><input id="donationAmount" type="number" min="0.01" step="0.01" required></div>
-<div><label>विवरण</label><input id="donationDetail"></div>
-</div>
-<button class="green">दान आय जोड़ें</button>
-</form>
-</div>
-
-<div class="card">
-<h2>अन्य आय</h2>
-<form id="otherIncomeForm">
-<div class="grid">
-<div><label>आय का स्रोत</label><input id="otherSource" required></div>
-<div><label>तारीख</label><input id="otherDate" type="date" required></div>
-<div><label>राशि (₹)</label><input id="otherAmount" type="number" min="0.01" step="0.01" required></div>
-<div><label>विवरण</label><input id="otherDetail"></div>
-</div>
-<button class="green">अन्य आय जोड़ें</button>
-</form>
-</div>
-
-<div class="card">
-<h2>व्यय दर्ज करें</h2>
-<form id="expenseForm">
-<div class="grid">
-<div><label>खर्च का नाम</label><input id="expenseName" required></div>
-<div><label>तारीख</label><input id="expenseDate" type="date" required></div>
-<div><label>राशि (₹)</label><input id="expenseAmount" type="number" min="0.01" step="0.01" required></div>
-<div><label>विवरण</label><input id="expenseDetail"></div>
-</div>
-<button class="red">व्यय जोड़ें</button>
-</form>
-</div>
-
-<div class="card">
-<h2>दान आय सूची</h2>
-<div class="table-wrap"><table>
-<thead><tr><th>नाम</th><th>तारीख</th><th>राशि</th><th>विवरण</th><th>हटाएँ</th></tr></thead>
-<tbody id="donationTable"></tbody>
-</table></div>
-</div>
-
-<div class="card">
-<h2>अन्य आय सूची</h2>
-<div class="table-wrap"><table>
-<thead><tr><th>स्रोत</th><th>तारीख</th><th>राशि</th><th>विवरण</th><th>हटाएँ</th></tr></thead>
-<tbody id="otherIncomeTable"></tbody>
-</table></div>
-</div>
-
-<div class="card">
-<h2>व्यय सूची</h2>
-<div class="table-wrap"><table>
-<thead><tr><th>खर्च</th><th>तारीख</th><th>राशि</th><th>विवरण</th><th>हटाएँ</th></tr></thead>
-<tbody id="expenseTable"></tbody>
-</table></div>
-</div>
-</div>
-</div>
-
-<!-- OPERATOR AREA -->
-<div id="operatorArea" class="hidden">
-<h1>Operator Dashboard</h1>
-<div class="card">
-<p id="operatorWelcome"></p>
-<div class="nav">
-<button onclick="showOperatorTab('operatorHome')">डैशबोर्ड</button>
-<button onclick="showOperatorTab('operatorEntry')">नया पंजीयन</button>
-<button onclick="showOperatorTab('operatorList')">मेरे पंजीयन</button>
-<button class="red" onclick="logout()">लॉगआउट</button>
-</div>
-</div>
-
-<div id="operatorHome" class="operatorTab">
-<div class="card">
-<h2>मेरी रिपोर्ट</h2>
-<div class="stats">
-<div class="stat">मेरे कुल पंजीयन<strong id="myTotal">0</strong></div>
-<div class="stat">वर<strong id="myGroom">0</strong></div>
-<div class="stat">वधु<strong id="myBride">0</strong></div>
-</div>
-</div>
-</div>
-
-<div id="operatorEntry" class="operatorTab hidden">
-<div class="card">
-<h2>नया पंजीयन दर्ज करें</h2>
-<form id="registrationForm">
-<div class="grid">
-<div><label>पंजीयन प्रकार *</label>
-<select id="type" required><option value="">चुनें</option><option>वर</option><option>वधु</option></select></div>
-<div><label>पंजीयन क्रमांक *</label><input id="regNo" required></div>
-<div><label>व्यक्ति का नाम *</label><input id="name" required></div>
-<div><label>पिता का नाम</label><input id="father"></div>
-<div><label>दादाजी का नाम</label><input id="grandfather"></div>
-<div><label>मोबाइल नंबर *</label><input id="mobile" type="tel" maxlength="10" pattern="[0-9]{10}" required></div>
-<div><label>गाँव का नाम *</label><input id="village" required></div>
-<div><label>तहसील *</label><input id="tehsil" required></div>
-<div><label>जिला *</label><input id="district" required></div>
-<div><label>पंजीयन राशि (₹) *</label><input id="amount" type="number" min="0" step="0.01" required></div>
-</div>
-<br>
-<button type="submit" class="green">पंजीयन सुरक्षित करें</button>
-<button type="reset" class="orange">फॉर्म साफ करें</button>
-</form>
-</div>
-</div>
-
-<div id="operatorList" class="operatorTab hidden">
-<div class="card">
-<h2>मेरे पंजीयन</h2>
-<div class="table-wrap"><table>
-<thead><tr><th>क्रमांक</th><th>प्रकार</th><th>पंजीयन नं.</th><th>नाम</th><th>मोबाइल</th><th>गाँव</th><th>राशि</th><th>तारीख</th></tr></thead>
-<tbody id="myRegistrationTable"></tbody>
-</table></div>
-</div>
-</div>
-</div>
-
-<!-- PUBLIC PORTAL -->
-<div id="publicDashboard" class="hidden">
-<h1>सम्मेलन पंजीयन - सार्वजनिक रिपोर्ट</h1>
-<div class="card">
-<h2>ग्रामवार पंजीयन जानकारी</h2>
-<div class="stats">
-<div class="stat">कुल पंजीयन<strong id="publicTotal">0</strong></div>
-<div class="stat">कुल गाँव<strong id="publicVillages">0</strong></div>
-</div>
-<br>
-<input id="villageSearch" placeholder="गाँव का नाम खोजें">
-<br><br>
-<div class="table-wrap"><table class="public-table">
-<thead><tr><th>क्रमांक</th><th>गाँव</th><th>वर</th><th>वधु</th><th>कुल</th></tr></thead>
-<tbody id="villageTable"></tbody>
-</table></div>
-<br>
-<a href="#" class="btn">लॉगिन पेज पर वापस जाएँ</a>
-</div>
-<p class="note">यह रिपोर्ट केवल सामूहिक पंजीयन संख्या दिखाती है।</p>
-</div>
-
+सामाजिक एकता • सहयोग • समर्पण
 </div>
 
 <script>
-const KEYS={
- registrations:"sammelan_registrations",
- donations:"sammelan_donations",
- other:"sammelan_other_income",
- expenses:"sammelan_expenses",
- operators:"sammelan_operators"
-};
 
-let currentUser=null;
+const API_URL =
+"https://script.google.com/macros/s/AKfycbzeclWgmPQdS180kyU6aufd5he2_uWVkF_vnvQ4AfKwOA013TjfLiNGHuRsWN_oMr8fzQ/exec";
 
-function read(key){
+let TOKEN = localStorage.getItem("spr_token") || "";
+
+async function call(action,data={}){
+
+ const r=await fetch(API_URL,{
+  method:"POST",
+  headers:{
+   "Content-Type":"text/plain;charset=utf-8"
+  },
+  body:JSON.stringify({
+   action,
+   token:TOKEN,
+   ...data
+  })
+ });
+
+ return r.json();
+}
+
+// LOGIN
+async function doLogin(){
+
+ const username=document.getElementById("u").value.trim();
+ const password=document.getElementById("p").value.trim();
+
+ document.getElementById("loginMsg").textContent="लॉगिन हो रहा है...";
+
  try{
-  const x=JSON.parse(localStorage.getItem(key)||"[]");
-  return Array.isArray(x)?x:[];
- }catch(e){return []}
-}
-function write(key,data){localStorage.setItem(key,JSON.stringify(data))}
-function money(n){return "₹"+Number(n||0).toLocaleString("en-IN",{maximumFractionDigits:2})}
-function esc(v){
- return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
-}
-function today(){
- const d=new Date(),offset=d.getTimezoneOffset();
- return new Date(d.getTime()-offset*60000).toISOString().slice(0,10);
-}
-["donationDate","otherDate","expenseDate"].forEach(id=>{
- document.getElementById(id).value=today();
-});
 
-function showOnly(id){
- ["loginArea","adminArea","operatorArea","publicDashboard"].forEach(x=>
-  document.getElementById(x).classList.add("hidden")
- );
- document.getElementById(id).classList.remove("hidden");
-}
-function showAdminTab(id){
- document.querySelectorAll(".adminTab").forEach(x=>x.classList.add("hidden"));
- document.getElementById(id).classList.remove("hidden");
-}
-function showOperatorTab(id){
- document.querySelectorAll(".operatorTab").forEach(x=>x.classList.add("hidden"));
- document.getElementById(id).classList.remove("hidden");
-}
-function logout(){
- currentUser=null;
- sessionStorage.removeItem("sammelan_demo_user");
- showOnly("loginArea");
- location.hash="";
-}
-function getOperators(){return read(KEYS.operators)}
+  const res=await call("login",{username,password});
 
-document.getElementById("loginForm").addEventListener("submit",function(e){
- e.preventDefault();
- const id=document.getElementById("loginId").value.trim();
- const password=document.getElementById("loginPassword").value;
-
- if(id==="admin" && password==="admin123"){
-  currentUser={role:"admin",id:"admin",name:"Admin"};
-  sessionStorage.setItem("sammelan_demo_user",JSON.stringify(currentUser));
-  openAdmin();
-  return;
- }
-
- const op=getOperators().find(x=>x.id.toLowerCase()===id.toLowerCase() && x.password===password);
- if(!op){
-  alert("यूजर ID या पासवर्ड गलत है।");
-  return;
- }
- currentUser={role:"operator",id:op.id,name:op.name};
- sessionStorage.setItem("sammelan_demo_user",JSON.stringify(currentUser));
- openOperator();
-});
-
-function openAdmin(){
- showOnly("adminArea");
- document.getElementById("adminWelcome").textContent="लॉगिन: Admin";
- showAdminTab("adminHome");
- renderAll();
-}
-function openOperator(){
- showOnly("operatorArea");
- document.getElementById("operatorWelcome").textContent=
-  "ऑपरेटर: "+currentUser.name+" | ID: "+currentUser.id;
- showOperatorTab("operatorHome");
- renderAll();
-}
-
-// ऑपरेटर बनाना
-document.getElementById("operatorForm").addEventListener("submit",function(e){
- e.preventDefault();
- if(!currentUser || currentUser.role!=="admin")return;
-
- const op={
-  name:document.getElementById("operatorName").value.trim(),
-  id:document.getElementById("operatorId").value.trim(),
-  mobile:document.getElementById("operatorMobile").value.trim(),
-  password:document.getElementById("operatorPassword").value,
-  role:"operator"
- };
-
- if(!/^[0-9]{10}$/.test(op.mobile)){
-  alert("मोबाइल नंबर 10 अंकों का होना चाहिए।");return;
- }
- if(op.id.toLowerCase()==="admin" || getOperators().some(x=>x.id.toLowerCase()===op.id.toLowerCase())){
-  alert("यह Operator ID पहले से मौजूद है या मान्य नहीं है।");return;
- }
- const list=getOperators();
- list.push(op);
- write(KEYS.operators,list);
- alert("ऑपरेटर जोड़ दिया गया।");
- this.reset();
- renderAll();
-});
-
-function renderOperators(){
- const list=getOperators();
- document.getElementById("operatorTable").innerHTML=list.map((o,i)=>`
-  <tr><td>${i+1}</td><td>${esc(o.name)}</td><td>${esc(o.id)}</td>
-  <td>${esc(o.mobile)}</td><td>Operator</td></tr>
- `).join("");
- document.getElementById("adminOperators").textContent=list.length;
-}
-
-// पंजीयन दर्ज करना
-document.getElementById("registrationForm").addEventListener("submit",function(e){
- e.preventDefault();
- if(!currentUser || currentUser.role!=="operator")return;
-
- const r={
-  type:document.getElementById("type").value,
-  regNo:document.getElementById("regNo").value.trim(),
-  name:document.getElementById("name").value.trim(),
-  father:document.getElementById("father").value.trim(),
-  grandfather:document.getElementById("grandfather").value.trim(),
-  mobile:document.getElementById("mobile").value.trim(),
-  village:document.getElementById("village").value.trim(),
-  tehsil:document.getElementById("tehsil").value.trim(),
-  district:document.getElementById("district").value.trim(),
-  amount:Number(document.getElementById("amount").value),
-  date:today(),
-  operatorId:currentUser.id,
-  operatorName:currentUser.name
- };
-
- if(!/^[0-9]{10}$/.test(r.mobile)){
-  alert("सही 10 अंकों का मोबाइल नंबर दर्ज करें।");return;
- }
- if(!Number.isFinite(r.amount)||r.amount<0){
-  alert("सही पंजीयन राशि दर्ज करें।");return;
- }
-
- const records=read(KEYS.registrations);
- if(records.some(x=>
-  String(x.regNo||"").toLowerCase()===r.regNo.toLowerCase() ||
-  String(x.mobile||"")===r.mobile
- )){
-  alert("यह पंजीयन क्रमांक या मोबाइल नंबर पहले से दर्ज है।");return;
- }
- records.push(r);
- write(KEYS.registrations,records);
- alert("पंजीयन सफलतापूर्वक सुरक्षित हो गया।");
- this.reset();
- renderAll();
- showOperatorTab("operatorHome");
-});
-
-// वित्तीय प्रविष्टियाँ: केवल Admin
-function addFinance(formId,key,fields){
- document.getElementById(formId).addEventListener("submit",function(e){
-  e.preventDefault();
-  if(!currentUser || currentUser.role!=="admin")return;
-  const item={id:Date.now(),date:document.getElementById(fields.date).value,
-   name:document.getElementById(fields.name).value.trim(),
-   amount:Number(document.getElementById(fields.amount).value),
-   detail:document.getElementById(fields.detail).value.trim()
-  };
-  if(!item.name||!item.date||!Number.isFinite(item.amount)||item.amount<=0){
-   alert("सभी जरूरी जानकारी सही भरें।");return;
+  if(!res.success){
+   document.getElementById("loginMsg").textContent=
+   res.message || "लॉगिन असफल हुआ";
+   return;
   }
-  const list=read(key);list.push(item);write(key,list);
-  alert("प्रविष्टि सुरक्षित हो गई।");
-  this.reset();
-  document.getElementById(fields.date).value=today();
-  renderAll();
- });
-}
-addFinance("donationForm",KEYS.donations,{
- name:"donorName",date:"donationDate",amount:"donationAmount",detail:"donationDetail"
-});
-addFinance("otherIncomeForm",KEYS.other,{
- name:"otherSource",date:"otherDate",amount:"otherAmount",detail:"otherDetail"
-});
-addFinance("expenseForm",KEYS.expenses,{
- name:"expenseName",date:"expenseDate",amount:"expenseAmount",detail:"expenseDetail"
-});
 
-function deleteFinance(key,id){
- if(!currentUser || currentUser.role!=="admin")return;
- if(!confirm("क्या यह प्रविष्टि हटानी है?"))return;
- write(key,read(key).filter(x=>x.id!==id));
- renderAll();
-}
+  TOKEN=res.token;
 
-function renderFinance(){
- const regs=read(KEYS.registrations);
- const donations=read(KEYS.donations);
- const others=read(KEYS.other);
- const expenses=read(KEYS.expenses);
- const regTotal=regs.reduce((s,r)=>s+Number(r.amount||0),0);
- const donTotal=donations.reduce((s,r)=>s+Number(r.amount||0),0);
- const otherTotal=others.reduce((s,r)=>s+Number(r.amount||0),0);
- const expTotal=expenses.reduce((s,r)=>s+Number(r.amount||0),0);
- document.getElementById("fReg").textContent=money(regTotal);
- document.getElementById("fDonation").textContent=money(donTotal);
- document.getElementById("fOther").textContent=money(otherTotal);
- document.getElementById("fIncome").textContent=money(regTotal+donTotal+otherTotal);
- document.getElementById("fExpense").textContent=money(expTotal);
- document.getElementById("fBalance").textContent=money(regTotal+donTotal+otherTotal-expTotal);
+  localStorage.setItem("spr_token",TOKEN);
 
- function table(id,list,key){
-  document.getElementById(id).innerHTML=list.map(r=>`
-   <tr><td>${esc(r.name)}</td><td>${esc(r.date)}</td><td>${money(r.amount)}</td>
-   <td>${esc(r.detail)}</td><td><button class="red" onclick="deleteFinance('${key}',${r.id})">हटाएँ</button></td></tr>
-  `).join("");
+  document.getElementById("loginBox").classList.add("hidden");
+  document.getElementById("appBox").classList.remove("hidden");
+
+  document.getElementById("welcome").textContent=
+  "नमस्कार, "+(res.name||res.role);
+
+  loadDash();
+  showTab("reg");
+
+ }catch(e){
+
+  document.getElementById("loginMsg").textContent=
+  "नेटवर्क समस्या: "+e.message;
+
  }
- table("donationTable",donations,KEYS.donations);
- table("otherIncomeTable",others,KEYS.other);
- table("expenseTable",expenses,KEYS.expenses);
+
 }
 
-function renderRegistrations(){
- const regs=read(KEYS.registrations);
- const groom=regs.filter(r=>r.type==="वर").length;
- const bride=regs.filter(r=>r.type==="वधु").length;
- document.getElementById("adminTotal").textContent=regs.length;
- document.getElementById("adminGroom").textContent=groom;
- document.getElementById("adminBride").textContent=bride;
+// DASHBOARD
+async function loadDash(){
 
- const search=(document.getElementById("adminSearch").value||"").toLowerCase().trim();
- const filtered=regs.filter(r=>
-  [r.name,r.regNo,r.mobile,r.village,r.operatorName,r.operatorId]
-   .some(v=>String(v||"").toLowerCase().includes(search))
- );
- document.getElementById("adminRegistrationTable").innerHTML=filtered.map((r,i)=>`
-  <tr><td>${i+1}</td><td>${esc(r.type||"")}</td><td>${esc(r.regNo||"")}</td>
-  <td>${esc(r.name||"")}</td><td>${esc(r.mobile||"")}</td><td>${esc(r.village||"")}</td>
-  <td>${money(r.amount)}</td><td>${esc(r.operatorName||"पुराना रिकॉर्ड")}</td>
-  <td>${esc(r.date||"")}</td></tr>
- `).join("");
-}
+ try{
 
-function renderOperator(){
- if(!currentUser || currentUser.role!=="operator")return;
- const mine=read(KEYS.registrations).filter(r=>r.operatorId===currentUser.id);
- document.getElementById("myTotal").textContent=mine.length;
- document.getElementById("myGroom").textContent=mine.filter(r=>r.type==="वर").length;
- document.getElementById("myBride").textContent=mine.filter(r=>r.type==="वधु").length;
- document.getElementById("myRegistrationTable").innerHTML=mine.map((r,i)=>`
-  <tr><td>${i+1}</td><td>${esc(r.type||"")}</td><td>${esc(r.regNo||"")}</td>
-  <td>${esc(r.name||"")}</td><td>${esc(r.mobile||"")}</td>
-  <td>${esc(r.village||"")}</td><td>${money(r.amount)}</td><td>${esc(r.date||"")}</td></tr>
- `).join("");
-}
+  const res=await call("dashboard",{});
 
-function renderAll(){
- renderOperators();
- renderRegistrations();
- renderFinance();
- renderOperator();
- renderPublic();
-}
+  if(!res.success){
+   logout();
+   return;
+  }
 
-function downloadRegistrations(){
- if(!currentUser || currentUser.role!=="admin")return;
- const regs=read(KEYS.registrations);
- const headers=["प्रकार","पंजीयन क्रमांक","नाम","पिता","दादाजी","मोबाइल","गाँव","तहसील","जिला","राशि","ऑपरेटर","ऑपरेटर ID","तारीख"];
- const rows=regs.map(r=>[
-  r.type,r.regNo,r.name,r.father,r.grandfather,r.mobile,r.village,r.tehsil,r.district,r.amount,r.operatorName,r.operatorId,r.date
- ]);
- const csv=[headers,...rows].map(row=>row.map(v=>`"${String(v??"").replace(/"/g,'""')}"`).join(",")).join("\n");
- const blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8"});
- const url=URL.createObjectURL(blob);
- const a=document.createElement("a");a.href=url;a.download="Sammelan_Registrations.csv";a.click();
- URL.revokeObjectURL(url);
-}
+  document.getElementById("sReg").textContent=
+  res.registrations ?? 0;
 
-// सार्वजनिक डैशबोर्ड में केवल गाँववार गिनती
-function renderPublic(){
- const regs=read(KEYS.registrations),villages={};
- regs.forEach(r=>{
-  const name=String(r.village||"").trim();
-  if(!name)return;
-  const key=name.toLocaleLowerCase("hi");
-  if(!villages[key])villages[key]={name,groom:0,bride:0};
-  if(r.type==="वर")villages[key].groom++;
-  if(r.type==="वधु")villages[key].bride++;
- });
- const list=Object.values(villages).sort((a,b)=>a.name.localeCompare(b.name,"hi"));
- document.getElementById("publicTotal").textContent=regs.length;
- document.getElementById("publicVillages").textContent=list.length;
- const q=(document.getElementById("villageSearch").value||"").toLocaleLowerCase("hi");
- document.getElementById("villageTable").innerHTML=list.filter(v=>v.name.toLocaleLowerCase("hi").includes(q)).map((v,i)=>`
-  <tr><td>${i+1}</td><td>${esc(v.name)}</td><td>${v.groom}</td><td>${v.bride}</td><td>${v.groom+v.bride}</td></tr>
- `).join("");
-}
+  document.getElementById("sDon").textContent=
+  "₹"+(res.donation ?? 0);
 
-document.getElementById("adminSearch").addEventListener("input",renderRegistrations);
-document.getElementById("villageSearch").addEventListener("input",renderPublic);
+  document.getElementById("sExp").textContent=
+  "₹"+(res.expenses ?? 0);
 
-function changePage(){
- if(location.hash==="#public"){
-  showOnly("publicDashboard");
-  renderPublic();
- }else if(currentUser){
-  if(currentUser.role==="admin")openAdmin();
-  else openOperator();
- }else{
-  showOnly("loginArea");
+  document.getElementById("sBal").textContent=
+  "₹"+(res.balance ?? 0);
+
+ }catch(e){
+
+  console.log(e);
+
  }
-}
-window.addEventListener("hashchange",changePage);
-window.addEventListener("storage",renderAll);
 
-// पुराने ब्राउज़र रिकॉर्ड और नए डेमो लॉगिन को अलग रखा गया है।
-renderAll();
-changePage();
+}
+
+// TAB CHANGE
+function showTab(t){
+
+ ["reg","don","exp","op"].forEach(x=>{
+  document.getElementById("tab-"+x).classList.add("hidden");
+ });
+
+ document.getElementById("tab-"+t).classList.remove("hidden");
+
+}
+
+// REGISTRATION SAVE
+async function saveReg(){
+
+ const data={
+  village:v("rVillage"),
+  groom:v("rGroom"),
+  bride:v("rBride"),
+  father:v("rFather"),
+  mobile:v("rMobile"),
+  amount:v("rAmount")
+ };
+
+ const r=await call("saveReg",{data});
+
+ document.getElementById("regMsg").textContent=
+ r.success
+ ? "पंजीयन सफल! रसीद क्रमांक: "+r.receipt
+ : (r.message || "पंजीयन नहीं हुआ");
+
+ if(r.success){
+  loadDash();
+ }
+
+}
+
+// DONATION SAVE
+async function saveDon(){
+
+ const data={
+  village:v("dVillage"),
+  name:v("dName"),
+  father:v("dFather"),
+  amount:v("dAmount"),
+  type:v("dType")
+ };
+
+ const r=await call("saveDon",{data});
+
+ document.getElementById("donMsg").textContent=
+ r.success
+ ? "दान राशि सुरक्षित! रसीद क्रमांक: "+r.receipt
+ : (r.message || "दान राशि सुरक्षित नहीं हुई");
+
+ if(r.success){
+  loadDash();
+ }
+
+}
+
+// EXPENSE SAVE
+async function saveExp(){
+
+ const data={
+  item:v("eItem"),
+  description:v("eDesc"),
+  paidBy:v("ePaid"),
+  amount:v("eAmount")
+ };
+
+ const r=await call("saveExp",{data});
+
+ document.getElementById("expMsg").textContent=
+ r.success
+ ? "खर्च सुरक्षित! रसीद क्रमांक: "+r.receipt
+ : (r.message || "खर्च सुरक्षित नहीं हुआ");
+
+ if(r.success){
+  loadDash();
+ }
+
+}
+
+// ADD OPERATOR
+async function addOp(){
+
+ const data={
+  username:v("oUser"),
+  password:v("oPass"),
+  name:v("oName")
+ };
+
+ const r=await call("addOp",{data});
+
+ document.getElementById("opMsg").textContent=
+ r.message || (r.success ? "ऑपरेटर बन गया" : "ऑपरेटर नहीं बना");
+
+}
+
+// INPUT VALUE
+function v(id){
+
+ return document.getElementById(id).value.trim();
+
+}
+
+// LOGOUT
+function logout(){
+
+ localStorage.removeItem("spr_token");
+
+ TOKEN="";
+
+ location.reload();
+
+}
+
+// AUTO LOGIN
+if(TOKEN){
+
+ document.getElementById("loginBox").classList.add("hidden");
+ document.getElementById("appBox").classList.remove("hidden");
+
+ loadDash();
+ showTab("reg");
+
+}
+
 </script>
+
 </body>
 </html>
