@@ -23,7 +23,6 @@ h2,h3{color:#9a3412;margin-top:5px}
 .stat{background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:16px;text-align:center}
 .stat b{display:block;font-size:23px;color:#c2410c}
 .stat span{font-size:13px}
-.menu{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin:15px 0}
 button{border:0;background:#ea580c;color:white;padding:11px 16px;border-radius:9px;font-weight:700}
 button.secondary{background:white;color:#c2410c;border:1px solid #ea580c}
 button.danger{background:#dc2626}
@@ -212,18 +211,37 @@ async function call(action,data={}) {
  return await res.json();
 }
 function money(n){ return "₹"+Number(n||0).toLocaleString("en-IN"); }
+
+// --- HOME PAGE DASHBOARD - NAYA FIX WALA ---
 async function loadPublicDashboard(){
  const status=document.getElementById("publicStatus");
  status.textContent="डैशबोर्ड लोड हो रहा है...";
  try{
-  const r=await call("publicDashboard");
-  if(!r.success) throw new Error(r.message||"डेटा प्राप्त नहीं हुआ");
-  document.getElementById("publicReg").textContent=r.registrations??0;
-  document.getElementById("publicDon").textContent=money(r.donation);
-  document.getElementById("publicExp").textContent=money(r.expenses);
-  document.getElementById("publicBal").textContent=money(r.balance);
-  status.textContent="डैशबोर्ड अपडेट हो गया";
- }catch(e){ status.textContent="डेटा लोड नहीं हुआ: "+e.message; }
+  const res = await fetch(API_URL + "?action=publicDashboard");
+  const r = await res.json();
+  if(r.success){
+    document.getElementById("publicReg").textContent=r.registrations??0;
+    document.getElementById("publicDon").textContent=money(r.donation);
+    document.getElementById("publicExp").textContent=money(r.expenses);
+    document.getElementById("publicBal").textContent=money(r.balance);
+    status.textContent="डैशबोर्ड अपडेट हो गया";
+    return;
+  }
+  throw new Error("GET fail");
+ }catch(e1){
+   try{
+    const r=await call("publicDashboard");
+    if(!r.success) throw new Error(r.message||"डेटा प्राप्त नहीं हुआ");
+    document.getElementById("publicReg").textContent=r.registrations??0;
+    document.getElementById("publicDon").textContent=money(r.donation);
+    document.getElementById("publicExp").textContent=money(r.expenses);
+    document.getElementById("publicBal").textContent=money(r.balance);
+    status.textContent="डैशबोर्ड अपडेट हो गया";
+   }catch(e){
+     status.textContent="डेटा लोड नहीं हुआ: "+e.message+" - 5 Sec me fir try ho raha hai";
+     setTimeout(loadPublicDashboard, 5000);
+   }
+ }
 }
 async function login(role){
  const isAdmin=role==="admin";
@@ -268,8 +286,6 @@ function showTab(t){
 }
 function v(id){ return document.getElementById(id).value.trim(); }
 function setMsg(id,message,success){ const el=document.getElementById(id); el.textContent=message||""; el.className="message "+(success?"success":""); }
-
-// --- LIST WALA NAYA KAAM ---
 function filterTable(tbodyId, q){
  q=q.toLowerCase();
  document.querySelectorAll("#"+tbodyId+" tr").forEach(tr=>{
@@ -296,13 +312,12 @@ async function loadList(type){
   document.getElementById(msgId).textContent="कुल एंट्री: "+rows.length;
  }catch(e){ document.getElementById(msgId).textContent="सूची नहीं लोड हुई: "+e.message; }
 }
-
 async function saveReg(){
  if(!v("rVillage")||!v("rGroom")||!v("rBride")){ return setMsg("regMsg","गांव, वर और वधू का नाम भरें",false); }
  const mobile=v("rMobile");
  if(mobile && !/^[0-9]{10}$/.test(mobile)){ return setMsg("regMsg","मोबाइल नंबर 10 अंकों का होना चाहिए",false); }
  try{
-  const r=await call("saveReg",{data:{village:v("rVillage"),groom:v("rGroom"),bride:v("rBride"),father:v("rFather"),mobile:mobile,amount:v("rAmount")}});
+  const r=await call("saveReg",{data:{village:v("rVillage"),groom:v("rGroom"),bride:v("rBride"),father:v("rFather"),mobile:v("rMobile"),amount:v("rAmount")}});
   setMsg("regMsg",r.success?"पंजीयन सफल! रसीद: "+r.receipt:r.message,r.success);
   if(r.success){ ["rVillage","rGroom","rBride","rFather","rMobile","rAmount"].forEach(id=>document.getElementById(id).value=""); refreshDashboard(); loadPublicDashboard(); }
  }catch(e){ setMsg("regMsg","नेटवर्क समस्या: "+e.message,false); }
@@ -312,7 +327,7 @@ async function saveDon(){
  const type=v("dType");
  if(type!=="गुप्त" && !v("dName")){ return setMsg("donMsg","दानदाता का नाम भरें",false); }
  try{
-  const r=await call("saveDon",{data:{village:v("dVillage"),name:v("dName"),father:v("dFather"),amount:v("dAmount"),type:type}});
+  const r=await call("saveDon",{data:{village:v("dVillage"),name:v("dName"),father:v("dFather"),amount:v("dAmount"),type:v("dType")}});
   setMsg("donMsg",r.success?"दान सुरक्षित! रसीद: "+r.receipt:r.message,r.success);
   if(r.success){ ["dVillage","dName","dFather","dAmount"].forEach(id=>document.getElementById(id).value=""); refreshDashboard(); loadPublicDashboard(); }
  }catch(e){ setMsg("donMsg","नेटवर्क समस्या: "+e.message,false); }
