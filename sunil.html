@@ -1,0 +1,546 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Sunil Kumar Yadav - Data Analyst Portfolio">
+<title>Sunil Kumar Yadav | Data Analyst Portfolio</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root {
+ --bg:#080e1c;
+ --card:#111b30;
+ --text:#f4f7ff;
+ --muted:#a3afc5;
+ --accent:#6c8cff;
+ --accent2:#21d4fd;
+ --border:rgba(255,255,255,.10);
+ --shadow:0 15px 45px rgba(0,0,0,.20);
+}
+body.light {
+ --bg:#f4f7ff;
+ --card:#ffffff;
+ --text:#17213a;
+ --muted:#65718a;
+ --border:rgba(20,40,80,.12);
+ --shadow:0 15px 40px rgba(20,40,80,.08);
+}
+*{margin:0;padding:0;box-sizing:border-box;scroll-behavior:smooth}
+body{
+ background:var(--bg);color:var(--text);
+ font-family:Inter,sans-serif;line-height:1.7;
+ transition:.3s;
+}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer}
+.container{width:min(1120px,90%);margin:auto}
+header{
+ position:sticky;top:0;z-index:1000;
+ background:var(--bg);border-bottom:1px solid var(--border);
+}
+.nav{
+ min-height:75px;display:flex;justify-content:space-between;
+ align-items:center;gap:20px;
+}
+.logo{font-size:22px;font-weight:800;color:var(--accent)}
+.logo span{color:var(--text)}
+.navlinks{display:flex;gap:23px;align-items:center}
+.navlinks a{font-size:13px;color:var(--muted);font-weight:600}
+.navlinks a:hover{color:var(--accent)}
+.nav-actions{display:flex;gap:12px;align-items:center}
+.icon-btn{
+ border:1px solid var(--border);background:var(--card);
+ color:var(--text);width:38px;height:38px;border-radius:50%;
+}
+.menu-btn{display:none}
+.hero{
+ min-height:620px;display:flex;align-items:center;
+ padding:80px 0;
+ background:radial-gradient(ellipse at 80% 30%,rgba(67,105,255,.15),transparent 55%);
+}
+.hero-grid{display:grid;grid-template-columns:1.4fr .8fr;gap:60px;align-items:center}
+.tag{
+ display:inline-block;padding:7px 15px;border:1px solid var(--border);
+ border-radius:30px;color:var(--accent2);font-size:12px;
+ margin-bottom:22px;
+}
+h1{font-size:clamp(40px,6vw,68px);line-height:1.13;letter-spacing:-2px}
+.gradient{
+ background:linear-gradient(90deg,#6c8cff,#21d4fd);
+ -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.hero p{color:var(--muted);margin:22px 0;max-width:600px}
+.hero-buttons{display:flex;gap:13px;flex-wrap:wrap;margin-top:28px}
+.btn{
+ padding:12px 22px;border-radius:9px;border:1px solid var(--accent);
+ background:var(--accent);color:white;font-weight:700;
+ display:inline-flex;align-items:center;gap:9px;
+}
+.btn.secondary{background:transparent;color:var(--text);border-color:var(--border)}
+.btn:hover{transform:translateY(-3px);filter:brightness(1.1)}
+.profile-wrap{display:flex;justify-content:center}
+.profile{
+ width:280px;height:320px;border-radius:25px;
+ border:2px solid var(--accent);
+ background:linear-gradient(145deg,#1c3157,#101a30);
+ display:flex;align-items:center;justify-content:center;
+ box-shadow:0 0 65px rgba(80,120,255,.18);
+ overflow:hidden;
+}
+.profile img{width:100%;height:100%;object-fit:cover}
+.profile-placeholder{text-align:center;color:#aabfff}
+.profile-placeholder i{font-size:85px;margin-bottom:12px}
+section{padding:85px 0;scroll-margin-top:70px}
+.section-heading{text-align:center;margin-bottom:45px}
+.section-heading small{color:var(--accent);font-weight:800;letter-spacing:2px}
+.section-heading h2{font-size:35px;margin-top:8px}
+.section-heading p{color:var(--muted);font-size:14px}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+.panel{
+ background:var(--card);border:1px solid var(--border);
+ border-radius:16px;padding:28px;box-shadow:var(--shadow);
+}
+.panel h3{margin-bottom:13px}
+.panel p{color:var(--muted);font-size:14px}
+.info-row{
+ display:flex;justify-content:space-between;gap:15px;
+ padding:11px 0;border-bottom:1px solid var(--border);
+ font-size:13px;
+}
+.info-row span:first-child{color:var(--muted)}
+.skills-grid{
+ display:grid;grid-template-columns:repeat(4,1fr);gap:18px;
+}
+.skill{
+ background:var(--card);border:1px solid var(--border);
+ padding:23px;border-radius:13px;
+}
+.skill i{font-size:26px;color:var(--accent);margin-bottom:12px}
+.skill h3{font-size:16px}
+.skill p{font-size:12px;color:var(--muted);margin-top:5px}
+.education-grid,.projects-grid{
+ display:grid;grid-template-columns:repeat(2,1fr);gap:20px;
+}
+.edu-card,.project{
+ background:var(--card);border:1px solid var(--border);
+ padding:25px;border-radius:15px;transition:.25s;
+}
+.edu-card:hover,.project:hover{transform:translateY(-5px);border-color:var(--accent)}
+.edu-card i,.project i{color:var(--accent);font-size:25px;margin-bottom:12px}
+.edu-card p,.project p{color:var(--muted);font-size:13px}
+.project-tags{display:flex;gap:8px;flex-wrap:wrap;margin:17px 0}
+.project-tags span{
+ background:rgba(108,140,255,.13);color:var(--accent);
+ border-radius:20px;padding:4px 10px;font-size:11px;
+}
+.project-link{color:var(--accent);font-size:13px;font-weight:700}
+.experience{
+ border-left:2px solid var(--accent);padding:5px 0 5px 25px;
+ margin:20px 0;
+}
+.experience p{color:var(--muted);font-size:13px}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px}
+.contact-item{display:flex;gap:15px;margin:22px 0;align-items:center}
+.contact-item i{
+ width:43px;height:43px;background:rgba(108,140,255,.15);
+ color:var(--accent);display:grid;place-items:center;border-radius:10px;
+}
+.contact-item p{font-size:13px;color:var(--muted)}
+input,textarea{
+ width:100%;padding:13px;margin:7px 0 15px;
+ background:var(--bg);border:1px solid var(--border);
+ border-radius:8px;color:var(--text);font-family:inherit;
+}
+textarea{min-height:120px;resize:vertical}
+label{font-size:13px;color:var(--muted)}
+footer{
+ border-top:1px solid var(--border);padding:28px 0;
+ text-align:center;color:var(--muted);font-size:13px;
+}
+.socials{display:flex;gap:17px;margin-top:20px}
+.socials a{color:var(--muted);font-size:20px}
+.socials a:hover{color:var(--accent)}
+.hidden{display:none}
+@media(max-width:850px){
+ .navlinks{
+ display:none;position:absolute;top:75px;left:0;width:100%;
+ background:var(--card);padding:25px;
+ flex-direction:column;align-items:flex-start;
+ }
+ .navlinks.show{display:flex}
+ .menu-btn{display:block}
+ .hero-grid{grid-template-columns:1fr;text-align:center}
+ .hero p{margin:20px auto}
+ .hero-buttons,.socials{justify-content:center}
+ .profile-wrap{grid-row:1}
+ .profile{width:220px;height:240px}
+ .about-grid,.contact-grid{grid-template-columns:1fr}
+ .skills-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:520px){
+ .education-grid,.projects-grid{grid-template-columns:1fr}
+ .skills-grid{grid-template-columns:1fr 1fr}
+ section{padding:60px 0}
+ .section-heading h2{font-size:28px}
+}
+@media print{
+ header,.hero-buttons,.contact-form,footer{display:none!important}
+ body{background:white;color:black}
+ .panel,.skill,.project,.edu-card{break-inside:avoid}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+ <div class="container nav">
+  <a href="#home" class="logo">SUNIL<span>.Y</span></a>
+  <nav class="navlinks" id="navlinks">
+   <a href="#home">Home</a>
+   <a href="#about">About</a>
+   <a href="#skills">Skills</a>
+   <a href="#education">Education</a>
+   <a href="#projects">Projects</a>
+   <a href="#experience">Experience</a>
+   <a href="#contact">Contact</a>
+  </nav>
+  <div class="nav-actions">
+   <button class="icon-btn" id="themeBtn" aria-label="Change theme">
+    <i class="fa-solid fa-sun"></i>
+   </button>
+   <button class="icon-btn menu-btn" id="menuBtn" aria-label="Open menu">
+    <i class="fa-solid fa-bars"></i>
+   </button>
+  </div>
+ </div>
+</header>
+
+<main>
+
+<!-- HOME -->
+<section class="hero" id="home">
+ <div class="container hero-grid">
+  <div>
+   <span class="tag"><i class="fa-solid fa-circle-check"></i> WELCOME TO MY PORTFOLIO</span>
+   <h1>Hello, I'm<br><span class="gradient">Sunil Kumar Yadav</span></h1>
+   <h3>Data Analyst | Aspiring Data Scientist</h3>
+   <p>
+    I am passionate about data analysis, logical thinking and
+    transforming raw data into meaningful information.
+    I am continuously learning Excel, SQL, Python and Power BI.
+   </p>
+   <div class="hero-buttons">
+    <a class="btn" href="#projects"><i class="fa-solid fa-briefcase"></i> View Projects</a>
+    <button class="btn secondary" onclick="window.print()">
+     <i class="fa-solid fa-download"></i> Download / Print Resume
+    </button>
+   </div>
+   <div class="socials">
+    <a href="#" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+    <a href="#" title="GitHub"><i class="fa-brands fa-github"></i></a>
+    <a href="mailto:your-email@example.com" title="Email"><i class="fa-solid fa-envelope"></i></a>
+   </div>
+  </div>
+
+  <div class="profile-wrap">
+   <div class="profile">
+    <!-- Replace this placeholder with your photo -->
+    <div class="profile-placeholder">
+     <i class="fa-solid fa-user-tie"></i>
+     <p>YOUR PROFILE PHOTO</p>
+    </div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+ <div class="container">
+  <div class="section-heading">
+   <small>DISCOVER MY STORY</small>
+   <h2>About Me</h2>
+   <p>Know more about my background and interests.</p>
+  </div>
+  <div class="about-grid">
+   <div class="panel">
+    <h3>Who Am I?</h3>
+    <p>
+     My name is Sunil Kumar Yadav. I have an academic background
+     in Computer Science and a strong interest in Data Analytics.
+     I enjoy working with information, solving problems and
+     learning new technologies.
+     My goal is to develop professional data analysis skills
+     and build practical projects that solve real-world problems.
+    </p>
+   </div>
+   <div class="panel">
+    <h3>Personal Details</h3>
+    <div class="info-row"><span>Name</span><b>Sunil Kumar Yadav</b></div>
+    <div class="info-row"><span>Profession</span><b>Data Analyst Learner</b></div>
+    <div class="info-row"><span>Qualification</span><b>B.Sc. Computer Science</b></div>
+    <div class="info-row"><span>Additional</span><b>PGDCA, DCA, CPCT</b></div>
+    <div class="info-row"><span>Location</span><b>Madhya Pradesh, India</b></div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+ <div class="container">
+  <div class="section-heading">
+   <small>WHAT I AM LEARNING</small>
+   <h2>My Skills</h2>
+   <p>Technical and professional skill development.</p>
+  </div>
+  <div class="skills-grid">
+   <div class="skill"><i class="fa-solid fa-file-excel"></i><h3>MS Excel</h3><p>Data management and analysis</p></div>
+   <div class="skill"><i class="fa-solid fa-database"></i><h3>SQL</h3><p>Database and queries</p></div>
+   <div class="skill"><i class="fa-brands fa-python"></i><h3>Python</h3><p>Programming and data analysis</p></div>
+   <div class="skill"><i class="fa-solid fa-chart-column"></i><h3>Power BI</h3><p>Interactive dashboards</p></div>
+   <div class="skill"><i class="fa-solid fa-broom"></i><h3>Data Cleaning</h3><p>Data preparation</p></div>
+   <div class="skill"><i class="fa-solid fa-chart-line"></i><h3>Visualization</h3><p>Charts and reporting</p></div>
+   <div class="skill"><i class="fa-solid fa-brain"></i><h3>Logical Thinking</h3><p>Analytical problem solving</p></div>
+   <div class="skill"><i class="fa-solid fa-lightbulb"></i><h3>Problem Solving</h3><p>Practical solutions</p></div>
+  </div>
+ </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+ <div class="container">
+  <div class="section-heading">
+   <small>MY QUALIFICATIONS</small>
+   <h2>Education & Certifications</h2>
+  </div>
+  <div class="education-grid">
+   <div class="edu-card">
+    <i class="fa-solid fa-graduation-cap"></i>
+    <h3>B.Sc. Computer Science</h3>
+    <p>Graduation</p>
+   </div>
+   <div class="edu-card">
+    <i class="fa-solid fa-certificate"></i>
+    <h3>PGDCA</h3>
+    <p>Post Graduate Diploma in Computer Applications</p>
+   </div>
+   <div class="edu-card">
+    <i class="fa-solid fa-computer"></i>
+    <h3>DCA</h3>
+    <p>Diploma in Computer Applications</p>
+   </div>
+   <div class="edu-card">
+    <i class="fa-solid fa-keyboard"></i>
+    <h3>CPCT</h3>
+    <p>Computer Proficiency Certification Test</p>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+ <div class="container">
+  <div class="section-heading">
+   <small>MY WORK</small>
+   <h2>Featured Projects</h2>
+   <p>Project ideas and work samples. Replace with completed projects.</p>
+  </div>
+  <div class="projects-grid">
+   <div class="project">
+    <i class="fa-solid fa-file-excel"></i>
+    <h3>Excel Dashboard</h3>
+    <p>Plan to build an interactive Excel reporting dashboard.</p>
+    <div class="project-tags"><span>Excel</span><span>Dashboard</span></div>
+    <a class="project-link" href="#contact">Project Details →</a>
+   </div>
+   <div class="project">
+    <i class="fa-solid fa-chart-pie"></i>
+    <h3>Sales Analysis</h3>
+    <p>Analyze sales data, trends and performance indicators.</p>
+    <div class="project-tags"><span>Excel</span><span>Analytics</span></div>
+    <a class="project-link" href="#contact">Project Details →</a>
+   </div>
+   <div class="project">
+    <i class="fa-solid fa-database"></i>
+    <h3>SQL Data Analysis</h3>
+    <p>Practice database queries and generate useful insights.</p>
+    <div class="project-tags"><span>SQL</span><span>Database</span></div>
+    <a class="project-link" href="#contact">Project Details →</a>
+   </div>
+   <div class="project">
+    <i class="fa-solid fa-chart-line"></i>
+    <h3>Power BI Dashboard</h3>
+    <p>Create interactive visual reports and data dashboards.</p>
+    <div class="project-tags"><span>Power BI</span><span>Visualization</span></div>
+    <a class="project-link" href="#contact">Project Details →</a>
+   </div>
+   <div class="project">
+    <i class="fa-brands fa-python"></i>
+    <h3>Python Data Analysis</h3>
+    <p>Explore datasets and practice data analysis using Python.</p>
+    <div class="project-tags"><span>Python</span><span>Data</span></div>
+    <a class="project-link" href="#contact">Project Details →</a>
+   </div>
+   <div class="project">
+    <i class="fa-solid fa-building"></i>
+    <h3>Government Data Reporting</h3>
+    <p>Concept for structured data reporting and performance tracking.</p>
+    <div class="project-tags"><span>Reporting</span><span>Dashboard</span></div>
+    <a class="project-link" href="#contact">Project Details →</a>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+ <div class="container">
+  <div class="section-heading">
+   <small>MY PROFESSIONAL JOURNEY</small>
+   <h2>Experience</h2>
+  </div>
+  <div class="panel">
+   <div class="experience">
+    <h3>Professional Work Experience</h3>
+    <p>
+     Add your verified designation, organization, joining date
+     and responsibilities here. Keep confidential office information private.
+    </p>
+   </div>
+   <div class="experience">
+    <h3>Data Analytics Learning</h3>
+    <p>
+     Developing practical skills in Excel, SQL, Python and Power BI
+     through structured learning and hands-on exercises.
+    </p>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+ <div class="container">
+  <div class="section-heading">
+   <small>LET'S CONNECT</small>
+   <h2>Contact Me</h2>
+   <p>Have a project or professional opportunity? Let's connect.</p>
+  </div>
+  <div class="contact-grid">
+   <div class="panel">
+    <h3>Get In Touch</h3>
+    <div class="contact-item">
+     <i class="fa-solid fa-envelope"></i>
+     <div><b>Email</b><p>your-email@example.com</p></div>
+    </div>
+    <div class="contact-item">
+     <i class="fa-solid fa-location-dot"></i>
+     <div><b>Location</b><p>Madhya Pradesh, India</p></div>
+    </div>
+    <div class="contact-item">
+     <i class="fa-brands fa-linkedin"></i>
+     <div><b>LinkedIn</b><p>Add your profile link</p></div>
+    </div>
+    <div class="contact-item">
+     <i class="fa-brands fa-github"></i>
+     <div><b>GitHub</b><p>Add your GitHub link</p></div>
+    </div>
+   </div>
+   <div class="panel contact-form">
+    <h3>Send a Message</h3>
+    <form id="contactForm">
+     <label>Your Name</label>
+     <input id="senderName" type="text" placeholder="Enter your name" required>
+     <label>Your Email</label>
+     <input id="senderEmail" type="email" placeholder="Enter your email" required>
+     <label>Subject</label>
+     <input id="subject" type="text" placeholder="Message subject" required>
+     <label>Message</label>
+     <textarea id="message" placeholder="Write your message..." required></textarea>
+     <button class="btn" type="submit">
+      <i class="fa-solid fa-paper-plane"></i> Send Message
+     </button>
+    </form>
+   </div>
+  </div>
+ </div>
+</section>
+
+</main>
+
+<footer>
+ <div class="container">
+  <p>© <span id="year"></span> Sunil Kumar Yadav. All Rights Reserved.</p>
+  <p>Designed with <i class="fa-solid fa-heart" style="color:#ff5678"></i> and Passion.</p>
+ </div>
+</footer>
+
+<script>
+// Mobile menu
+const menuBtn=document.getElementById("menuBtn");
+const navlinks=document.getElementById("navlinks");
+
+menuBtn.addEventListener("click",()=>{
+ navlinks.classList.toggle("show");
+});
+
+document.querySelectorAll(".navlinks a").forEach(link=>{
+ link.addEventListener("click",()=>{
+  navlinks.classList.remove("show");
+ });
+});
+
+// Dark / Light Theme
+const themeBtn=document.getElementById("themeBtn");
+
+if(localStorage.getItem("portfolioTheme")==="light"){
+ document.body.classList.add("light");
+ themeBtn.innerHTML='<i class="fa-solid fa-moon"></i>';
+}
+
+themeBtn.addEventListener("click",()=>{
+ document.body.classList.toggle("light");
+ const light=document.body.classList.contains("light");
+ localStorage.setItem("portfolioTheme",light?"light":"dark");
+ themeBtn.innerHTML=light
+  ?'<i class="fa-solid fa-moon"></i>'
+  :'<i class="fa-solid fa-sun"></i>';
+});
+
+// Current year
+document.getElementById("year").textContent=new Date().getFullYear();
+
+// Contact form: opens the visitor's email application
+document.getElementById("contactForm").addEventListener("submit",function(e){
+ e.preventDefault();
+
+ // Replace with your real email address
+ const recipient="your-email@example.com";
+
+ if(recipient==="your-email@example.com"){
+  alert("Please add your real email address in the website code first.");
+  return;
+ }
+
+ const name=document.getElementById("senderName").value;
+ const email=document.getElementById("senderEmail").value;
+ const subject=document.getElementById("subject").value;
+ const message=document.getElementById("message").value;
+
+ const body=`Name: ${name}\nEmail: ${email}\n\n${message}`;
+ const mailto=`mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+ window.location.href=mailto;
+});
+</script>
+
+</body>
+</html>
