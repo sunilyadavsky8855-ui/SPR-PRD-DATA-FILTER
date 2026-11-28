@@ -1,251 +1,789 @@
+
 <!DOCTYPE html>
-<html lang="hi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>🏵️ SPR Sammelan - Management System</title>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>यादव समाज सामूहिक विवाह सम्मेलन</title>
+
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:system-ui;background:#fff7ed;color:#1c1917}
-.top{background:#ea580c;color:#fff;padding:14px;text-align:center}
-.top h1{margin:0;font-size:22px}.top p{margin:4px 0 0;font-size:13px;opacity:.9}
-.card{max-width:780px;margin:14px auto;background:#fff;border:1px solid #fed7aa;border-radius:14px;padding:16px;box-shadow:0 6px 20px rgba(0,0,0,.06)}
-h2{margin:0 0 10px}label{font-size:13px;font-weight:700;display:block;margin:10px 0 4px}
-input,select,textarea{width:100%;padding:11px;border:1px solid #e7e5e4;border-radius:10px;font-size:15px}
-button{width:100%;padding:12px;border:0;border-radius:10px;background:#ea580c;color:#fff;font-weight:800;font-size:15px;margin-top:12px;cursor:pointer}
-button.sec{background:#fff;color:#ea580c;border:1px solid #ea580c}
-button.green{background:#16a34a}button.red{background:#dc2626}button.blue{background:#2563eb}button.dark{background:#172554}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
-.stat{background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:11px;text-align:center}
-.stat b{font-size:20px;display:block}.stat span{font-size:12px}
-.tabs{display:flex;gap:7px;flex-wrap:wrap}.tabs button{width:auto;padding:9px 11px;margin:0;font-size:13px}
-.hidden{display:none}.msg{margin-top:10px;font-size:14px;color:#dc2626;text-align:center}.ok{color:#16a34a}
-.small{font-size:12px;color:#78716c;text-align:center;margin-top:8px}
-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}th,td{border:1px solid #ddd;padding:7px;text-align:center}th{background:#ea580c;color:#fff}
-.flow{background:#f0fdf4;border:1px solid #86efac;padding:12px;border-radius:12px;font-size:13px;line-height:1.9;margin-top:10px}
-@media print{ body *{visibility:hidden} #printArea, #printArea *{visibility:visible} #printArea{position:absolute;left:0;top:0;width:100%} }
-.printBox{border:2px solid #000;padding:18px;text-align:center}
-</style></head>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,"Noto Sans Devanagari",sans-serif;background:#f4f6fb;color:#20243a}
+header{background:linear-gradient(120deg,#6415a5,#a12b8e);color:white;padding:24px 15px;text-align:center}
+header h1{margin:0;font-size:25px}
+header p{margin:9px 0 0;font-size:14px}
+nav{background:white;padding:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;box-shadow:0 2px 8px #0001}
+button{border:0;border-radius:8px;padding:11px 16px;background:#7624a4;color:white;font-weight:bold;cursor:pointer}
+button:hover{opacity:.88}
+button.secondary{background:#e9e2f2;color:#572080}
+button.danger{background:#c62828}
+button.green{background:#13834c}
+main{max-width:1100px;margin:22px auto;padding:0 14px}
+.card{background:white;padding:20px;border-radius:14px;box-shadow:0 3px 14px #0000000c;margin-bottom:17px}
+h2{color:#70239a;margin-top:0;font-size:21px}
+h3{color:#70239a}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+.stat{background:linear-gradient(135deg,#7624a4,#ad398c);color:white;border-radius:13px;padding:20px;text-align:center}
+.stat strong{display:block;font-size:32px;margin-top:8px}
+.stat small{font-size:14px}
+input,select,textarea{width:100%;padding:12px;margin:7px 0 13px;border:1px solid #d8d8e2;border-radius:8px;font-size:15px;background:white}
+label{font-weight:bold;font-size:14px}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.hidden{display:none!important}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:650px}
+th,td{padding:11px;border-bottom:1px solid #eee;text-align:left;font-size:14px}
+th{background:#f3eafa;color:#60218b}
+.notice{padding:12px;border-radius:8px;background:#fff5dc;color:#755000;margin:12px 0}
+.success{color:#13834c;font-weight:bold}
+.error{color:#c62828;font-weight:bold}
+.section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+footer{text-align:center;padding:25px;background:#28133c;color:#eee;margin-top:40px}
+.badge{background:#eee1f8;color:#70239a;padding:5px 9px;border-radius:20px;font-size:12px}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+@media(max-width:600px){
+ header h1{font-size:20px}
+ .card{padding:15px}
+ button{padding:10px 12px;font-size:13px}
+}
+</style>
+</head>
+
 <body>
-<div class="top"><h1>🏵️ SPR Sammelan - Management System</h1><p>Registration • Donation • Other Income • Expense • Operator</p></div>
 
-<!-- PUBLIC REPORT - Bina Login -->
-<div id="publicBox" class="card">
-<h2>📢 सार्वजनिक रिपोर्ट - गाँववार आँकड़े (Bina Login)</h2>
-<div class="grid3"><div class="stat"><b id="pTotal">0</b><span>कुल पंजीयन</span></div><div class="stat"><b id="pGroom">0</b><span>कुल वर</span></div><div class="stat"><b id="pBride">0</b><span>कुल वधु</span></div></div>
-<div style="overflow:auto"><table><thead><tr><th>गाँव</th><th>वर</th><th>वधु</th><th>कुल</th></tr></thead><tbody id="pVillages"></tbody></table></div>
-<button class="sec" onclick="loadPublic()">🔄 Public Report Dekho</button>
-</div>
+<header>
+  <h1>🙏 यादव समाज सामूहिक विवाह सम्मेलन 🙏</h1>
+  <p>सामाजिक एकता • सहयोग • सामूहिक विवाह आयोजन</p>
+</header>
 
-<div id="loginBox" class="card">
-<h2>🔐 Login</h2>
-<label>Username</label><input id="u" placeholder="admin">
-<label>Password</label><input id="p" type="password" placeholder="Admin@123">
-<button onclick="doLogin()">Login Karein</button>
-<div id="loginMsg" class="msg"></div>
-<div class="small">Admin: admin / Admin@123<br>Operator ko Admin banayega</div>
-</div>
+<nav id="publicNav">
+  <button onclick="showPublicHome()">होम पेज</button>
+  <button onclick="showLogin('admin')">एडमिन लॉगिन</button>
+  <button onclick="showLogin('operator')">ऑपरेटर लॉगिन</button>
+</nav>
 
-<div id="appBox" class="card hidden" style="max-width:780px">
-<div style="display:flex;justify-content:space-between;align-items:center"><h2 id="welcome">Namaste</h2><button onclick="logout()" style="width:auto;padding:8px 12px;background:#dc2626">Logout</button></div>
-<p id="roleTxt" class="small"></p>
+<main>
 
-<!-- FLOWCHART WALA DASHBOARD -->
-<div class="grid" style="margin-top:10px">
-<div class="stat"><b id="sGroom">0</b><span>कुल वर पंजीयन</span></div>
-<div class="stat"><b id="sBride">0</b><span>कुल वधु पंजीयन</span></div>
-<div class="stat"><b id="sReg">0</b><span>कुल पंजीयन</span></div>
-<div class="stat"><b id="sRegAmt">₹0</b><span>पंजीयन से राशि</span></div>
-<div class="stat"><b id="sDon">₹0</b><span>कुल दान</span></div>
-<div class="stat"><b id="sOther">₹0</b><span>अन्य आय</span></div>
-<div class="stat"><b id="sExp">₹0</b><span>कुल खर्च</span></div>
-<div class="stat"><b id="sBal">₹0</b><span>शेष राशि (आय - खर्च)</span></div>
-</div>
+<!-- PUBLIC HOME -->
+<section id="homeSection">
+  <div class="card" style="text-align:center">
+    <h2>यादव समाज सामूहिक विवाह सम्मेलन में आपका स्वागत है</h2>
+    <p>सम्मेलन की पंजीयन जानकारी देखने के लिए आपका स्वागत है।</p>
+  </div>
 
-<div class="flow" id="flowBox">Flowchart load ho raha hai...</div>
+  <div class="grid">
+    <div class="stat">
+      <small>कुल पंजीयन</small>
+      <strong id="publicTotal">0</strong>
+      <small>वर + वधू पंजीयन</small>
+    </div>
+  </div>
 
-<div class="tabs" style="margin-top:14px">
-<button class="sec" onclick="showTab('reg')">+ पंजीयन</button>
-<button class="sec" id="btnDon" onclick="showTab('don')">+ दान</button>
-<button class="sec" id="btnOther" onclick="showTab('other')">+ अन्य आय</button>
-<button class="sec" id="btnExp" onclick="showTab('exp')">+ खर्च</button>
-<button class="sec" id="btnOp" onclick="showTab('op')">+ Operator</button>
-<button class="sec" onclick="showTab('list')">📋 रिपोर्ट</button>
-<button class="sec" onclick="loadDash()">🔄 Refresh</button>
-</div>
+  <div class="card" style="text-align:center;margin-top:18px">
+    <h3>सम्मेलन प्रबंधन प्रणाली</h3>
+    <p>अधिकृत एडमिन एवं ऑपरेटर अपने लॉगिन से प्रवेश करें।</p>
+    <button onclick="showLogin('admin')">एडमिन लॉगिन</button>
+    <button onclick="showLogin('operator')">ऑपरेटर लॉगिन</button>
+  </div>
+</section>
 
-<!-- REGISTRATION -->
-<div id="tab-reg" class="hidden">
-<label>गाँव *</label><input id="rVillage" placeholder="Gaon ka naam">
-<label>वर / दूल्हा *</label><input id="rGroom">
-<label>वधु / दुल्हन *</label><input id="rBride">
-<label>पिता का नाम</label><input id="rFather">
-<label>मोबाइल (10 अंक)</label><input id="rMobile">
-<label>पंजीयन शुल्क (₹)</label><input id="rAmount" type="number" value="0">
-<button class="green" onclick="saveReg()">पंजीयन Save Karein</button><div id="regMsg" class="msg"></div>
-</div>
+<!-- LOGIN -->
+<section id="loginSection" class="hidden">
+  <div class="card" style="max-width:450px;margin:25px auto">
+    <h2 id="loginTitle">लॉगिन</h2>
+    <label>यूजर आईडी</label>
+    <input id="username" placeholder="यूजर आईडी">
 
-<!-- DONATION - SIRF ADMIN -->
-<div id="tab-don" class="hidden">
-<label>गाँव</label><input id="dVillage">
-<label>दाता का नाम *</label><input id="dName">
-<label>पिता का नाम</label><input id="dFather">
-<label>राशि (₹) *</label><input id="dAmount" type="number">
-<label>प्रकार</label><select id="dType"><option>सामान्य</option><option>गुप्त</option><option>विशेष</option></select>
-<button class="green" onclick="saveDon()">दान Save Karein</button><div id="donMsg" class="msg"></div>
-</div>
+    <label>पासवर्ड</label>
+    <input id="password" type="password" placeholder="पासवर्ड">
 
-<!-- OTHER INCOME - NAYA - SIRF ADMIN -->
-<div id="tab-other" class="hidden">
-<label>स्रोत * - जैसे चंदा, स्टॉल, प्रायोजक</label><input id="oSrc" placeholder="Kahan se aayi?">
-<label>देने वाले का नाम *</label><input id="oName2">
-<label>राशि (₹) *</label><input id="oAmt" type="number">
-<label>विवरण</label><input id="oDesc">
-<button class="green" onclick="saveOther()">अन्य आय Save Karein</button><div id="otherMsg" class="msg"></div>
-</div>
+    <button class="green" style="width:100%" onclick="login()">लॉगिन करें</button>
+    <p id="loginMessage"></p>
+    <button class="secondary" onclick="showPublicHome()">वापस होम पेज</button>
+  </div>
+</section>
 
-<!-- EXPENSE - SIRF ADMIN -->
-<div id="tab-exp" class="hidden">
-<label>Item *</label><input id="eItem" placeholder="Kis cheez ka kharcha">
-<label>विवरण</label><input id="eDesc">
-<label>किसको दिया?</label><input id="ePaid">
-<label>राशि (₹) *</label><input id="eAmount" type="number">
-<button class="red" onclick="saveExp()">खर्च Save Karein</button><div id="expMsg" class="msg"></div>
-</div>
+<!-- PRIVATE APP -->
+<section id="appSection" class="hidden">
 
-<!-- OPERATOR - SIRF ADMIN -->
-<div id="tab-op" class="hidden">
-<label>Operator Username *</label><input id="oUser">
-<label>Password *</label><input id="oPass">
-<label>Operator ka Naam *</label><input id="oName">
-<label>Mobile</label><input id="oMobile">
-<button class="dark" onclick="addOp()">Operator Banayein</button><div id="opMsg" class="msg"></div>
-<div class="small">नियम: Operator केवल पंजीयन करेगा। दान / खर्च / अन्य आय नहीं करेगा।</div>
-</div>
+  <div class="card">
+    <div class="section-title">
+      <div>
+        <h2 style="margin-bottom:5px">सम्मेलन डैशबोर्ड</h2>
+        <span id="welcomeText"></span>
+        <span id="roleBadge" class="badge"></span>
+      </div>
+      <button class="danger" onclick="logout()">लॉगआउट</button>
+    </div>
+  </div>
 
-<!-- REPORTS -->
-<div id="tab-list" class="hidden">
-<h2>📋 गाँववार रिपोर्ट + वित्तीय रिपोर्ट</h2>
-<input id="searchBox" placeholder="🔍 खोजो - गाँव / वर / वधु / रसीद..." onkeyup="filterList()">
-<div style="overflow:auto"><table><thead><tr><th>रसीद</th><th>गाँव</th><th>वर</th><th>वधु</th><th>शुल्क</th><th>ऑपरेटर</th><th>एक्शन</th></tr></thead><tbody id="regList"></tbody></table></div>
-<h2 style="margin-top:14px">💰 वित्तीय रिपोर्ट</h2>
-<div style="overflow:auto"><table><thead><tr><th>प्रकार</th><th>नाम / Item</th><th>राशि</th><th>तारीख</th><th>एक्शन</th></tr></thead><tbody id="finList"></tbody></table></div>
-<button class="blue" onclick="downloadExcel()">⬇️ Excel Download (सभी रिपोर्ट)</button>
-</div>
-</div>
+  <div class="card">
+    <div class="actions">
+      <button onclick="showPage('dashboardPage')">डैशबोर्ड</button>
+      <button onclick="showPage('groomPage')">वर पंजीयन</button>
+      <button onclick="showPage('bridePage')">वधू पंजीयन</button>
+      <button onclick="showPage('groomListPage');loadGroomList()">वर सूची</button>
+      <button onclick="showPage('brideListPage');loadBrideList()">वधू सूची</button>
+      <button onclick="showPage('donationPage')">दान एंट्री</button>
+      <button onclick="showPage('expensePage')">खर्च एंट्री</button>
+      <button onclick="showPage('donationListPage');loadDonationList()">दान सूची</button>
+      <button onclick="showPage('expenseListPage');loadExpenseList()">खर्च सूची</button>
+      <button id="operatorReportButton" class="hidden" onclick="showPage('operatorReportPage');loadOperatorReport()">ऑपरेटर रिपोर्ट</button>
+      <button id="addOperatorButton" class="hidden" onclick="showPage('operatorPage')">ऑपरेटर बनाएं</button>
+    </div>
+  </div>
 
-<!-- PRINT AREA -->
-<div id="printArea" class="hidden"></div>
+  <!-- DASHBOARD -->
+  <div id="dashboardPage" class="page">
+    <div class="grid">
+      <div class="stat"><small>कुल पंजीयन</small><strong id="totalReg">0</strong></div>
+      <div class="stat"><small>वर पंजीयन</small><strong id="totalGroom">0</strong></div>
+      <div class="stat"><small>वधू पंजीयन</small><strong id="totalBride">0</strong></div>
+      <div class="stat"><small>कुल दान</small><strong id="totalDonation">₹0</strong></div>
+      <div class="stat"><small>कुल खर्च</small><strong id="totalExpense">₹0</strong></div>
+      <div class="stat"><small>शेष राशि</small><strong id="totalBalance">₹0</strong></div>
+    </div>
 
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <div class="card" style="margin-top:18px">
+      <h3>गांव-वार पंजीयन</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>गांव</th><th>कुल पंजीयन</th></tr></thead>
+          <tbody id="villageTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- GROOM FORM -->
+  <div id="groomPage" class="page hidden">
+    <div class="card">
+      <h2>वर पंजीयन फॉर्म</h2>
+      <div class="notice">वर का पंजीयन अलग से दर्ज करें। रसीद क्रमांक स्वतः बनेगा।</div>
+      <div class="form-grid">
+        <div><label>गांव *</label><input id="gVillage" placeholder="गांव का नाम"></div>
+        <div><label>वर का नाम *</label><input id="gName" placeholder="वर का पूरा नाम"></div>
+        <div><label>पिता का नाम</label><input id="gFather" placeholder="पिता का नाम"></div>
+        <div><label>मोबाइल नंबर</label><input id="gMobile" maxlength="10" placeholder="मोबाइल नंबर"></div>
+        <div><label>पंजीयन राशि</label><input id="gAmount" type="number" min="0" value="0"></div>
+      </div>
+      <button class="green" onclick="saveRegistration('saveGroom','g')">वर पंजीयन सेव करें</button>
+      <p id="gMessage"></p>
+    </div>
+  </div>
+
+  <!-- BRIDE FORM -->
+  <div id="bridePage" class="page hidden">
+    <div class="card">
+      <h2>वधू पंजीयन फॉर्म</h2>
+      <div class="notice">वधू का पंजीयन अलग से दर्ज करें। रसीद क्रमांक स्वतः बनेगा।</div>
+      <div class="form-grid">
+        <div><label>गांव *</label><input id="bVillage" placeholder="गांव का नाम"></div>
+        <div><label>वधू का नाम *</label><input id="bName" placeholder="वधू का पूरा नाम"></div>
+        <div><label>पिता का नाम</label><input id="bFather" placeholder="पिता का नाम"></div>
+        <div><label>मोबाइल नंबर</label><input id="bMobile" maxlength="10" placeholder="मोबाइल नंबर"></div>
+        <div><label>पंजीयन राशि</label><input id="bAmount" type="number" min="0" value="0"></div>
+      </div>
+      <button class="green" onclick="saveRegistration('saveBride','b')">वधू पंजीयन सेव करें</button>
+      <p id="bMessage"></p>
+    </div>
+  </div>
+
+  <!-- GROOM LIST -->
+  <div id="groomListPage" class="page hidden">
+    <div class="card">
+      <h2>वर पंजीयन सूची</h2>
+      <input id="groomSearch" placeholder="नाम, गांव या रसीद नंबर खोजें" oninput="filterTable('groomTable','groomSearch')">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>दिनांक</th><th>रसीद</th><th>गांव</th><th>वर का नाम</th><th>पिता</th><th>मोबाइल</th><th>राशि</th><th>ऑपरेटर</th></tr></thead>
+          <tbody id="groomTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- BRIDE LIST -->
+  <div id="brideListPage" class="page hidden">
+    <div class="card">
+      <h2>वधू पंजीयन सूची</h2>
+      <input id="brideSearch" placeholder="नाम, गांव या रसीद नंबर खोजें" oninput="filterTable('brideTable','brideSearch')">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>दिनांक</th><th>रसीद</th><th>गांव</th><th>वधू का नाम</th><th>पिता</th><th>मोबाइल</th><th>राशि</th><th>ऑपरेटर</th></tr></thead>
+          <tbody id="brideTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- DONATION FORM -->
+  <div id="donationPage" class="page hidden">
+    <div class="card">
+      <h2>दान एंट्री</h2>
+      <div class="form-grid">
+        <div><label>गांव</label><input id="dVillage" placeholder="गांव"></div>
+        <div><label>दानदाता का नाम</label><input id="dName" placeholder="नाम"></div>
+        <div><label>पिता का नाम</label><input id="dFather" placeholder="पिता का नाम"></div>
+        <div><label>दान का प्रकार</label>
+          <select id="dType">
+            <option>सामान्य दान</option>
+            <option>सहयोग राशि</option>
+            <option>गुप्त दान</option>
+            <option>अन्य</option>
+          </select>
+        </div>
+        <div><label>राशि *</label><input id="dAmount" type="number" min="1" placeholder="दान राशि"></div>
+      </div>
+      <button class="green" onclick="saveDonation()">दान सेव करें</button>
+      <p id="dMessage"></p>
+    </div>
+  </div>
+
+  <!-- EXPENSE FORM -->
+  <div id="expensePage" class="page hidden">
+    <div class="card">
+      <h2>खर्च एंट्री</h2>
+      <div class="form-grid">
+        <div><label>खर्च का नाम *</label><input id="eItem" placeholder="जैसे भोजन व्यवस्था"></div>
+        <div><label>विवरण</label><input id="eDescription" placeholder="खर्च का विवरण"></div>
+        <div><label>भुगतानकर्ता</label><input id="ePaidBy" placeholder="नाम"></div>
+        <div><label>राशि *</label><input id="eAmount" type="number" min="1" placeholder="राशि"></div>
+      </div>
+      <button class="green" onclick="saveExpense()">खर्च सेव करें</button>
+      <p id="eMessage"></p>
+    </div>
+  </div>
+
+  <!-- DONATION LIST -->
+  <div id="donationListPage" class="page hidden">
+    <div class="card">
+      <h2>दान सूची</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>दिनांक</th><th>रसीद</th><th>गांव</th><th>नाम</th><th>प्रकार</th><th>राशि</th><th>ऑपरेटर</th></tr></thead>
+          <tbody id="donationTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXPENSE LIST -->
+  <div id="expenseListPage" class="page hidden">
+    <div class="card">
+      <h2>खर्च सूची</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>दिनांक</th><th>रसीद</th><th>खर्च</th><th>विवरण</th><th>भुगतानकर्ता</th><th>राशि</th><th>ऑपरेटर</th></tr></thead>
+          <tbody id="expenseTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPERATOR REPORT -->
+  <div id="operatorReportPage" class="page hidden">
+    <div class="card">
+      <h2>ऑपरेटर-वार पंजीयन रिपोर्ट</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>ऑपरेटर</th><th>यूजर आईडी</th><th>वर</th><th>वधू</th><th>कुल</th></tr></thead>
+          <tbody id="operatorReportTable"></tbody>
+        </table>
+      </div>
+      <h3 id="reportGrandTotal"></h3>
+    </div>
+  </div>
+
+  <!-- ADD OPERATOR -->
+  <div id="operatorPage" class="page hidden">
+    <div class="card">
+      <h2>नया ऑपरेटर बनाएं</h2>
+      <div class="form-grid">
+        <div><label>ऑपरेटर का नाम *</label><input id="opName" placeholder="पूरा नाम"></div>
+        <div><label>यूजर आईडी *</label><input id="opUsername" placeholder="यूजर आईडी"></div>
+        <div><label>पासवर्ड *</label><input id="opPassword" type="password" placeholder="कम से कम 6 अक्षर"></div>
+      </div>
+      <button class="green" onclick="addOperator()">ऑपरेटर बनाएं</button>
+      <p id="opMessage"></p>
+    </div>
+  </div>
+
+</section>
+</main>
+
+<footer>
+  <p>यादव समाज सामूहिक विवाह सम्मेलन</p>
+  <small>सम्मेलन प्रबंधन प्रणाली</small>
+</footer>
+
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbzeclWgmPQdS180kyU6aufd5he2_uWVkF_vnvQ4AfKwOA013TjfLiNGHuRsWN_oMr8fzQ/exec";
-let TOKEN = localStorage.getItem("spr_token") || "";
-let ROLE = localStorage.getItem("spr_role") || "";
-let ALL_REG = [], ALL_FIN = [];
 
-async function call(action, data={}){ const r=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action,token:TOKEN,...data})}); return r.json(); }
-function v(id){ return document.getElementById(id).value.trim(); }
-function showTab(t){ ["reg","don","other","exp","op","list"].forEach(x=>document.getElementById("tab-"+x).classList.add("hidden")); document.getElementById("tab-"+t).classList.remove("hidden"); }
+let token = sessionStorage.getItem("spr_token") || "";
+let currentRole = sessionStorage.getItem("spr_role") || "";
+let currentName = sessionStorage.getItem("spr_name") || "";
+let expectedLoginRole = "admin";
 
-async function loadPublic(){
-  try{ const res=await call("public",{});
-    if(res.success){
-      document.getElementById("pTotal").textContent=res.total||0;
-      let g=0,b=0; (res.villages||[]).forEach(v=>{g+=v.groom;b+=v.bride;});
-      document.getElementById("pGroom").textContent=g; document.getElementById("pBride").textContent=b;
-      document.getElementById("pVillages").innerHTML=(res.villages||[]).map(v=>`<tr><td>${v.name}</td><td>${v.groom}</td><td>${v.bride}</td><td>${v.groom+v.bride}</td></tr>`).join("")||"<tr><td colspan=4>Abhi koi data nahi</td></tr>";
+function el(id){
+  return document.getElementById(id);
+}
+
+function escapeHTML(value){
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  })[c]);
+}
+
+function money(value){
+  return "₹" + Number(value || 0).toLocaleString("en-IN");
+}
+
+function dateText(value){
+  if(!value) return "-";
+  const d = new Date(value);
+  if(isNaN(d.getTime())) return escapeHTML(value);
+  return d.toLocaleDateString("hi-IN");
+}
+
+async function api(action, data = {}, auth = true){
+  const payload = {action, ...data};
+  if(auth) payload.token = token;
+
+  const res = await fetch(API_URL, {
+    method:"POST",
+    headers:{"Content-Type":"text/plain;charset=utf-8"},
+    body:JSON.stringify(payload)
+  });
+
+  return await res.json();
+}
+
+function hideAll(){
+  ["homeSection","loginSection","appSection"].forEach(id=>{
+    el(id).classList.add("hidden");
+  });
+}
+
+function showPublicHome(){
+  hideAll();
+  el("homeSection").classList.remove("hidden");
+  el("publicNav").classList.remove("hidden");
+  loadPublicDashboard();
+}
+
+function showLogin(role){
+  expectedLoginRole = role;
+  hideAll();
+  el("loginSection").classList.remove("hidden");
+  el("publicNav").classList.remove("hidden");
+  el("loginTitle").textContent =
+    role === "admin" ? "एडमिन लॉगिन" : "ऑपरेटर लॉगिन";
+  el("loginMessage").textContent = "";
+  el("username").value = "";
+  el("password").value = "";
+}
+
+async function loadPublicDashboard(){
+  try{
+    const result = await api("publicDashboard",{},false);
+    if(result.success){
+      el("publicTotal").textContent = result.registrations || 0;
     }
-  }catch(e){}
-}
-loadPublic();
-
-async function doLogin(){
-  const username=v("u"), password=v("p");
-  document.getElementById("loginMsg").textContent="Login ho raha hai...";
-  try{ const res=await call("login",{username,password});
-    if(!res.success){ document.getElementById("loginMsg").textContent=res.message; return; }
-    TOKEN=res.token; ROLE=res.role||"operator";
-    localStorage.setItem("spr_token",TOKEN); localStorage.setItem("spr_role",ROLE);
-    document.getElementById("loginBox").classList.add("hidden");
-    document.getElementById("appBox").classList.remove("hidden");
-    document.getElementById("welcome").textContent="Namaste, "+(res.name||res.role);
-    applyRole(); loadDash(); loadAll(); showTab("reg");
-  }catch(e){ document.getElementById("loginMsg").textContent="Network Error: "+e.message; }
+  }catch(err){
+    el("publicTotal").textContent = "—";
+  }
 }
 
-// SUDHAR 1 - Role ke hisab se Button chhupao
-function applyRole(){
-  const isAdmin = ROLE==="admin";
-  document.getElementById("roleTxt").textContent = isAdmin ? "👑 Role: ADMIN - Sab kuchh kar sakte ho" : "👤 Role: OPERATOR - Sirf Panjiyan kar sakte ho";
-  ["btnDon","btnOther","btnExp","btnOp"].forEach(id=>{ document.getElementById(id).style.display = isAdmin ? "" : "none"; });
-}
+async function login(){
+  const username = el("username").value.trim();
+  const password = el("password").value;
 
-async function loadDash(){
-  try{ const res=await call("dashboard",{}); if(!res.success){ logout(); return; }
-    document.getElementById("sReg").textContent=res.registrations||res.total||0;
-    document.getElementById("sGroom").textContent=res.groom||0;
-    document.getElementById("sBride").textContent=res.bride||0;
-    document.getElementById("sRegAmt").textContent="₹"+Number(res.regIncome||0).toLocaleString("en-IN");
-    document.getElementById("sDon").textContent="₹"+Number(res.donationIncome||res.donation||0).toLocaleString("en-IN");
-    document.getElementById("sOther").textContent="₹"+Number(res.otherIncome||0).toLocaleString("en-IN");
-    document.getElementById("sExp").textContent="₹"+Number(res.expenses||res.totalExpense||0).toLocaleString("en-IN");
-    document.getElementById("sBal").textContent="₹"+Number(res.balance||0).toLocaleString("en-IN");
-    // FLOWCHART
-    document.getElementById("flowBox").innerHTML = `<b>💰 वित्तीय हिसाब - Flowchart</b><br>पंजीयन से: <b>₹${Number(res.regIncome||0).toLocaleString("en-IN")}</b> + दान से: <b>₹${Number(res.donationIncome||0).toLocaleString("en-IN")}</b> + अन्य आय: <b>₹${Number(res.otherIncome||0).toLocaleString("en-IN")}</b> = <b>कुल आय ₹${Number(res.totalIncome||0).toLocaleString("en-IN")}</b><br>कुल खर्च: <b>₹${Number(res.totalExpense||0).toLocaleString("en-IN")}</b><br><b>अंतिम शेष = कुल आय - कुल खर्च = ₹${Number(res.balance||0).toLocaleString("en-IN")}</b>`;
-  }catch(e){}
-}
+  if(!username || !password){
+    el("loginMessage").textContent = "यूजर आईडी और पासवर्ड भरें";
+    el("loginMessage").className = "error";
+    return;
+  }
 
-async function loadAll(){
-  try{ const res=await call("getData",{});
-    if(res.success){ ALL_REG=res.registrations||[]; renderReg(ALL_REG);
-      ALL_FIN=[];
-      (res.donations||[]).forEach(x=>ALL_FIN.push({...x, _type:"donations", _label:"दान"}));
-      (res.other||[]).forEach(x=>ALL_FIN.push({...x, _type:"other", _label:"अन्य आय"}));
-      (res.expenses||[]).forEach(x=>ALL_FIN.push({...x, _type:"expenses", _label:"खर्च"}));
-      document.getElementById("finList").innerHTML = ALL_FIN.map(f=>`<tr><td>${f._label}</td><td>${f.name||f.item||""}</td><td>₹${f.amount}</td><td>${f.date||""}</td><td>${ROLE==="admin"?`<button style="width:auto;padding:5px 8px;background:#dc2626;margin:0" onclick="delFin('${f._type}','${f.id}')">Delete</button>`:"-"}</td></tr>`).join("")||"<tr><td colspan=5>Koi वित्तीय रिकॉर्ड nahi</td></tr>";
+  el("loginMessage").textContent = "लॉगिन हो रहा है...";
+
+  try{
+    const result = await api("login",{
+      username,
+      password,
+      expectedRole:expectedLoginRole
+    },false);
+
+    if(!result.success){
+      el("loginMessage").textContent = result.message || "लॉगिन असफल";
+      el("loginMessage").className = "error";
+      return;
     }
-  }catch(e){}
+
+    token = result.token;
+    currentRole = result.role;
+    currentName = result.name;
+
+    sessionStorage.setItem("spr_token",token);
+    sessionStorage.setItem("spr_role",currentRole);
+    sessionStorage.setItem("spr_name",currentName);
+
+    openApp();
+
+  }catch(err){
+    el("loginMessage").textContent = "सर्वर से संपर्क नहीं हो पाया। API URL और Deployment जांचें।";
+    el("loginMessage").className = "error";
+  }
 }
 
-function renderReg(list){
-  document.getElementById("regList").innerHTML = list.map(r=>`<tr><td>${r.receipt||""}</td><td>${r.village||""}</td><td>${r.groom||r.name||""}</td><td>${r.bride||""}</td><td>₹${r.amount||0}</td><td>${r.operatorName||r.operatorId||""}</td><td><button style="width:auto;padding:5px 8px;background:#2563eb;margin:0" onclick="printReceipt('${r.receipt}')">🖨️ रसीद</button></td></tr>`).join("")||"<tr><td colspan=7>Koi पंजीयन nahi</td></tr>";
-}
-function filterList(){
-  const q=document.getElementById("searchBox").value.toLowerCase();
-  renderReg(ALL_REG.filter(r=>JSON.stringify(r).toLowerCase().includes(q)));
+function openApp(){
+  hideAll();
+  el("appSection").classList.remove("hidden");
+  el("publicNav").classList.add("hidden");
+
+  el("welcomeText").textContent = "स्वागत है: " + currentName;
+  el("roleBadge").textContent =
+    currentRole === "admin" ? "एडमिन" : "ऑपरेटर";
+
+  el("operatorReportButton").classList.toggle("hidden",currentRole !== "admin");
+  el("addOperatorButton").classList.toggle("hidden",currentRole !== "admin");
+
+  showPage("dashboardPage");
+  loadDashboard();
 }
 
-// SUDHAR - Duplicate Warning frontend me bhi
-async function saveReg(){
-  const data={village:v("rVillage"),groom:v("rGroom"),bride:v("rBride"),father:v("rFather"),mobile:v("rMobile"),amount:v("rAmount")||0, date:new Date().toISOString().slice(0,10)};
-  if(!data.village||!data.groom||!data.bride){ document.getElementById("regMsg").textContent="गाँव, वर, वधु bharo"; return; }
-  const dup = ALL_REG.find(r=>r.groom===data.groom && r.bride===data.bride && r.village===data.village);
-  if(dup && !confirm("⚠️ DUPLICATE LAG RAHA HAI! Yehi Var-Vadhu pehle se hai - Receipt "+dup.receipt+" - Phir bhi Save karna hai?")) return;
-  const r=await call("saveReg",{data}); document.getElementById("regMsg").textContent=r.success?"Ho gaya! Receipt: "+r.receipt:r.message;
-  if(r.success){ printReceipt(r.receipt, data); loadDash(); loadAll(); }
-}
-async function saveDon(){ const data={village:v("dVillage"),name:v("dName"),father:v("dFather"),amount:v("dAmount"),type:v("dType"),date:new Date().toISOString().slice(0,10)}; const r=await call("saveDon",{data}); document.getElementById("donMsg").textContent=r.success?"Ho gaya! Receipt: "+r.receipt:r.message; if(r.success) loadDash(); loadAll(); }
-async function saveOther(){ const data={name:v("oName2"),amount:v("oAmt"),description:v("oDesc"),item:v("oSrc"),source:v("oSrc"),date:new Date().toISOString().slice(0,10)}; const r=await call("saveOther",{data}); document.getElementById("otherMsg").textContent=r.success?"Ho gaya! Receipt: "+r.receipt:r.message; if(r.success) loadDash(); loadAll(); }
-async function saveExp(){ const data={item:v("eItem"),name:v("eItem"),description:v("eDesc"),paidBy:v("ePaid"),amount:v("eAmount"),date:new Date().toISOString().slice(0,10)}; const r=await call("saveExp",{data}); document.getElementById("expMsg").textContent=r.success?"Ho gaya! Receipt: "+r.receipt:r.message; if(r.success) loadDash(); loadAll(); }
-async function addOp(){ const data={username:v("oUser"),id:v("oUser"),password:v("oPass"),name:v("oName"),mobile:v("oMobile")}; const r=await call("addOp",{data}); document.getElementById("opMsg").textContent=r.success?r.message:r.message; }
-async function delFin(type,id){ if(!confirm("Delete karna hai?")) return; const r=await call("deleteFinance",{data:{type,id}}); alert(r.message); loadDash(); loadAll(); }
+function logout(){
+  token = "";
+  currentRole = "";
+  currentName = "";
 
-function printReceipt(receipt, data){
-  let r = ALL_REG.find(x=>x.receipt===receipt) || data || {};
-  document.getElementById("printArea").innerHTML = `<div class="printBox"><h2>🏵️ SPR SAMMELAN</h2><p>वर-वधु पंजीयन रसीद / टोकन</p><hr><p><b>रसीद नं:</b> ${receipt}</p><p><b>गाँव:</b> ${r.village||""}</p><p><b>वर:</b> ${r.groom||r.name||""}</p><p><b>वधु:</b> ${r.bride||""}</p><p><b>पिता:</b> ${r.father||""}</p><p><b>शुल्क:</b> ₹${r.amount||0}</p><p><b>दिनांक:</b> ${r.date||new Date().toLocaleDateString("hi-IN")}</p><br><br><p>___________________<br>हस्ताक्षर - संचालक</p></div>`;
-  document.getElementById("printArea").classList.remove("hidden");
-  window.print();
-  setTimeout(()=>document.getElementById("printArea").classList.add("hidden"), 500);
+  sessionStorage.removeItem("spr_token");
+  sessionStorage.removeItem("spr_role");
+  sessionStorage.removeItem("spr_name");
+
+  showPublicHome();
 }
 
-function downloadExcel(){
-  if(!ALL_REG.length){ alert("Pehle data load karo"); return; }
-  const wb=XLSX.utils.book_new();
-  const ws1=XLSX.utils.aoa_to_sheet([["रसीद","गाँव","वर","वधु","पिता","मोबाइल","शुल्क","तारीख","ऑपरेटर"], ...ALL_REG.map(r=>[r.receipt,r.village,r.groom||r.name,r.bride,r.father,r.mobile,r.amount,r.date,r.operatorName||r.operatorId])]);
-  XLSX.utils.book_append_sheet(wb,ws1,"Panjiyan");
-  const ws2=XLSX.utils.aoa_to_sheet([["प्रकार","नाम","राशि","तारीख"], ...ALL_FIN.map(f=>[f._label,f.name||f.item,f.amount,f.date])]);
-  XLSX.utils.book_append_sheet(wb,ws2,"Vittiya Report");
-  XLSX.writeFile(wb,"SPR_Sammelan_Report.xlsx");
+function showPage(pageId){
+  document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));
+  el(pageId).classList.remove("hidden");
 }
 
-function logout(){ localStorage.removeItem("spr_token"); localStorage.removeItem("spr_role"); TOKEN=""; location.reload(); }
-if(TOKEN){ document.getElementById("loginBox").classList.add("hidden"); document.getElementById("appBox").classList.remove("hidden"); applyRole(); loadDash(); loadAll(); showTab("reg"); }
-</script></body></html>
+async function loadDashboard(){
+  try{
+    const r = await api("dashboard");
+
+    if(!r.success){
+      if(r.message) alert(r.message);
+      return;
+    }
+
+    el("totalReg").textContent = r.registrations || 0;
+    el("totalGroom").textContent = r.groomCount || 0;
+    el("totalBride").textContent = r.brideCount || 0;
+    el("totalDonation").textContent = money(r.donation);
+    el("totalExpense").textContent = money(r.expenses);
+    el("totalBalance").textContent = money(r.balance);
+
+    const villages = r.villages || {};
+    const tbody = el("villageTable");
+    tbody.innerHTML = "";
+
+    Object.keys(villages).sort().forEach(v=>{
+      tbody.innerHTML += `<tr>
+        <td>${escapeHTML(v)}</td>
+        <td>${villages[v]}</td>
+      </tr>`;
+    });
+
+    if(!Object.keys(villages).length){
+      tbody.innerHTML = '<tr><td colspan="2">अभी कोई पंजीयन नहीं है</td></tr>';
+    }
+
+  }catch(err){
+    alert("डैशबोर्ड लोड नहीं हुआ।");
+  }
+}
+
+async function saveRegistration(action,prefix){
+  const village = el(prefix+"Village").value.trim();
+  const name = el(prefix+"Name").value.trim();
+  const father = el(prefix+"Father").value.trim();
+  const mobile = el(prefix+"Mobile").value.trim();
+  const amount = el(prefix+"Amount").value || 0;
+  const msg = el(prefix+"Message");
+
+  if(!village || !name){
+    msg.textContent = "गांव और नाम भरना जरूरी है";
+    msg.className = "error";
+    return;
+  }
+
+  if(mobile && !/^[0-9]{10}$/.test(mobile)){
+    msg.textContent = "मोबाइल नंबर 10 अंकों का होना चाहिए";
+    msg.className = "error";
+    return;
+  }
+
+  try{
+    const r = await api(action,{
+      data:{village,name,father,mobile,amount}
+    });
+
+    if(!r.success){
+      msg.textContent = r.message || "पंजीयन सेव नहीं हुआ";
+      msg.className = "error";
+      return;
+    }
+
+    msg.innerHTML = `पंजीयन सफल! रसीद क्रमांक: <b>${escapeHTML(r.receipt)}</b>`;
+    msg.className = "success";
+
+    ["Village","Name","Father","Mobile"].forEach(s=>{
+      el(prefix+s).value = "";
+    });
+    el(prefix+"Amount").value = 0;
+
+    loadDashboard();
+    loadPublicDashboard();
+
+  }catch(err){
+    msg.textContent = "सर्वर से संपर्क नहीं हो पाया";
+    msg.className = "error";
+  }
+}
+
+async function loadGroomList(){
+  try{
+    const r = await api("listGroom");
+    if(!r.success) return;
+
+    el("groomTable").innerHTML = (r.data || []).map(x=>`
+      <tr>
+        <td>${dateText(x.date)}</td>
+        <td>${escapeHTML(x.receipt)}</td>
+        <td>${escapeHTML(x.village)}</td>
+        <td>${escapeHTML(x.name)}</td>
+        <td>${escapeHTML(x.father)}</td>
+        <td>${escapeHTML(x.mobile)}</td>
+        <td>${money(x.amount)}</td>
+        <td>${escapeHTML(x.operator)}</td>
+      </tr>`).join("") || '<tr><td colspan="8">कोई रिकॉर्ड नहीं मिला</td></tr>';
+
+  }catch(err){alert("वर सूची लोड नहीं हुई");}
+}
+
+async function loadBrideList(){
+  try{
+    const r = await api("listBride");
+    if(!r.success) return;
+
+    el("brideTable").innerHTML = (r.data || []).map(x=>`
+      <tr>
+        <td>${dateText(x.date)}</td>
+        <td>${escapeHTML(x.receipt)}</td>
+        <td>${escapeHTML(x.village)}</td>
+        <td>${escapeHTML(x.name)}</td>
+        <td>${escapeHTML(x.father)}</td>
+        <td>${escapeHTML(x.mobile)}</td>
+        <td>${money(x.amount)}</td>
+        <td>${escapeHTML(x.operator)}</td>
+      </tr>`).join("") || '<tr><td colspan="8">कोई रिकॉर्ड नहीं मिला</td></tr>';
+
+  }catch(err){alert("वधू सूची लोड नहीं हुई");}
+}
+
+async function saveDonation(){
+  const data = {
+    village:el("dVillage").value.trim(),
+    name:el("dName").value.trim(),
+    father:el("dFather").value.trim(),
+    type:el("dType").value,
+    amount:el("dAmount").value
+  };
+
+  const msg = el("dMessage");
+
+  if(!data.amount || Number(data.amount)<=0){
+    msg.textContent = "दान राशि सही भरें";
+    msg.className = "error";
+    return;
+  }
+
+  try{
+    const r = await api("saveDon",{data});
+
+    msg.textContent = r.success
+      ? "दान सेव हुआ। रसीद: " + r.receipt
+      : r.message;
+
+    msg.className = r.success ? "success" : "error";
+
+    if(r.success){
+      ["dVillage","dName","dFather","dAmount"].forEach(id=>el(id).value="");
+      loadDashboard();
+    }
+  }catch(err){
+    msg.textContent = "दान सेव नहीं हुआ";
+    msg.className = "error";
+  }
+}
+
+async function saveExpense(){
+  const data = {
+    item:el("eItem").value.trim(),
+    description:el("eDescription").value.trim(),
+    paidBy:el("ePaidBy").value.trim(),
+    amount:el("eAmount").value
+  };
+
+  const msg = el("eMessage");
+
+  if(!data.item || !data.amount || Number(data.amount)<=0){
+    msg.textContent = "खर्च का नाम और सही राशि भरें";
+    msg.className = "error";
+    return;
+  }
+
+  try{
+    const r = await api("saveExp",{data});
+
+    msg.textContent = r.success
+      ? "खर्च सेव हुआ। रसीद: " + r.receipt
+      : r.message;
+
+    msg.className = r.success ? "success" : "error";
+
+    if(r.success){
+      ["eItem","eDescription","ePaidBy","eAmount"].forEach(id=>el(id).value="");
+      loadDashboard();
+    }
+  }catch(err){
+    msg.textContent = "खर्च सेव नहीं हुआ";
+    msg.className = "error";
+  }
+}
+
+async function loadDonationList(){
+  try{
+    const r = await api("listDon");
+    if(!r.success) return;
+
+    el("donationTable").innerHTML = (r.data || []).map(x=>`
+      <tr>
+        <td>${dateText(x.date)}</td>
+        <td>${escapeHTML(x.receipt)}</td>
+        <td>${escapeHTML(x.village)}</td>
+        <td>${escapeHTML(x.name)}</td>
+        <td>${escapeHTML(x.type)}</td>
+        <td>${money(x.amount)}</td>
+        <td>${escapeHTML(x.operator)}</td>
+      </tr>`).join("") || '<tr><td colspan="7">कोई रिकॉर्ड नहीं</td></tr>';
+
+  }catch(err){alert("दान सूची लोड नहीं हुई");}
+}
+
+async function loadExpenseList(){
+  try{
+    const r = await api("listExp");
+    if(!r.success) return;
+
+    el("expenseTable").innerHTML = (r.data || []).map(x=>`
+      <tr>
+        <td>${dateText(x.date)}</td>
+        <td>${escapeHTML(x.receipt)}</td>
+        <td>${escapeHTML(x.item)}</td>
+        <td>${escapeHTML(x.description)}</td>
+        <td>${escapeHTML(x.paidBy)}</td>
+        <td>${money(x.amount)}</td>
+        <td>${escapeHTML(x.operator)}</td>
+      </tr>`).join("") || '<tr><td colspan="7">कोई रिकॉर्ड नहीं</td></tr>';
+
+  }catch(err){alert("खर्च सूची लोड नहीं हुई");}
+}
+
+async function loadOperatorReport(){
+  if(currentRole !== "admin") return;
+
+  try{
+    const r = await api("operatorReport");
+    if(!r.success){
+      alert(r.message || "रिपोर्ट उपलब्ध नहीं");
+      return;
+    }
+
+    el("operatorReportTable").innerHTML = (r.data || []).map(x=>`
+      <tr>
+        <td>${escapeHTML(x.name)}</td>
+        <td>${escapeHTML(x.username)}</td>
+        <td>${x.groomCount}</td>
+        <td>${x.brideCount}</td>
+        <td><b>${x.total}</b></td>
+      </tr>`).join("") || '<tr><td colspan="5">कोई ऑपरेटर नहीं</td></tr>';
+
+    el("reportGrandTotal").textContent =
+      "कुल वर: " + r.totalGroom +
+      " | कुल वधू: " + r.totalBride +
+      " | कुल पंजीयन: " + r.grandTotal;
+
+  }catch(err){alert("ऑपरेटर रिपोर्ट लोड नहीं हुई");}
+}
+
+async function addOperator(){
+  if(currentRole !== "admin") return;
+
+  const data = {
+    name:el("opName").value.trim(),
+    username:el("opUsername").value.trim(),
+    password:el("opPassword").value
+  };
+
+  const msg = el("opMessage");
+
+  if(!data.name || !data.username || !data.password){
+    msg.textContent = "सभी जानकारी भरें";
+    msg.className = "error";
+    return;
+  }
+
+  try{
+    const r = await api("addOp",{data});
+
+    msg.textContent = r.message || "";
+    msg.className = r.success ? "success" : "error";
+
+    if(r.success){
+      el("opName").value="";
+      el("opUsername").value="";
+      el("opPassword").value="";
+    }
+  }catch(err){
+    msg.textContent = "ऑपरेटर नहीं बन पाया";
+    msg.className = "error";
+  }
+}
+
+function filterTable(tableId,searchId){
+  const query = el(searchId).value.toLowerCase();
+  const rows = el(tableId).querySelectorAll("tr");
+
+  rows.forEach(row=>{
+    row.style.display =
+      row.textContent.toLowerCase().includes(query) ? "" : "none";
+  });
+}
+
+// पेज खुलते ही सार्वजनिक डैशबोर्ड
+showPublicHome();
+
+// पहले से लॉगिन सत्र उपलब्ध हो तो ऐप खोलें
+if(token && currentRole && currentName){
+  openApp();
+}
+</script>
+</body>
+</html>
