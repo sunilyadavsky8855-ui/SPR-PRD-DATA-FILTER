@@ -1,377 +1,366 @@
-/*******************************************************
- * यादव समाज सामूहिक विवाह सम्मेलन - Google Apps Script
- * Existing Google Sheet data/columns are preserved.
- *
- * IMPORTANT:
- * 1) Run setupSheets() once from Apps Script editor.
- * 2) Deploy > New deployment > Web app
- * 3) Execute as: Me | Who has access: Anyone
- * 4) Put the deployed /exec URL in index.html as API_URL.
- *******************************************************/
-
-const SHEET_LINK = "https://docs.google.com/spreadsheets/d/1gixoGfKTs3dr0gelDGfQ23oKbwyUgw7mfgU_gsPjMXY/edit";
-const SESSION_SECONDS = 21600; // 6 hours
-
-const SHEETS = {
-  Registration: ["Date","Receipt","Village","Groom","Bride","Father","Mobile","Amount","Operator"],
-  Donations: ["Date","Receipt","Village","Name","Father","Amount","Type","Operator"],
-  Expenses: ["Date","Receipt","Item","Description","PaidBy","Amount","Operator"],
-  Users: ["Username","PasswordHash","Role","Name"]
-};
-
-function getSS() {
-  return SpreadsheetApp.openByUrl(SHEET_LINK);
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>यादव समाज सामूहिक विवाह सम्मेलन</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,"Noto Sans Devanagari",sans-serif;background:#fff7ed;color:#292524}
+button,input{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+header{background:#9a3412;color:white;text-align:center;padding:12px}
+header h1{font-size:clamp(20px,4vw,30px);margin:5px}
+header p{margin:4px;font-size:13px}
+.hero{max-width:1100px;margin:15px auto;padding:10px}
+.hero img{width:100%;height:310px;object-fit:cover;border-radius:18px;box-shadow:0 5px 18px #0002}
+.hero-title{text-align:center;color:#9a3412;font-size:25px;font-weight:900;margin:12px 0}
+.container{max-width:1100px;margin:auto;padding:12px}
+.card{background:white;border:1px solid #fed7aa;border-radius:14px;padding:16px;margin-bottom:15px;box-shadow:0 4px 14px #00000009}
+h2,h3{color:#9a3412;margin-top:5px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.stat{background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:16px;text-align:center}
+.stat b{display:block;font-size:23px;color:#c2410c}
+.stat span{font-size:13px}
+button{border:0;background:#ea580c;color:white;padding:11px 16px;border-radius:9px;font-weight:700}
+button.secondary{background:white;color:#c2410c;border:1px solid #ea580c}
+button.danger{background:#dc2626}
+button:disabled{opacity:.5}
+.login-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+label{display:block;font-weight:700;font-size:14px;margin:12px 0 5px}
+input,select{width:100%;padding:11px;border:1px solid #d6d3d1;border-radius:9px;background:white}
+.form-button{width:100%;margin-top:15px}
+.message{text-align:center;margin-top:10px;color:#dc2626;font-size:14px}
+.success{color:#15803d}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.tabs button{flex:1 1 130px}
+.footer{text-align:center;padding:20px;background:#9a3412;color:white;margin-top:25px}
+.small{text-align:center;font-size:12px;color:#78716c}
+table{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px}
+th,td{border:1px solid #fed7aa;padding:8px;text-align:left}
+th{background:#fff7ed;color:#9a3412}
+tr:nth-child(even){background:#fff7ed}
+.search-box{margin:10px 0}
+@media(max-width:650px){
+ .stats{grid-template-columns:1fr 1fr}
+ .login-grid{grid-template-columns:1fr}
+ .hero img{height:220px}
+ table{font-size:12px}
+ th,td{padding:6px}
 }
+</style>
+</head>
+<body>
+<header>
+<h1>🏵️ यादव समाज सामूहिक विवाह सम्मेलन</h1>
+<p>सामाजिक एकता • सहयोग • समर्पण</p>
+</header>
 
-function setupSheets() {
-  const ss = getSS();
-  Object.keys(SHEETS).forEach(name => {
-    let sh = ss.getSheetByName(name);
-    if (!sh) sh = ss.insertSheet(name);
-    if (sh.getLastRow() === 0) sh.appendRow(SHEETS[name]);
-    // Do not overwrite or clear any existing rows or headers.
+<main id="homePage">
+<div class="hero">
+<img src="radha-krishna.png" alt="श्री राधा कृष्ण">
+<div class="hero-title">॥ राधे राधे ॥</div>
+</div>
+<div class="container">
+<div class="card">
+<h2 style="text-align:center">📊 सम्मेलन का मुख्य डैशबोर्ड</h2>
+<div class="stats">
+<div class="stat"><b id="publicReg">0</b><span>कुल पंजीयन</span></div>
+<div class="stat"><b id="publicDon">₹0</b><span>कुल प्राप्त दान</span></div>
+<div class="stat"><b id="publicExp">₹0</b><span>कुल खर्च</span></div>
+<div class="stat"><b id="publicBal">₹0</b><span>शेष राशि</span></div>
+</div>
+<div class="small" id="publicStatus">डैशबोर्ड लोड हो रहा है...</div>
+</div>
+<div class="card">
+<h2 style="text-align:center">🔐 लॉगिन पोर्टल</h2>
+<div class="login-grid">
+<div class="card">
+<h3 style="text-align:center">👑 एडमिन लॉगिन</h3>
+<label>एडमिन यूजरनेम</label>
+<input id="adminUser" placeholder="यूजरनेम">
+<label>पासवर्ड</label>
+<input id="adminPass" type="password" placeholder="पासवर्ड">
+<button class="form-button" onclick="login('admin')">एडमिन लॉगिन करें</button>
+<div id="adminMsg" class="message"></div>
+</div>
+<div class="card">
+<h3 style="text-align:center">👤 ऑपरेटर लॉगिन</h3>
+<label>ऑपरेटर यूजरनेम</label>
+<input id="operatorUser" placeholder="यूजरनेम">
+<label>पासवर्ड</label>
+<input id="operatorPass" type="password" placeholder="पासवर्ड">
+<button class="form-button" onclick="login('operator')">ऑपरेटर लॉगिन करें</button>
+<div id="operatorMsg" class="message"></div>
+</div>
+</div>
+</div>
+</div>
+</main>
+
+<main id="appPage" class="hidden">
+<div class="container">
+<div class="card">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+<h2 id="welcome">नमस्कार</h2>
+<button class="danger" onclick="logout()">लॉगआउट</button>
+</div>
+<div class="stats">
+<div class="stat"><b id="sReg">0</b><span>पंजीयन</span></div>
+<div class="stat"><b id="sDon">₹0</b><span>दान राशि</span></div>
+<div class="stat"><b id="sExp">₹0</b><span>खर्च</span></div>
+<div class="stat"><b id="sBal">₹0</b><span>शेष राशि</span></div>
+</div>
+<p class="small" id="roleInfo"></p>
+</div>
+
+<div class="card">
+<div class="tabs">
+<button class="secondary" onclick="showTab('reg')">नया पंजीयन</button>
+<button class="secondary" onclick="showTab('don')">दान राशि</button>
+<button class="secondary" onclick="showTab('exp')">खर्च विवरण</button>
+<button class="secondary" onclick="showTab('listReg')">📋 पंजीयन सूची</button>
+<button class="secondary" onclick="showTab('listDon')">🙏 दान सूची</button>
+<button class="secondary" onclick="showTab('listExp')">📒 खर्च सूची</button>
+<button class="secondary adminOnly hidden" onclick="showTab('op')">ऑपरेटर बनाएं</button>
+<button class="secondary" onclick="refreshDashboard()">डैशबोर्ड अपडेट</button>
+</div>
+
+<div id="tab-reg" class="hidden">
+<h3>📝 विवाह पंजीयन</h3>
+<label>गांव का नाम</label><input id="rVillage" placeholder="गांव का नाम">
+<label>वर का नाम</label><input id="rGroom">
+<label>वधू का नाम</label><input id="rBride">
+<label>पिता का नाम</label><input id="rFather">
+<label>मोबाइल नंबर</label><input id="rMobile" type="tel" maxlength="10">
+<label>पंजीयन राशि</label><input id="rAmount" type="number" min="0">
+<button class="form-button" onclick="saveReg()">पंजीयन सुरक्षित करें</button>
+<div id="regMsg" class="message"></div>
+</div>
+
+<div id="tab-don" class="hidden">
+<h3>🙏 दान राशि प्राप्ति</h3>
+<label>गांव का नाम</label><input id="dVillage">
+<label>दानदाता का नाम</label><input id="dName">
+<label>पिता का नाम</label><input id="dFather">
+<label>दान राशि</label><input id="dAmount" type="number" min="1">
+<label>दान का प्रकार</label>
+<select id="dType"><option value="सामान्य">सामान्य दान</option><option value="गुप्त">गुप्त दान</option><option value="विशेष">विशेष दान</option></select>
+<button class="form-button" onclick="saveDon()">दान सुरक्षित करें</button>
+<div id="donMsg" class="message"></div>
+</div>
+
+<div id="tab-exp" class="hidden">
+<h3>📒 खर्च / व्यय विवरण</h3>
+<label>खर्च की मद</label><input id="eItem" placeholder="भोजन, टेंट, साउंड आदि">
+<label>विवरण</label><input id="eDesc">
+<label>भुगतान करने वाले का नाम</label><input id="ePaid">
+<label>खर्च की राशि</label><input id="eAmount" type="number" min="1">
+<button class="form-button" onclick="saveExp()">खर्च सुरक्षित करें</button>
+<div id="expMsg" class="message"></div>
+</div>
+
+<div id="tab-listReg" class="hidden">
+<h3>📋 पंजीयन सूची</h3>
+<div class="search-box"><input id="searchReg" placeholder="🔍 गांव / वर / वधू का नाम से खोजें..." oninput="filterTable('regTable',this.value)"></div>
+<button onclick="loadList('reg')">🔄 सूची अपडेट करें</button>
+<div id="regListMsg" class="message"></div>
+<div style="overflow-x:auto"><table><thead><tr><th>रसीद</th><th>गांव</th><th>वर</th><th>वधू</th><th>पिता</th><th>मोबाइल</th><th>राशि</th></tr></thead><tbody id="regTable"><tr><td colspan="7" style="text-align:center">सूची लोड करने के लिए ऊपर बटन दबाएं</td></tr></tbody></table></div>
+</div>
+
+<div id="tab-listDon" class="hidden">
+<h3>🙏 दान सूची</h3>
+<div class="search-box"><input id="searchDon" placeholder="🔍 गांव / दानदाता का नाम से खोजें..." oninput="filterTable('donTable',this.value)"></div>
+<button onclick="loadList('don')">🔄 सूची अपडेट करें</button>
+<div id="donListMsg" class="message"></div>
+<div style="overflow-x:auto"><table><thead><tr><th>रसीद</th><th>गांव</th><th>दानदाता</th><th>पिता</th><th>प्रकार</th><th>राशि</th></tr></thead><tbody id="donTable"><tr><td colspan="6" style="text-align:center">सूची लोड करने के लिए ऊपर बटन दबाएं</td></tr></tbody></table></div>
+</div>
+
+<div id="tab-listExp" class="hidden">
+<h3>📒 खर्च सूची</h3>
+<div class="search-box"><input id="searchExp" placeholder="🔍 मद / नाम से खोजें..." oninput="filterTable('expTable',this.value)"></div>
+<button onclick="loadList('exp')">🔄 सूची अपडेट करें</button>
+<div id="expListMsg" class="message"></div>
+<div style="overflow-x:auto"><table><thead><tr><th>रसीद</th><th>मद</th><th>विवरण</th><th>भुगतानकर्ता</th><th>राशि</th></tr></thead><tbody id="expTable"><tr><td colspan="5" style="text-align:center">सूची लोड करने के लिए ऊपर बटन दबाएं</td></tr></tbody></table></div>
+</div>
+
+<div id="tab-op" class="hidden">
+<h3>👥 नया ऑपरेटर बनाएं</h3>
+<label>यूजरनेम</label><input id="oUser">
+<label>पासवर्ड (कम से कम 6 अक्षर)</label><input id="oPass" type="password">
+<label>ऑपरेटर का नाम</label><input id="oName">
+<button class="form-button" onclick="addOp()">ऑपरेटर बनाएं</button>
+<div id="opMsg" class="message"></div>
+</div>
+
+</div>
+</div>
+</main>
+
+<footer class="footer">
+<strong>🏵️ यादव समाज सामूहिक विवाह सम्मेलन</strong>
+<p>॥ राधे राधे ॥</p>
+</footer>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbzeclWgmPQdS180kyU6aufd5he2_uWVkF_vnvQ4AfKwOA013TjfLiNGHuRsWN_oMr8fzQ/exec";
+let TOKEN=""; let ROLE=""; let USERNAME="";
+async function call(action,data={}) {
+ const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action,token:TOKEN,...data})});
+ return await res.json();
+}
+function money(n){ return "₹"+Number(n||0).toLocaleString("en-IN"); }
+
+// --- HOME PAGE DASHBOARD - NAYA FIX WALA ---
+async function loadPublicDashboard(){
+ const status=document.getElementById("publicStatus");
+ status.textContent="डैशबोर्ड लोड हो रहा है...";
+ try{
+  const res = await fetch(API_URL + "?action=publicDashboard");
+  const r = await res.json();
+  if(r.success){
+    document.getElementById("publicReg").textContent=r.registrations??0;
+    document.getElementById("publicDon").textContent=money(r.donation);
+    document.getElementById("publicExp").textContent=money(r.expenses);
+    document.getElementById("publicBal").textContent=money(r.balance);
+    status.textContent="डैशबोर्ड अपडेट हो गया";
+    return;
+  }
+  throw new Error("GET fail");
+ }catch(e1){
+   try{
+    const r=await call("publicDashboard");
+    if(!r.success) throw new Error(r.message||"डेटा प्राप्त नहीं हुआ");
+    document.getElementById("publicReg").textContent=r.registrations??0;
+    document.getElementById("publicDon").textContent=money(r.donation);
+    document.getElementById("publicExp").textContent=money(r.expenses);
+    document.getElementById("publicBal").textContent=money(r.balance);
+    status.textContent="डैशबोर्ड अपडेट हो गया";
+   }catch(e){
+     status.textContent="डेटा लोड नहीं हुआ: "+e.message+" - 5 Sec me fir try ho raha hai";
+     setTimeout(loadPublicDashboard, 5000);
+   }
+ }
+}
+async function login(role){
+ const isAdmin=role==="admin";
+ const user=document.getElementById(isAdmin?"adminUser":"operatorUser").value.trim();
+ const pass=document.getElementById(isAdmin?"adminPass":"operatorPass").value;
+ const msg=document.getElementById(isAdmin?"adminMsg":"operatorMsg");
+ if(!user||!pass){ msg.textContent="यूजरनेम और पासवर्ड भरें"; return; }
+ msg.textContent="लॉगिन हो रहा है...";
+ try{
+  const r=await call("login",{username:user,password:pass,expectedRole:role});
+  if(!r.success){ msg.textContent=r.message||"लॉगिन असफल"; return; }
+  TOKEN=r.token; ROLE=r.role; USERNAME=user;
+  sessionStorage.setItem("spr_token",TOKEN); sessionStorage.setItem("spr_role",ROLE); sessionStorage.setItem("spr_username",USERNAME);
+  openApp(r.name);
+ }catch(e){ msg.textContent="नेटवर्क समस्या: "+e.message; }
+}
+function openApp(name){
+ document.getElementById("homePage").classList.add("hidden");
+ document.getElementById("appPage").classList.remove("hidden");
+ document.getElementById("welcome").textContent="नमस्कार, "+name;
+ document.getElementById("roleInfo").textContent=ROLE==="admin"?"👑 मुख्य व्यवस्थापक":"👤 ऑपरेटर";
+ document.querySelectorAll(".adminOnly").forEach(el=>{ el.classList.toggle("hidden",ROLE!=="admin"); });
+ showTab("reg"); refreshDashboard();
+}
+async function refreshDashboard(){
+ try{
+  const r=await call("dashboard");
+  if(!r.success){ logout(); return; }
+  document.getElementById("sReg").textContent=r.registrations;
+  document.getElementById("sDon").textContent=money(r.donation);
+  document.getElementById("sExp").textContent=money(r.expenses);
+  document.getElementById("sBal").textContent=money(r.balance);
+ }catch(e){ alert("डैशबोर्ड अपडेट नहीं हुआ: "+e.message); }
+}
+function showTab(t){
+ if(t==="op" && ROLE!=="admin") return;
+ ["reg","don","exp","op","listReg","listDon","listExp"].forEach(x=>{ document.getElementById("tab-"+x).classList.add("hidden"); });
+ document.getElementById("tab-"+t).classList.remove("hidden");
+ if(t==="listReg") loadList('reg');
+ if(t==="listDon") loadList('don');
+ if(t==="listExp") loadList('exp');
+}
+function v(id){ return document.getElementById(id).value.trim(); }
+function setMsg(id,message,success){ const el=document.getElementById(id); el.textContent=message||""; el.className="message "+(success?"success":""); }
+function filterTable(tbodyId, q){
+ q=q.toLowerCase();
+ document.querySelectorAll("#"+tbodyId+" tr").forEach(tr=>{
+  tr.style.display = tr.textContent.toLowerCase().includes(q) ? "" : "none";
+ });
+}
+async function loadList(type){
+ let tbodyId = type==="reg"?"regTable":type==="don"?"donTable":"expTable";
+ let msgId = type==="reg"?"regListMsg":type==="don"?"donListMsg":"expListMsg";
+ let action = type==="reg"?"listReg":type==="don"?"listDon":"listExp";
+ document.getElementById(msgId).textContent="सूची लोड हो रही है...";
+ try{
+  const r=await call(action);
+  if(!r.success) throw new Error(r.message||"सूची नहीं मिली");
+  let rows=r.data||r.list||[];
+  if(rows.length===0){ document.getElementById(tbodyId).innerHTML='<tr><td colspan="7" style="text-align:center">अभी कोई एंट्री नहीं है</td></tr>'; document.getElementById(msgId).textContent=""; return; }
+  let html="";
+  rows.forEach(row=>{
+   if(type==="reg") html+=`<tr><td>${row.receipt||""}</td><td>${row.village||""}</td><td>${row.groom||""}</td><td>${row.bride||""}</td><td>${row.father||""}</td><td>${row.mobile||""}</td><td>${money(row.amount)}</td></tr>`;
+   if(type==="don") html+=`<tr><td>${row.receipt||""}</td><td>${row.village||""}</td><td>${row.name||""}</td><td>${row.father||""}</td><td>${row.type||""}</td><td>${money(row.amount)}</td></tr>`;
+   if(type==="exp") html+=`<tr><td>${row.receipt||""}</td><td>${row.item||""}</td><td>${row.description||""}</td><td>${row.paidBy||""}</td><td>${money(row.amount)}</td></tr>`;
   });
-
-  const users = ss.getSheetByName("Users");
-  if (users.getLastRow() < 2) {
-    users.appendRow(["admin", hashPassword("Admin@123"), "admin", "मुख्य व्यवस्थापक"]);
-  }
-  return "शीट तैयार हैं। मौजूदा डेटा सुरक्षित रखा गया है।";
+  document.getElementById(tbodyId).innerHTML=html;
+  document.getElementById(msgId).textContent="कुल एंट्री: "+rows.length;
+ }catch(e){ document.getElementById(msgId).textContent="सूची नहीं लोड हुई: "+e.message; }
 }
-
-function hashPassword(password) {
-  const bytes = Utilities.computeDigest(
-    Utilities.DigestAlgorithm.SHA_256,
-    String(password),
-    Utilities.Charset.UTF_8
-  );
-  return bytes.map(b => ("0" + ((b + 256) % 256).toString(16)).slice(-2)).join("");
+async function saveReg(){
+ if(!v("rVillage")||!v("rGroom")||!v("rBride")){ return setMsg("regMsg","गांव, वर और वधू का नाम भरें",false); }
+ const mobile=v("rMobile");
+ if(mobile && !/^[0-9]{10}$/.test(mobile)){ return setMsg("regMsg","मोबाइल नंबर 10 अंकों का होना चाहिए",false); }
+ try{
+  const r=await call("saveReg",{data:{village:v("rVillage"),groom:v("rGroom"),bride:v("rBride"),father:v("rFather"),mobile:v("rMobile"),amount:v("rAmount")}});
+  setMsg("regMsg",r.success?"पंजीयन सफल! रसीद: "+r.receipt:r.message,r.success);
+  if(r.success){ ["rVillage","rGroom","rBride","rFather","rMobile","rAmount"].forEach(id=>document.getElementById(id).value=""); refreshDashboard(); loadPublicDashboard(); }
+ }catch(e){ setMsg("regMsg","नेटवर्क समस्या: "+e.message,false); }
 }
-
-function json(data) {
-  return ContentService.createTextOutput(JSON.stringify(data))
-    .setMimeType(ContentService.MimeType.JSON);
+async function saveDon(){
+ if(!v("dAmount")||Number(v("dAmount"))<=0){ return setMsg("donMsg","दान राशि सही भरें",false); }
+ const type=v("dType");
+ if(type!=="गुप्त" && !v("dName")){ return setMsg("donMsg","दानदाता का नाम भरें",false); }
+ try{
+  const r=await call("saveDon",{data:{village:v("dVillage"),name:v("dName"),father:v("dFather"),amount:v("dAmount"),type:v("dType")}});
+  setMsg("donMsg",r.success?"दान सुरक्षित! रसीद: "+r.receipt:r.message,r.success);
+  if(r.success){ ["dVillage","dName","dFather","dAmount"].forEach(id=>document.getElementById(id).value=""); refreshDashboard(); loadPublicDashboard(); }
+ }catch(e){ setMsg("donMsg","नेटवर्क समस्या: "+e.message,false); }
 }
-
-function getUserByToken(token) {
-  if (!token) return null;
-  const value = CacheService.getScriptCache().get("session_" + token);
-  return value ? JSON.parse(value) : null;
+async function saveExp(){
+ if(!v("eItem")||!v("eAmount")||Number(v("eAmount"))<=0){ return setMsg("expMsg","खर्च की मद और सही राशि भरें",false); }
+ if(ROLE!=="admin"){ return setMsg("expMsg","खर्च दर्ज करने की अनुमति उपलब्ध नहीं है",false); }
+ try{
+  const r=await call("saveExp",{data:{item:v("eItem"),description:v("eDesc"),paidBy:v("ePaid"),amount:v("eAmount")}});
+  setMsg("expMsg",r.success?"खर्च सुरक्षित! रसीद: "+r.receipt:r.message,r.success);
+  if(r.success){ ["eItem","eDesc","ePaid","eAmount"].forEach(id=>document.getElementById(id).value=""); refreshDashboard(); loadPublicDashboard(); }
+ }catch(e){ setMsg("expMsg","नेटवर्क समस्या: "+e.message,false); }
 }
-
-function readRows(sheetName) {
-  const sh = getSS().getSheetByName(sheetName);
-  if (!sh || sh.getLastRow() < 2) return [];
-  return sh.getRange(2, 1, sh.getLastRow() - 1, sh.getLastColumn()).getValues();
+async function addOp(){
+ if(ROLE!=="admin") return;
+ if(!v("oUser")||!v("oPass")||!v("oName")){ return setMsg("opMsg","सभी जानकारी भरें",false); }
+ try{
+  const r=await call("addOp",{data:{username:v("oUser"),password:v("oPass"),name:v("oName")}});
+  setMsg("opMsg",r.message,r.success);
+  if(r.success){ ["oUser","oPass","oName"].forEach(id=>document.getElementById(id).value=""); }
+ }catch(e){ setMsg("opMsg","नेटवर्क समस्या: "+e.message,false); }
 }
-
-function amountTotal(rows, index) {
-  return rows.reduce((sum, row) => sum + (Number(row[index]) || 0), 0);
+function logout(){
+ TOKEN=""; ROLE=""; USERNAME=""; sessionStorage.clear();
+ document.getElementById("appPage").classList.add("hidden");
+ document.getElementById("homePage").classList.remove("hidden");
+ loadPublicDashboard();
 }
-
-function getPublicTotals() {
-  const regs = readRows("Registration");
-  const dons = readRows("Donations");
-  const exps = readRows("Expenses");
-  const registrationAmount = amountTotal(regs, 7);
-  const donation = amountTotal(dons, 5);
-  const expenses = amountTotal(exps, 5);
-  const villages = {};
-  regs.forEach(r => {
-    const village = String(r[2] || "अन्य").trim() || "अन्य";
-    villages[village] = (villages[village] || 0) + 1;
-  });
-  return {
-    registrations: regs.length,
-    donation: donation,
-    registrationAmount: registrationAmount,
-    expenses: expenses,
-    balance: registrationAmount + donation - expenses,
-    villages: villages
-  };
-}
-
-function requireAdmin(user) {
-  return user && user.role === "admin";
-}
-
-function makeReceipt(prefix, sheet) {
-  // Generate the next unused serial even if an older final row was deleted.
-  const last = sheet.getLastRow();
-  let maxSerial = 0;
-  if (last >= 2) {
-    const values = sheet.getRange(2, 2, last - 1, 1).getDisplayValues();
-    values.forEach(r => {
-      const match = String(r[0] || "").match(new RegExp("^" + prefix + "(\\d+)$"));
-      if (match) maxSerial = Math.max(maxSerial, Number(match[1]));
-    });
-  }
-  return prefix + Utilities.formatString("%05d", maxSerial + 1);
-}
-
-function findRowByReceipt(sheetName, receipt) {
-  const sh = getSS().getSheetByName(sheetName);
-  if (!sh || sh.getLastRow() < 2) return {sheet: sh, row: -1};
-  const found = sh.getRange(2, 2, sh.getLastRow() - 1, 1)
-    .createTextFinder(String(receipt)).matchEntireCell(true).findNext();
-  return {sheet: sh, row: found ? found.getRow() : -1};
-}
-
-function rowOwnedByUser(sheetName, rowNumber, user) {
-  if (user.role === "admin") return true;
-  const sh = getSS().getSheetByName(sheetName);
-  const ownerCol = sheetName === "Registration" ? 9 :
-                   sheetName === "Donations" ? 8 : 7;
-  return String(sh.getRange(rowNumber, ownerCol).getValue()) === String(user.username);
-}
-
-function doGet(e) {
-  try {
-    setupSheets();
-    const action = e && e.parameter ? e.parameter.action : "";
-    if (action === "publicDashboard") {
-      return json({success: true, ...getPublicTotals()});
-    }
-    return json({success: true, status: "OK", message: "यादव समाज सामूहिक विवाह सम्मेलन API चालू है"});
-  } catch (err) {
-    return json({success: false, message: err.message});
-  }
-}
-
-function doPost(e) {
-  try {
-    setupSheets();
-    const d = JSON.parse((e && e.postData && e.postData.contents) || "{}");
-    const action = String(d.action || "");
-
-    // Public dashboard: intentionally does not require login.
-    if (action === "publicDashboard") {
-      return json({success: true, ...getPublicTotals()});
-    }
-
-    // Login
-    if (action === "login") {
-      const username = String(d.username || "").trim();
-      const password = String(d.password || "");
-      const users = readRows("Users");
-      const user = users.find(r =>
-        String(r[0]) === username &&
-        String(r[1]) === hashPassword(password)
-      );
-      if (!user) return json({success: false, message: "गलत यूजर आईडी या पासवर्ड"});
-      if (d.expectedRole && String(user[2]) !== String(d.expectedRole)) {
-        return json({success: false, message: "यह लॉगिन इस खाते के लिए उपलब्ध नहीं है"});
-      }
-      const token = Utilities.getUuid();
-      const session = {username: String(user[0]), role: String(user[2]), name: String(user[3])};
-      CacheService.getScriptCache().put("session_" + token, JSON.stringify(session), SESSION_SECONDS);
-      return json({success: true, token: token, role: session.role, name: session.name});
-    }
-
-    const user = getUserByToken(d.token);
-    if (!user) return json({success: false, message: "सत्र समाप्त हो गया। कृपया दोबारा लॉगिन करें।"});
-
-    if (action === "logout") {
-      CacheService.getScriptCache().remove("session_" + d.token);
-      return json({success: true, message: "लॉगआउट सफल"});
-    }
-
-    if (action === "changePassword") {
-      const oldPassword = String(d.oldPassword || "");
-      const newPassword = String(d.newPassword || "");
-      if (newPassword.length < 8) return json({success: false, message: "नया पासवर्ड कम से कम 8 अक्षरों का रखें"});
-      const sh = getSS().getSheetByName("Users");
-      const values = sh.getDataRange().getValues();
-      const index = values.findIndex((r, i) => i > 0 && String(r[0]) === user.username);
-      if (index < 1 || String(values[index][1]) !== hashPassword(oldPassword)) {
-        return json({success: false, message: "पुराना पासवर्ड सही नहीं है"});
-      }
-      sh.getRange(index + 1, 2).setValue(hashPassword(newPassword));
-      CacheService.getScriptCache().remove("session_" + d.token);
-      return json({success: true, message: "पासवर्ड बदल गया। कृपया नए पासवर्ड से दोबारा लॉगिन करें।"});
-    }
-
-    if (action === "dashboard") {
-      const regsAll = readRows("Registration");
-      const donsAll = readRows("Donations");
-      const expsAll = readRows("Expenses");
-      const regs = user.role === "admin" ? regsAll : regsAll.filter(r => String(r[8]) === user.username);
-      const dons = user.role === "admin" ? donsAll : donsAll.filter(r => String(r[7]) === user.username);
-      const exps = user.role === "admin" ? expsAll : expsAll.filter(r => String(r[6]) === user.username);
-      const villages = {};
-      regs.forEach(r => {
-        const v = String(r[2] || "अन्य").trim() || "अन्य";
-        villages[v] = (villages[v] || 0) + 1;
-      });
-      const registrationAmount = amountTotal(regs, 7);
-      const donation = amountTotal(dons, 5);
-      const expenses = amountTotal(exps, 5);
-      return json({
-        success: true, role: user.role, name: user.name,
-        registrations: regs.length, donation: donation, registrationAmount: registrationAmount,
-        expenses: expenses, balance: registrationAmount + donation - expenses, villages: villages
-      });
-    }
-
-    if (action === "listReg" || action === "listDon" || action === "listExp") {
-      const sheetName = action === "listReg" ? "Registration" :
-                        action === "listDon" ? "Donations" : "Expenses";
-      const rows = readRows(sheetName).filter(r => user.role === "admin" ||
-        String(r[sheetName === "Registration" ? 8 : sheetName === "Donations" ? 7 : 6]) === user.username).reverse();
-      const data = rows.map(r => {
-        if (sheetName === "Registration") return {
-          date: formatDate(r[0]), receipt: r[1], village: r[2], groom: r[3], bride: r[4],
-          father: r[5], mobile: r[6], amount: r[7], operator: r[8]
-        };
-        if (sheetName === "Donations") return {
-          date: formatDate(r[0]), receipt: r[1], village: r[2], name: r[3],
-          father: r[4], amount: r[5], type: r[6], operator: r[7]
-        };
-        return {
-          date: formatDate(r[0]), receipt: r[1], item: r[2], description: r[3],
-          paidBy: r[4], amount: r[5], operator: r[6]
-        };
-      });
-      return json({success: true, data: data});
-    }
-
-    if (action === "operators") {
-      if (!requireAdmin(user)) return json({success: false, message: "केवल एडमिन यह सूची देख सकता है"});
-      const users = readRows("Users").filter(r => String(r[2]) === "operator")
-        .map(r => ({username: r[0], name: r[3]}));
-      const regs = readRows("Registration");
-      const dons = readRows("Donations");
-      const exps = readRows("Expenses");
-      const result = users.map(op => ({
-        username: op.username, name: op.name,
-        registrations: regs.filter(r => String(r[8]) === String(op.username)).length,
-        donation: amountTotal(dons.filter(r => String(r[7]) === String(op.username)), 5),
-        expenses: amountTotal(exps.filter(r => String(r[6]) === String(op.username)), 5)
-      }));
-      return json({success: true, data: result});
-    }
-
-    if (action === "addOp") {
-      if (!requireAdmin(user)) return json({success: false, message: "केवल एडमिन ऑपरेटर बना सकता है"});
-      const data = d.data || {};
-      const username = String(data.username || "").trim();
-      const password = String(data.password || "");
-      const name = String(data.name || "").trim();
-      if (!username || !password || !name) return json({success: false, message: "सभी जानकारी भरें"});
-      if (password.length < 8) return json({success: false, message: "पासवर्ड कम से कम 8 अक्षरों का होना चाहिए"});
-      if (!/^[A-Za-z0-9._-]{3,30}$/.test(username)) {
-        return json({success: false, message: "यूजरनेम 3-30 अक्षर का हो; अंग्रेजी अक्षर, अंक, dot, _ या - उपयोग करें"});
-      }
-      const sh = getSS().getSheetByName("Users");
-      const exists = readRows("Users").some(r => String(r[0]).toLowerCase() === username.toLowerCase());
-      if (exists) return json({success: false, message: "यह यूजर पहले से मौजूद है"});
-      sh.appendRow([username, hashPassword(password), "operator", name]);
-      return json({success: true, message: "ऑपरेटर सफलतापूर्वक बनाया गया"});
-    }
-
-    if (action === "saveReg" || action === "saveDon" || action === "saveExp") {
-      const data = d.data || {};
-      const lock = LockService.getScriptLock();
-      lock.waitLock(15000);
-      try {
-        if (action === "saveReg") {
-          if (!data.village || !data.groom || !data.bride) return json({success: false, message: "गांव, वर और वधू का नाम भरें"});
-          const sh = getSS().getSheetByName("Registration");
-          const receipt = makeReceipt("R", sh);
-          sh.appendRow([new Date(), receipt, clean(data.village), clean(data.groom), clean(data.bride),
-            clean(data.father), clean(data.mobile), positiveOrZero(data.amount), user.username]);
-          return json({success: true, receipt: receipt, message: "पंजीयन सुरक्षित हुआ"});
-        }
-        if (action === "saveDon") {
-          const amount = Number(data.amount);
-          if (!Number.isFinite(amount) || amount <= 0) return json({success: false, message: "दान राशि सही भरें"});
-          const type = clean(data.type || "सामान्य");
-          const isSecret = type === "गुप्त" || type === "गुप्त दान";
-          if (!isSecret && !String(data.name || "").trim()) return json({success: false, message: "दानदाता का नाम भरें"});
-          const sh = getSS().getSheetByName("Donations");
-          const receipt = makeReceipt("D", sh);
-          sh.appendRow([new Date(), receipt, clean(data.village), isSecret ? "गुप्त दान" : clean(data.name),
-            isSecret ? "" : clean(data.father), amount, type, user.username]);
-          return json({success: true, receipt: receipt, message: "दान सुरक्षित हुआ"});
-        }
-        if (action === "saveExp") {
-          if (!requireAdmin(user)) return json({success: false, message: "खर्च दर्ज करने का अधिकार केवल एडमिन को है"});
-          const amount = Number(data.amount);
-          if (!data.item || !Number.isFinite(amount) || amount <= 0) return json({success: false, message: "खर्च की मद और सही राशि भरें"});
-          const sh = getSS().getSheetByName("Expenses");
-          const receipt = makeReceipt("E", sh);
-          sh.appendRow([new Date(), receipt, clean(data.item), clean(data.description), clean(data.paidBy), amount, user.username]);
-          return json({success: true, receipt: receipt, message: "खर्च सुरक्षित हुआ"});
-        }
-      } finally {
-        lock.releaseLock();
-      }
-    }
-
-    if (action === "updateRecord" || action === "deleteRecord") {
-      const type = String(d.type || "");
-      const sheetName = type === "reg" ? "Registration" : type === "don" ? "Donations" : type === "exp" ? "Expenses" : "";
-      if (!sheetName) return json({success: false, message: "रिकॉर्ड का प्रकार सही नहीं है"});
-      const receipt = String(d.receipt || "");
-      const found = findRowByReceipt(sheetName, receipt);
-      if (found.row < 2) return json({success: false, message: "रिकॉर्ड नहीं मिला"});
-      if (action === "deleteRecord" && !requireAdmin(user)) return json({success: false, message: "डिलीट करने का अधिकार केवल एडमिन को है"});
-      if (action === "updateRecord" && !rowOwnedByUser(sheetName, found.row, user)) {
-        return json({success: false, message: "आप केवल अपनी एंट्री संशोधित कर सकते हैं"});
-      }
-      const lock = LockService.getScriptLock();
-      lock.waitLock(15000);
-      try {
-        if (action === "deleteRecord") {
-          found.sheet.deleteRow(found.row);
-          return json({success: true, message: "रिकॉर्ड डिलीट हो गया"});
-        }
-        const x = d.data || {};
-        if (type === "reg") {
-          if (!x.village || !x.groom || !x.bride) return json({success: false, message: "गांव, वर और वधू का नाम जरूरी है"});
-          found.sheet.getRange(found.row, 3, 1, 6).setValues([[
-            clean(x.village), clean(x.groom), clean(x.bride), clean(x.father), clean(x.mobile), positiveOrZero(x.amount)
-          ]]);
-        } else if (type === "don") {
-          const amount = Number(x.amount);
-          if (!Number.isFinite(amount) || amount <= 0) return json({success: false, message: "दान राशि सही भरें"});
-          const secret = x.type === "गुप्त" || x.type === "गुप्त दान";
-          found.sheet.getRange(found.row, 3, 1, 5).setValues([[
-            clean(x.village), secret ? "गुप्त दान" : clean(x.name), secret ? "" : clean(x.father),
-            amount, clean(x.type || "सामान्य")
-          ]]);
-        } else {
-          if (!requireAdmin(user)) return json({success: false, message: "खर्च संशोधन केवल एडमिन कर सकता है"});
-          const amount = Number(x.amount);
-          if (!x.item || !Number.isFinite(amount) || amount <= 0) return json({success: false, message: "खर्च की मद और राशि सही भरें"});
-          found.sheet.getRange(found.row, 3, 1, 4).setValues([[clean(x.item), clean(x.description), clean(x.paidBy), amount]]);
-        }
-        return json({success: true, message: "रिकॉर्ड अपडेट हो गया"});
-      } finally {
-        lock.releaseLock();
-      }
-    }
-
-    return json({success: false, message: "अमान्य अनुरोध"});
-  } catch (err) {
-    return json({success: false, message: err.message || String(err)});
-  }
-}
-
-function clean(value) {
-  return String(value == null ? "" : value).trim();
-}
-function positiveOrZero(value) {
-  const n = Number(value || 0);
-  return Number.isFinite(n) && n >= 0 ? n : 0;
-}
-function formatDate(value) {
-  if (value instanceof Date) return Utilities.formatDate(value, Session.getScriptTimeZone(), "dd-MM-yyyy");
-  return String(value || "");
-}
-
-/** Run manually to initialize sheets and verify connection. */
-function testSetup() {
-  Logger.log(setupSheets());
-  Logger.log(JSON.stringify(getPublicTotals()));
-}
+TOKEN=sessionStorage.getItem("spr_token")||"";
+ROLE=sessionStorage.getItem("spr_role")||"";
+USERNAME=sessionStorage.getItem("spr_username")||"";
+if(TOKEN && (ROLE==="admin"||ROLE==="operator")){ openApp(USERNAME); }else{ TOKEN=""; ROLE=""; USERNAME=""; sessionStorage.clear(); }
+loadPublicDashboard();
+</script>
+</body>
+</html>
